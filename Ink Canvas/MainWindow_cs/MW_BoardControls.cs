@@ -160,7 +160,20 @@ namespace Ink_Canvas
                 CurrentWhiteboardIndex--;
             }
             WhiteboardTotalCount--;
-            RestoreStrokes();
+
+            // 如果删除后没有白板页，则自动新建一页
+            if (WhiteboardTotalCount == 0)
+            {
+                WhiteboardTotalCount = 1;
+                CurrentWhiteboardIndex = 1;
+                TimeMachineHistories[1] = null;
+                strokeCollections[1] = new StrokeCollection();
+                RestoreStrokes();
+            }
+            else
+            {
+                RestoreStrokes();
+            }
             UpdateIndexInfoDisplay();
         }
 

@@ -14,6 +14,7 @@ namespace Ink_Canvas
             Hotkey.Regist(this, HotkeyModifiers.MOD_ALT, Key.D, HotKey_DrawTool);
             Hotkey.Regist(this, HotkeyModifiers.MOD_ALT, Key.Q, HotKey_QuitDrawMode);
             Hotkey.Regist(this, HotkeyModifiers.MOD_ALT, Key.B, HotKey_Board);
+            Hotkey.Regist(this, HotkeyModifiers.MOD_CONTROL | HotkeyModifiers.MOD_SHIFT, Key.D, HotKey_DeleteWhiteBoard); // 新增快捷键
         }
 
         private void HotKey_ExitPPTSlideShow()
@@ -56,6 +57,11 @@ namespace Ink_Canvas
         private void HotKey_Board()
         {
             ImageBlackboard_Click(null, null);
+        }
+
+        private void HotKey_DeleteWhiteBoard()
+        {
+            BtnWhiteBoardDelete_Click(null, null);
         }
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)

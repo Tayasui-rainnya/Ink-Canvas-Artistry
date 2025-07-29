@@ -7,12 +7,20 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        // 用于存储每页白板的墨迹集合
         StrokeCollection[] strokeCollections = new StrokeCollection[101];
+        // 用于记录最后一次触控按下时的墨迹集合
         StrokeCollection lastTouchDownStrokeCollection = new StrokeCollection();
 
+        // 当前白板页码和总页数
         int CurrentWhiteboardIndex = 1, WhiteboardTotalCount = 1;
-        TimeMachineHistory[][] TimeMachineHistories = new TimeMachineHistory[101][]; //最多99页，0用来存储非白板时的墨迹以便还原
+        // 用于存储每页的历史记录，最多99页，0号用于非白板时的墨迹
+        TimeMachineHistory[][] TimeMachineHistories = new TimeMachineHistory[101][];
 
+        /// <summary>
+        /// 保存当前页的墨迹历史
+        /// </summary>
+        /// <param name="isBackupMain">是否备份主页面</param>
         private void SaveStrokes(bool isBackupMain = false)
         {
             if (isBackupMain)
@@ -30,6 +38,10 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 清空当前白板的墨迹
+        /// </summary>
+        /// <param name="isErasedByCode">是否由代码触发清空</param>
         private void ClearStrokes(bool isErasedByCode)
         {
             _currentCommitType = CommitReason.ClearingCanvas;
@@ -39,6 +51,10 @@ namespace Ink_Canvas
             _currentCommitType = CommitReason.UserInput;
         }
 
+        /// <summary>
+        /// 恢复当前页的墨迹历史
+        /// </summary>
+        /// <param name="isBackupMain">是否恢复主页面</param>
         private void RestoreStrokes(bool isBackupMain = false)
         {
             try
@@ -64,6 +80,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 切换到上一页白板
+        /// </summary>
         private void BtnWhiteBoardSwitchPrevious_Click(object sender, EventArgs e)
         {
             if (CurrentWhiteboardIndex <= 1) return;
@@ -74,8 +93,12 @@ namespace Ink_Canvas
             UpdateIndexInfoDisplay();
         }
 
+        /// <summary>
+        /// 切换到下一页白板，必要时自动新增白板页
+        /// </summary>
         private void BtnWhiteBoardSwitchNext_Click(object sender, EventArgs e)
         {
+            // 自动保存墨迹截图
             if (Settings.Automation.IsAutoSaveStrokesAtClear && inkCanvas.Strokes.Count > Settings.Automation.MinimumAutomationStrokeNumber)
             {
                 SaveScreenshot(true);
@@ -92,9 +115,13 @@ namespace Ink_Canvas
             UpdateIndexInfoDisplay();
         }
 
+        /// <summary>
+        /// 新增白板页
+        /// </summary>
         private void BtnWhiteBoardAdd_Click(object sender, EventArgs e)
         {
             if (WhiteboardTotalCount >= 99) return;
+            // 自动保存墨迹截图
             if (Settings.Automation.IsAutoSaveStrokesAtClear && inkCanvas.Strokes.Count > Settings.Automation.MinimumAutomationStrokeNumber)
             {
                 SaveScreenshot(true);
@@ -103,6 +130,7 @@ namespace Ink_Canvas
             ClearStrokes(true);
             WhiteboardTotalCount++;
             CurrentWhiteboardIndex++;
+            // 插入新页时，后面的历史向后移动
             if (CurrentWhiteboardIndex != WhiteboardTotalCount)
             {
                 for (int i = WhiteboardTotalCount; i > CurrentWhiteboardIndex; i--)
@@ -113,9 +141,13 @@ namespace Ink_Canvas
             UpdateIndexInfoDisplay();
         }
 
+        /// <summary>
+        /// 删除当前白板页
+        /// </summary>
         private void BtnWhiteBoardDelete_Click(object sender, RoutedEventArgs e)
         {
             ClearStrokes(true);
+            // 删除当前页后，后面的历史向前移动
             if (CurrentWhiteboardIndex != WhiteboardTotalCount)
             {
                 for (int i = CurrentWhiteboardIndex; i <= WhiteboardTotalCount; i++)
@@ -132,10 +164,14 @@ namespace Ink_Canvas
             UpdateIndexInfoDisplay();
         }
 
+        /// <summary>
+        /// 更新白板页码及相关控件显示
+        /// </summary>
         private void UpdateIndexInfoDisplay()
         {
             TextBlockWhiteBoardIndexInfo.Text = string.Format("{0} / {1}", CurrentWhiteboardIndex, WhiteboardTotalCount);
 
+            // 控制“下一页/加页”按钮显示
             if (CurrentWhiteboardIndex == WhiteboardTotalCount)
             {
                 BoardLeftPannelNextPage1.Width = 26;
@@ -149,6 +185,7 @@ namespace Ink_Canvas
                 BoardLeftPannelNextPageTextBlock.Text = "下一页";
             }
 
+            // 控制“上一页”按钮使能
             if (CurrentWhiteboardIndex == 1)
             {
                 BtnWhiteBoardSwitchPrevious.IsEnabled = false;
@@ -158,6 +195,7 @@ namespace Ink_Canvas
                 BtnWhiteBoardSwitchPrevious.IsEnabled = true;
             }
 
+            // 控制“下一页/加页”按钮使能
             if (CurrentWhiteboardIndex == 99)
             {
                 BoardLeftPannelNextPage1.IsEnabled = false;
@@ -167,6 +205,7 @@ namespace Ink_Canvas
                 BoardLeftPannelNextPage1.IsEnabled = true;
             }
 
+            // 控制“加页”按钮使能
             if (WhiteboardTotalCount == 99)
             {
                 BtnBoardAddPage.IsEnabled = false;

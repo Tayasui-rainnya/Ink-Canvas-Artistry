@@ -145,6 +145,36 @@ namespace Ink_Canvas
 
         [JsonProperty("isShowModeFingerToggleSwitch")]
         public bool IsShowModeFingerToggleSwitch { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarClearButton")]
+        public bool IsShowFloatBarClearButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarAreaEraserButton")]
+        public bool IsShowFloatBarAreaEraserButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarStrokeEraserButton")]
+        public bool IsShowFloatBarStrokeEraserButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarSelectButton")]
+        public bool IsShowFloatBarSelectButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarShapeButton")]
+        public bool IsShowFloatBarShapeButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarInsertImageButton")]
+        public bool IsShowFloatBarInsertImageButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarInsertMediaButton")]
+        public bool IsShowFloatBarInsertMediaButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarUndoButton")]
+        public bool IsShowFloatBarUndoButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarRedoButton")]
+        public bool IsShowFloatBarRedoButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarClearAndCursorButton")]
+        public bool IsShowFloatBarClearAndCursorButton { get; set; } = true;
         [JsonProperty("theme")]
         public int Theme { get; set; } = 0;            
     }

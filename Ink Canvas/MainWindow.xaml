@@ -1263,7 +1263,8 @@
                             Height="55"
                             Padding="0"
                             BorderThickness="0"
-                            Click="SymbolIconSelect_Click">
+                            x:Name="BtnFloatBarSelect"
+                                Click="SymbolIconSelect_Click">
                             <Border
                                 x:Name="BoardSelect"
                                 Width="60"
@@ -2012,7 +2013,8 @@
                             Height="55"
                             Padding="0"
                             BorderThickness="0"
-                            Click="ImageDrawShape_Click">
+                            x:Name="BtnFloatBarShape"
+                                Click="ImageDrawShape_Click">
                             <Border
                                 x:Name="BoardGeometry"
                                 Width="60"
@@ -2262,7 +2264,8 @@
                             Height="55"
                             Padding="0"
                             BorderThickness="0"
-                            Click="BtnImageInsert_Click">
+                            x:Name="BtnFloatBarInsertImage"
+                                Click="BtnImageInsert_Click">
                             <Border
                                 Width="60"
                                 Height="55"
@@ -2299,7 +2302,8 @@
                             Height="55"
                             Padding="0"
                             BorderThickness="0"
-                            Click="SymbolIconUndo_Click">
+                            x:Name="BtnFloatBarUndo"
+                                Click="SymbolIconUndo_Click">
                             <Border
                                 x:Name="BoardUndo"
                                 Width="60"
@@ -2339,7 +2343,8 @@
                             Height="55"
                             Padding="0"
                             BorderThickness="0"
-                            Click="SymbolIconRedo_Click">
+                            x:Name="BtnFloatBarRedo"
+                                Click="SymbolIconRedo_Click">
                             <Border
                                 x:Name="BoardRedo"
                                 Width="60"
@@ -3468,6 +3473,107 @@
                                         Foreground="{DynamicResource SettingsPageForeground}"
                                         Text="浮动工具栏背景色" />
                                 </ikw:SimpleStackPanel>
+                                <Expander Margin="0,10,0,0" Header="按钮管理" IsExpanded="False">
+                                    <ikw:SimpleStackPanel Margin="10,10,0,0" Spacing="6">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="{DynamicResource SettingsPageForeground}"
+                                            Opacity="0.8"
+                                            Text="以下仅控制浮动工具栏中的可选按钮显示；“鼠标”“批注”“画板”“工具”“隐藏”和展开按钮始终显示。" />
+                                        <WrapPanel Margin="0,4,0,0">
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarClearButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="清空" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarAreaEraserButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="圆形擦" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarStrokeEraserButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="墨迹擦" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarSelectButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="选择" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarShapeButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="图形" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarInsertImageButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="插入图片" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarInsertMediaButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="插入视频" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarUndoButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="撤销" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarRedoButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="重做" />
+                                            </ikw:SimpleStackPanel>
+                                            <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
+                                                <ui:ToggleSwitch
+                                                    Name="ToggleSwitchShowFloatBarClearAndCursorButton"
+                                                    IsOn="True"
+                                                    OffContent="关"
+                                                    OnContent="开"
+                                                    Toggled="ToggleSwitchFloatBarButtonVisibility_Toggled" />
+                                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsPageForeground}" Text="清并鼠" />
+                                            </ikw:SimpleStackPanel>
+                                        </WrapPanel>
+                                    </ikw:SimpleStackPanel>
+                                </Expander>
 
                                 <ikw:SimpleStackPanel Margin="0,15,0,0" Spacing="10">
                                     <StackPanel Orientation="Horizontal">
@@ -5492,7 +5598,8 @@
                             Height="32"
                             Padding="0"
                             BorderThickness="0"
-                            Click="SymbolIconDelete_MouseUp">
+                            x:Name="BtnFloatBarClear"
+                                Click="SymbolIconDelete_MouseUp">
                             <ikw:SimpleStackPanel
                                 Width="30"
                                 HorizontalAlignment="Center"
@@ -6051,6 +6158,7 @@
                                 Height="32"
                                 Padding="0"
                                 BorderThickness="0"
+                                x:Name="BtnFloatBarAreaEraser"
                                 Click="EraserIcon_Click">
                                 <ikw:SimpleStackPanel
                                     Name="Eraser_Icon"
@@ -6088,6 +6196,7 @@
                                 Height="32"
                                 Padding="0"
                                 BorderThickness="0"
+                                x:Name="BtnFloatBarStrokeEraser"
                                 Click="EraserIconByStrokes_Click">
                                 <ikw:SimpleStackPanel
                                     Name="EraserByStrokes_Icon"
@@ -6449,6 +6558,7 @@
                                 Height="32"
                                 Padding="0"
                                 BorderThickness="0"
+                                x:Name="BtnFloatBarInsertMedia"
                                 Click="BtnMediaInsert_Click">
                                 <ikw:SimpleStackPanel
                                     HorizontalAlignment="Center"
@@ -6539,6 +6649,7 @@
                                 Height="32"
                                 Padding="0"
                                 BorderThickness="0"
+                                x:Name="BtnFloatBarClearAndCursor"
                                 Click="CursorWithDelIcon_Click">
                                 <ikw:SimpleStackPanel
                                     Margin="1.5,0,2.5,0"

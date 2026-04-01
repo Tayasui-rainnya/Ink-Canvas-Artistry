@@ -180,6 +180,17 @@ namespace Ink_Canvas
                 SliderFloatingBarScale.Value = Settings.Appearance.FloatingBarScale;
                 SliderBlackboardScale.Value = Settings.Appearance.BlackboardScale;
                 SliderFloatingBarBottomMargin.Value = Settings.Appearance.FloatingBarBottomMargin;
+                ToggleSwitchShowFloatBarClearButton.IsOn = Settings.Appearance.IsShowFloatBarClearButton;
+                ToggleSwitchShowFloatBarAreaEraserButton.IsOn = Settings.Appearance.IsShowFloatBarAreaEraserButton;
+                ToggleSwitchShowFloatBarStrokeEraserButton.IsOn = Settings.Appearance.IsShowFloatBarStrokeEraserButton;
+                ToggleSwitchShowFloatBarSelectButton.IsOn = Settings.Appearance.IsShowFloatBarSelectButton;
+                ToggleSwitchShowFloatBarShapeButton.IsOn = Settings.Appearance.IsShowFloatBarShapeButton;
+                ToggleSwitchShowFloatBarInsertImageButton.IsOn = Settings.Appearance.IsShowFloatBarInsertImageButton;
+                ToggleSwitchShowFloatBarInsertMediaButton.IsOn = Settings.Appearance.IsShowFloatBarInsertMediaButton;
+                ToggleSwitchShowFloatBarUndoButton.IsOn = Settings.Appearance.IsShowFloatBarUndoButton;
+                ToggleSwitchShowFloatBarRedoButton.IsOn = Settings.Appearance.IsShowFloatBarRedoButton;
+                ToggleSwitchShowFloatBarClearAndCursorButton.IsOn = Settings.Appearance.IsShowFloatBarClearAndCursorButton;
+                ApplyFloatBarOptionalButtonVisibility();
                 ApplyScaling();
             }
             else
@@ -189,6 +200,7 @@ namespace Ink_Canvas
                 SliderFloatingBarScale.Value = Settings.Appearance.FloatingBarScale;
                 SliderBlackboardScale.Value = Settings.Appearance.BlackboardScale;
                 SliderFloatingBarBottomMargin.Value = Settings.Appearance.FloatingBarBottomMargin;
+                ApplyFloatBarOptionalButtonVisibility();
                 ApplyScaling();
             }
             // PowerPointSettings

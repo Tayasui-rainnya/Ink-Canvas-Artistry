@@ -148,6 +148,37 @@ namespace Ink_Canvas
             LoadSettings();
         }
 
+        private void ToggleSwitchFloatBarButtonVisibility_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Appearance.IsShowFloatBarClearButton = ToggleSwitchShowFloatBarClearButton.IsOn;
+            Settings.Appearance.IsShowFloatBarAreaEraserButton = ToggleSwitchShowFloatBarAreaEraserButton.IsOn;
+            Settings.Appearance.IsShowFloatBarStrokeEraserButton = ToggleSwitchShowFloatBarStrokeEraserButton.IsOn;
+            Settings.Appearance.IsShowFloatBarSelectButton = ToggleSwitchShowFloatBarSelectButton.IsOn;
+            Settings.Appearance.IsShowFloatBarShapeButton = ToggleSwitchShowFloatBarShapeButton.IsOn;
+            Settings.Appearance.IsShowFloatBarInsertImageButton = ToggleSwitchShowFloatBarInsertImageButton.IsOn;
+            Settings.Appearance.IsShowFloatBarInsertMediaButton = ToggleSwitchShowFloatBarInsertMediaButton.IsOn;
+            Settings.Appearance.IsShowFloatBarUndoButton = ToggleSwitchShowFloatBarUndoButton.IsOn;
+            Settings.Appearance.IsShowFloatBarRedoButton = ToggleSwitchShowFloatBarRedoButton.IsOn;
+            Settings.Appearance.IsShowFloatBarClearAndCursorButton = ToggleSwitchShowFloatBarClearAndCursorButton.IsOn;
+            ApplyFloatBarOptionalButtonVisibility();
+            SaveSettingsToFile();
+        }
+
+        private void ApplyFloatBarOptionalButtonVisibility()
+        {
+            BtnFloatBarClear.Visibility = Settings.Appearance.IsShowFloatBarClearButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarAreaEraser.Visibility = Settings.Appearance.IsShowFloatBarAreaEraserButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarStrokeEraser.Visibility = Settings.Appearance.IsShowFloatBarStrokeEraserButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarSelect.Visibility = Settings.Appearance.IsShowFloatBarSelectButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarShape.Visibility = Settings.Appearance.IsShowFloatBarShapeButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarInsertImage.Visibility = Settings.Appearance.IsShowFloatBarInsertImageButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarInsertMedia.Visibility = Settings.Appearance.IsShowFloatBarInsertMediaButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarUndo.Visibility = Settings.Appearance.IsShowFloatBarUndoButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarRedo.Visibility = Settings.Appearance.IsShowFloatBarRedoButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnFloatBarClearAndCursor.Visibility = Settings.Appearance.IsShowFloatBarClearAndCursorButton ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void ApplyScaling()
         {
             // Apply Floating Bar Scale
@@ -689,6 +720,16 @@ namespace Ink_Canvas
             Settings.Appearance.IsShowHideControlButton = false;
             Settings.Appearance.IsShowLRSwitchButton = false;
             Settings.Appearance.IsShowModeFingerToggleSwitch = true;
+            Settings.Appearance.IsShowFloatBarClearButton = true;
+            Settings.Appearance.IsShowFloatBarAreaEraserButton = true;
+            Settings.Appearance.IsShowFloatBarStrokeEraserButton = true;
+            Settings.Appearance.IsShowFloatBarSelectButton = true;
+            Settings.Appearance.IsShowFloatBarShapeButton = true;
+            Settings.Appearance.IsShowFloatBarInsertImageButton = true;
+            Settings.Appearance.IsShowFloatBarInsertMediaButton = true;
+            Settings.Appearance.IsShowFloatBarUndoButton = true;
+            Settings.Appearance.IsShowFloatBarRedoButton = true;
+            Settings.Appearance.IsShowFloatBarClearAndCursorButton = true;
             Settings.Appearance.Theme = 0;
 
             Settings.Automation.IsAutoFoldInEasiNote = true;

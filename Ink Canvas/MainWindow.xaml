@@ -3484,6 +3484,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarClearButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3493,6 +3495,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarAreaEraserButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3502,6 +3506,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarStrokeEraserButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3511,6 +3517,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarSelectButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3520,6 +3528,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarShapeButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3529,6 +3539,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarInsertImageButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3538,6 +3550,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarInsertMediaButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3547,6 +3561,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarUndoButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3556,6 +3572,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarRedoButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"
@@ -3565,6 +3583,8 @@
                                             <ikw:SimpleStackPanel Width="140" Margin="0,0,16,6" Orientation="Horizontal">
                                                 <ui:ToggleSwitch
                                                     Name="ToggleSwitchShowFloatBarClearAndCursorButton"
+                                                    Width="70"
+                                                    MinWidth="0"
                                                     IsOn="True"
                                                     OffContent="关"
                                                     OnContent="开"

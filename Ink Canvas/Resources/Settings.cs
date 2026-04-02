@@ -145,6 +145,63 @@ namespace Ink_Canvas
 
         [JsonProperty("isShowModeFingerToggleSwitch")]
         public bool IsShowModeFingerToggleSwitch { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarClearButton")]
+        public bool IsShowFloatBarClearButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarAreaEraserButton")]
+        public bool IsShowFloatBarAreaEraserButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarStrokeEraserButton")]
+        public bool IsShowFloatBarStrokeEraserButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarSelectButton")]
+        public bool IsShowFloatBarSelectButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarShapeButton")]
+        public bool IsShowFloatBarShapeButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarInsertImageButton")]
+        public bool IsShowFloatBarInsertImageButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarInsertMediaButton")]
+        public bool IsShowFloatBarInsertMediaButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarUndoButton")]
+        public bool IsShowFloatBarUndoButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarRedoButton")]
+        public bool IsShowFloatBarRedoButton { get; set; } = true;
+
+        [JsonProperty("isShowFloatBarClearAndCursorButton")]
+        public bool IsShowFloatBarClearAndCursorButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardGestureButton")]
+        public bool IsShowBoardGestureButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardCanvasButton")]
+        public bool IsShowBoardCanvasButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardSelectButton")]
+        public bool IsShowBoardSelectButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardAreaEraserButton")]
+        public bool IsShowBoardAreaEraserButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardStrokeEraserButton")]
+        public bool IsShowBoardStrokeEraserButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardShapeButton")]
+        public bool IsShowBoardShapeButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardInsertImageButton")]
+        public bool IsShowBoardInsertImageButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardUndoButton")]
+        public bool IsShowBoardUndoButton { get; set; } = true;
+
+        [JsonProperty("isShowBoardRedoButton")]
+        public bool IsShowBoardRedoButton { get; set; } = true;
         [JsonProperty("theme")]
         public int Theme { get; set; } = 0;            
     }

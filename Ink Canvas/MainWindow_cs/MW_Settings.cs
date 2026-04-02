@@ -165,6 +165,22 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        private void ToggleSwitchBoardButtonVisibility_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Appearance.IsShowBoardGestureButton = ToggleSwitchShowBoardGestureButton.IsOn;
+            Settings.Appearance.IsShowBoardCanvasButton = ToggleSwitchShowBoardCanvasButton.IsOn;
+            Settings.Appearance.IsShowBoardSelectButton = ToggleSwitchShowBoardSelectButton.IsOn;
+            Settings.Appearance.IsShowBoardAreaEraserButton = ToggleSwitchShowBoardAreaEraserButton.IsOn;
+            Settings.Appearance.IsShowBoardStrokeEraserButton = ToggleSwitchShowBoardStrokeEraserButton.IsOn;
+            Settings.Appearance.IsShowBoardShapeButton = ToggleSwitchShowBoardShapeButton.IsOn;
+            Settings.Appearance.IsShowBoardInsertImageButton = ToggleSwitchShowBoardInsertImageButton.IsOn;
+            Settings.Appearance.IsShowBoardUndoButton = ToggleSwitchShowBoardUndoButton.IsOn;
+            Settings.Appearance.IsShowBoardRedoButton = ToggleSwitchShowBoardRedoButton.IsOn;
+            ApplyBoardOptionalButtonVisibility();
+            SaveSettingsToFile();
+        }
+
         private void ApplyFloatBarOptionalButtonVisibility()
         {
             BtnFloatBarClear.Visibility = Settings.Appearance.IsShowFloatBarClearButton ? Visibility.Visible : Visibility.Collapsed;
@@ -177,6 +193,19 @@ namespace Ink_Canvas
             BtnFloatBarUndo.Visibility = Settings.Appearance.IsShowFloatBarUndoButton ? Visibility.Visible : Visibility.Collapsed;
             BtnFloatBarRedo.Visibility = Settings.Appearance.IsShowFloatBarRedoButton ? Visibility.Visible : Visibility.Collapsed;
             BtnFloatBarClearAndCursor.Visibility = Settings.Appearance.IsShowFloatBarClearAndCursorButton ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void ApplyBoardOptionalButtonVisibility()
+        {
+            BtnBoardGesture.Visibility = Settings.Appearance.IsShowBoardGestureButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardCanvas.Visibility = Settings.Appearance.IsShowBoardCanvasButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardSelect.Visibility = Settings.Appearance.IsShowBoardSelectButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardAreaEraser.Visibility = Settings.Appearance.IsShowBoardAreaEraserButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardStrokeEraser.Visibility = Settings.Appearance.IsShowBoardStrokeEraserButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardShape.Visibility = Settings.Appearance.IsShowBoardShapeButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardInsertImage.Visibility = Settings.Appearance.IsShowBoardInsertImageButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardUndo.Visibility = Settings.Appearance.IsShowBoardUndoButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnBoardRedo.Visibility = Settings.Appearance.IsShowBoardRedoButton ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ApplyScaling()
@@ -730,6 +759,15 @@ namespace Ink_Canvas
             Settings.Appearance.IsShowFloatBarUndoButton = true;
             Settings.Appearance.IsShowFloatBarRedoButton = true;
             Settings.Appearance.IsShowFloatBarClearAndCursorButton = true;
+            Settings.Appearance.IsShowBoardGestureButton = true;
+            Settings.Appearance.IsShowBoardCanvasButton = true;
+            Settings.Appearance.IsShowBoardSelectButton = true;
+            Settings.Appearance.IsShowBoardAreaEraserButton = true;
+            Settings.Appearance.IsShowBoardStrokeEraserButton = true;
+            Settings.Appearance.IsShowBoardShapeButton = true;
+            Settings.Appearance.IsShowBoardInsertImageButton = true;
+            Settings.Appearance.IsShowBoardUndoButton = true;
+            Settings.Appearance.IsShowBoardRedoButton = true;
             Settings.Appearance.Theme = 0;
 
             Settings.Automation.IsAutoFoldInEasiNote = true;

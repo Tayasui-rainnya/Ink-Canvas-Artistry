@@ -190,7 +190,17 @@ namespace Ink_Canvas
                 ToggleSwitchShowFloatBarUndoButton.IsOn = Settings.Appearance.IsShowFloatBarUndoButton;
                 ToggleSwitchShowFloatBarRedoButton.IsOn = Settings.Appearance.IsShowFloatBarRedoButton;
                 ToggleSwitchShowFloatBarClearAndCursorButton.IsOn = Settings.Appearance.IsShowFloatBarClearAndCursorButton;
+                ToggleSwitchShowBoardGestureButton.IsOn = Settings.Appearance.IsShowBoardGestureButton;
+                ToggleSwitchShowBoardCanvasButton.IsOn = Settings.Appearance.IsShowBoardCanvasButton;
+                ToggleSwitchShowBoardSelectButton.IsOn = Settings.Appearance.IsShowBoardSelectButton;
+                ToggleSwitchShowBoardAreaEraserButton.IsOn = Settings.Appearance.IsShowBoardAreaEraserButton;
+                ToggleSwitchShowBoardStrokeEraserButton.IsOn = Settings.Appearance.IsShowBoardStrokeEraserButton;
+                ToggleSwitchShowBoardShapeButton.IsOn = Settings.Appearance.IsShowBoardShapeButton;
+                ToggleSwitchShowBoardInsertImageButton.IsOn = Settings.Appearance.IsShowBoardInsertImageButton;
+                ToggleSwitchShowBoardUndoButton.IsOn = Settings.Appearance.IsShowBoardUndoButton;
+                ToggleSwitchShowBoardRedoButton.IsOn = Settings.Appearance.IsShowBoardRedoButton;
                 ApplyFloatBarOptionalButtonVisibility();
+                ApplyBoardOptionalButtonVisibility();
                 ApplyScaling();
             }
             else
@@ -201,6 +211,7 @@ namespace Ink_Canvas
                 SliderBlackboardScale.Value = Settings.Appearance.BlackboardScale;
                 SliderFloatingBarBottomMargin.Value = Settings.Appearance.FloatingBarBottomMargin;
                 ApplyFloatBarOptionalButtonVisibility();
+                ApplyBoardOptionalButtonVisibility();
                 ApplyScaling();
             }
             // PowerPointSettings

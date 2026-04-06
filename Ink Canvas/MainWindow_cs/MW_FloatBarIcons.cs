@@ -430,7 +430,7 @@ namespace Ink_Canvas
             new RandWindow(true).ShowDialog();
         }
 
-        private void GridInkReplayButton_Click(object sender, RoutedEventArgs e)
+        private async void GridInkReplayButton_Click(object sender, RoutedEventArgs e)
         {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);
             AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
@@ -446,70 +446,53 @@ namespace Ink_Canvas
             {
                 strokes = inkCanvas.GetSelectedStrokes().Clone();
             }
-            int k = 1, i = 0;
-            new Thread(new ThreadStart(() =>
+            await ReplayInkStrokesAsync(strokes);
+        }
+
+        private async Task ReplayInkStrokesAsync(StrokeCollection strokes)
+        {
+            const int ellipseBatchSize = 50;
+            const int normalBatchSize = 2;
+            const int frameDelayMs = 10;
+
+            foreach (Stroke stroke in strokes)
             {
-                foreach (Stroke stroke in strokes)
+                if (isStopInkReplay) return;
+
+                StylusPointCollection stylusPoints = new StylusPointCollection();
+                Stroke replayStroke = null;
+                int pendingPoints = 0;
+                int batchSize = stroke.StylusPoints.Count == 629 ? ellipseBatchSize : normalBatchSize;
+
+                foreach (StylusPoint stylusPoint in stroke.StylusPoints)
                 {
-                    StylusPointCollection stylusPoints = new StylusPointCollection();
-                    if (stroke.StylusPoints.Count == 629) //圆或椭圆
-                    {
-                        Stroke s = null;
-                        foreach (StylusPoint stylusPoint in stroke.StylusPoints)
-                        {
-                            if (i++ >= 50)
-                            {
-                                i = 0;
-                                Thread.Sleep(10);
-                                if (isStopInkReplay) return;
-                            }
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                try
-                                {
-                                    InkCanvasForInkReplay.Strokes.Remove(s);
-                                }
-                                catch { }
-                                stylusPoints.Add(stylusPoint);
-                                s = new Stroke(stylusPoints.Clone());
-                                s.DrawingAttributes = stroke.DrawingAttributes;
-                                InkCanvasForInkReplay.Strokes.Add(s);
-                            });
-                        }
-                    }
-                    else
-                    {
-                        Stroke s = null;
-                        foreach (StylusPoint stylusPoint in stroke.StylusPoints)
-                        {
-                            if (i++ >= k)
-                            {
-                                i = 0;
-                                Thread.Sleep(10);
-                                if (isStopInkReplay) return;
-                            }
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                try
-                                {
-                                    InkCanvasForInkReplay.Strokes.Remove(s);
-                                }
-                                catch { }
-                                stylusPoints.Add(stylusPoint);
-                                s = new Stroke(stylusPoints.Clone());
-                                s.DrawingAttributes = stroke.DrawingAttributes;
-                                InkCanvasForInkReplay.Strokes.Add(s);
-                            });
-                        }
-                    }
+                    if (isStopInkReplay) return;
+
+                    stylusPoints.Add(stylusPoint);
+                    pendingPoints++;
+
+                    if (pendingPoints < batchSize) continue;
+
+                    pendingPoints = 0;
+                    if (replayStroke != null) InkCanvasForInkReplay.Strokes.Remove(replayStroke);
+                    replayStroke = new Stroke(stylusPoints.Clone()) { DrawingAttributes = stroke.DrawingAttributes };
+                    InkCanvasForInkReplay.Strokes.Add(replayStroke);
+                    await Task.Delay(frameDelayMs);
                 }
-                Thread.Sleep(100);
-                Application.Current.Dispatcher.Invoke(() =>
+
+                if (pendingPoints > 0)
                 {
-                    InkCanvasForInkReplay.Visibility = Visibility.Collapsed;
-                    inkCanvas.Visibility = Visibility.Visible;
-                });
-            })).Start();
+                    if (replayStroke != null) InkCanvasForInkReplay.Strokes.Remove(replayStroke);
+                    replayStroke = new Stroke(stylusPoints.Clone()) { DrawingAttributes = stroke.DrawingAttributes };
+                    InkCanvasForInkReplay.Strokes.Add(replayStroke);
+                }
+            }
+
+            await Task.Delay(100);
+            if (isStopInkReplay) return;
+
+            InkCanvasForInkReplay.Visibility = Visibility.Collapsed;
+            inkCanvas.Visibility = Visibility.Visible;
         }
         bool isStopInkReplay = false;
         private void InkCanvasForInkReplay_MouseDown(object sender, MouseButtonEventArgs e)

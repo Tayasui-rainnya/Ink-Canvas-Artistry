@@ -292,10 +292,6 @@ namespace Ink_Canvas
 
         bool isGridInkCanvasSelectionCoverMouseDown = false;
         private Point lastMousePoint;
-        private StrokeCollection activeSelectionStrokes = new StrokeCollection();
-        private List<UIElement> activeSelectionElements = new List<UIElement>();
-        private long lastSelectionControlUpdateTicks;
-        private static readonly long SelectionControlUpdateIntervalTicks = TimeSpan.FromMilliseconds(16).Ticks;
 
         private void GridInkCanvasSelectionCover_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -311,8 +307,6 @@ namespace Ink_Canvas
                 StrokesSelectionClone = strokes.Clone();
                 inkCanvas.Strokes.Add(StrokesSelectionClone);
                 inkCanvas.Select(strokes, elementsList);
-                activeSelectionStrokes = StrokesSelectionClone;
-                activeSelectionElements = ElementsSelectionClone;
                 isProgramChangeStrokeSelection = false;
             }
             else if (lastMousePoint.X < inkCanvas.GetSelectionBounds().Left ||
@@ -324,13 +318,6 @@ namespace Ink_Canvas
                 inkCanvas.Select(new StrokeCollection());
                 StrokesSelectionClone = new StrokeCollection();
                 ElementsSelectionClone = new List<UIElement>();
-                activeSelectionStrokes = new StrokeCollection();
-                activeSelectionElements = new List<UIElement>();
-            }
-            else
-            {
-                activeSelectionStrokes = inkCanvas.GetSelectedStrokes();
-                activeSelectionElements = InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
             }
         }
 
@@ -344,14 +331,29 @@ namespace Ink_Canvas
             // add Translate
             m.Translate(trans.X, trans.Y);
             // handle UIElement
-            List<UIElement> elements = activeSelectionElements;
+            List<UIElement> elements = new List<UIElement>();
+            if (ElementsSelectionClone.Count != 0)
+            {
+                elements = ElementsSelectionClone;
+            }
+            else
+            {
+                elements = InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
+            }
             foreach (UIElement element in elements)
             {
                 ApplyElementMatrixTransform(element, m);
             }
             // handle strokes
-            StrokeCollection strokes = activeSelectionStrokes;
-            strokes.Transform(m, false);
+            StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
+            if (StrokesSelectionClone.Count != 0)
+            {
+                strokes = StrokesSelectionClone;
+            }
+            foreach (Stroke stroke in strokes)
+            {
+                stroke.Transform(m, false);
+            }
             updateBorderStrokeSelectionControlLocation();
         }
 
@@ -359,8 +361,6 @@ namespace Ink_Canvas
         {
             ToCommitStrokeManipulationHistoryAfterMouseUp();
             isGridInkCanvasSelectionCoverMouseDown = false;
-            activeSelectionStrokes = new StrokeCollection();
-            activeSelectionElements = new List<UIElement>();
             if (InkCanvasElementsHelper.IsNotCanvasElementSelected(inkCanvas))
             {
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
@@ -378,7 +378,6 @@ namespace Ink_Canvas
                     TextSelectionCloneToNewBoard.Text = "衍至新页";
                 }
                 GridInkCanvasSelectionCover.Visibility = Visibility.Visible;
-                updateBorderStrokeSelectionControlLocation(true);
                 StrokesSelectionClone = new StrokeCollection();
                 ElementsSelectionClone = new List<UIElement>();
             }
@@ -409,7 +408,7 @@ namespace Ink_Canvas
                 }
                 catch { }
             }
-            updateBorderStrokeSelectionControlLocation(true);
+            updateBorderStrokeSelectionControlLocation();
         }
 
         private void BtnSelect_Click(object sender, RoutedEventArgs e)
@@ -467,28 +466,14 @@ namespace Ink_Canvas
                 IconStrokeSelectionClone.SetResourceReference(TextBlock.ForegroundProperty, "FloatBarForeground");
                 ToggleButtonStrokeSelectionClone.IsChecked = false;
                 isStrokeSelectionCloneOn = false;
-                updateBorderStrokeSelectionControlLocation(true);
+                updateBorderStrokeSelectionControlLocation();
             }
         }
         double BorderStrokeSelectionControlWidth = 695;
         double BorderStrokeSelectionControlHeight = 104;
 
-        private void updateBorderStrokeSelectionControlLocation(bool force = false)
+        private void updateBorderStrokeSelectionControlLocation()
         {
-            if (!force)
-            {
-                long now = DateTime.UtcNow.Ticks;
-                if (now - lastSelectionControlUpdateTicks < SelectionControlUpdateIntervalTicks)
-                {
-                    return;
-                }
-                lastSelectionControlUpdateTicks = now;
-            }
-            else
-            {
-                lastSelectionControlUpdateTicks = DateTime.UtcNow.Ticks;
-            }
-
             Rect selectionBounds = inkCanvas.GetSelectionBounds();
             double borderLeft = (selectionBounds.Left + selectionBounds.Right - BorderStrokeSelectionControlWidth) / 2;
             double borderTop = selectionBounds.Bottom + 15;
@@ -589,24 +574,36 @@ namespace Ink_Canvas
                     Matrix m = new Matrix();
                     // add Scale
                     m.ScaleAt(scale.X, scale.Y, center.X, center.Y);
-                    StrokeCollection strokes = activeSelectionStrokes.Count != 0 ? activeSelectionStrokes : inkCanvas.GetSelectedStrokes();
-                    if (StrokesSelectionClone.Count == 0 && Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
+                    StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
+                    if (StrokesSelectionClone.Count != 0)
+                    {
+                        strokes = StrokesSelectionClone;
+                    }
+                    else if (Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
                     {
                         // add Rotate
                         m.RotateAt(rotate, center.X, center.Y);
                     }
                     // add Translate
                     m.Translate(trans.X, trans.Y);
-                    List<UIElement> elements = activeSelectionElements.Count != 0 ? activeSelectionElements : InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
+                    List<UIElement> elements = new List<UIElement>();
+                    if (ElementsSelectionClone.Count != 0)
+                    {
+                        elements = ElementsSelectionClone;
+                    }
+                    else
+                    {
+                        elements = InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
+                    }
                     // handle UIElements
                     foreach (UIElement element in elements)
                     {
                         ApplyElementMatrixTransform(element, m);
                     }
                     // handle strokes
-                    strokes.Transform(m, false);
                     foreach (Stroke stroke in strokes)
                     {
+                        stroke.Transform(m, false);
                         try
                         {
                             stroke.DrawingAttributes.Width *= md.Scale.X;
@@ -641,14 +638,7 @@ namespace Ink_Canvas
                     StrokesSelectionClone = strokes.Clone();
                     inkCanvas.Strokes.Add(StrokesSelectionClone);
                     inkCanvas.Select(strokes, elementsList);
-                    activeSelectionStrokes = StrokesSelectionClone;
-                    activeSelectionElements = ElementsSelectionClone;
                     isProgramChangeStrokeSelection = false;
-                }
-                else
-                {
-                    activeSelectionStrokes = inkCanvas.GetSelectedStrokes();
-                    activeSelectionElements = InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
                 }
             }
         }
@@ -657,8 +647,6 @@ namespace Ink_Canvas
         {
             dec.Remove(e.TouchDevice.Id);
             if (dec.Count >= 1) return;
-            activeSelectionStrokes = new StrokeCollection();
-            activeSelectionElements = new List<UIElement>();
             isProgramChangeStrokeSelection = false;
             if (lastTouchPointOnGridInkCanvasCover == e.GetTouchPoint(null).Position)
             {
@@ -689,7 +677,6 @@ namespace Ink_Canvas
                     TextSelectionCloneToNewBoard.Text = "衍至新页";
                 }
                 GridInkCanvasSelectionCover.Visibility = Visibility.Visible;
-                updateBorderStrokeSelectionControlLocation(true);
                 StrokesSelectionClone = new StrokeCollection();
                 ElementsSelectionClone = new List<UIElement>();
             }

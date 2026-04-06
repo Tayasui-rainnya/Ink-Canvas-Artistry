@@ -292,6 +292,18 @@ namespace Ink_Canvas
 
         bool isGridInkCanvasSelectionCoverMouseDown = false;
         private Point lastMousePoint;
+        private StrokeCollection activeSelectionStrokes = new StrokeCollection();
+        private List<UIElement> activeSelectionElements = new List<UIElement>();
+
+        private void RefreshActiveSelectionTargets()
+        {
+            activeSelectionStrokes = StrokesSelectionClone.Count != 0
+                ? StrokesSelectionClone
+                : inkCanvas.GetSelectedStrokes();
+            activeSelectionElements = ElementsSelectionClone.Count != 0
+                ? ElementsSelectionClone
+                : InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
+        }
 
         private void GridInkCanvasSelectionCover_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -308,6 +320,7 @@ namespace Ink_Canvas
                 inkCanvas.Strokes.Add(StrokesSelectionClone);
                 inkCanvas.Select(strokes, elementsList);
                 isProgramChangeStrokeSelection = false;
+                RefreshActiveSelectionTargets();
             }
             else if (lastMousePoint.X < inkCanvas.GetSelectionBounds().Left ||
             lastMousePoint.Y < inkCanvas.GetSelectionBounds().Top ||
@@ -318,6 +331,12 @@ namespace Ink_Canvas
                 inkCanvas.Select(new StrokeCollection());
                 StrokesSelectionClone = new StrokeCollection();
                 ElementsSelectionClone = new List<UIElement>();
+                activeSelectionStrokes = new StrokeCollection();
+                activeSelectionElements = new List<UIElement>();
+            }
+            else
+            {
+                RefreshActiveSelectionTargets();
             }
         }
 
@@ -331,26 +350,12 @@ namespace Ink_Canvas
             // add Translate
             m.Translate(trans.X, trans.Y);
             // handle UIElement
-            List<UIElement> elements = new List<UIElement>();
-            if (ElementsSelectionClone.Count != 0)
-            {
-                elements = ElementsSelectionClone;
-            }
-            else
-            {
-                elements = InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
-            }
-            foreach (UIElement element in elements)
+            foreach (UIElement element in activeSelectionElements)
             {
                 ApplyElementMatrixTransform(element, m);
             }
             // handle strokes
-            StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
-            if (StrokesSelectionClone.Count != 0)
-            {
-                strokes = StrokesSelectionClone;
-            }
-            foreach (Stroke stroke in strokes)
+            foreach (Stroke stroke in activeSelectionStrokes)
             {
                 stroke.Transform(m, false);
             }
@@ -381,6 +386,8 @@ namespace Ink_Canvas
                 StrokesSelectionClone = new StrokeCollection();
                 ElementsSelectionClone = new List<UIElement>();
             }
+            activeSelectionStrokes = new StrokeCollection();
+            activeSelectionElements = new List<UIElement>();
         }
 
         private void GridInkCanvasSelectionCover_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -574,34 +581,20 @@ namespace Ink_Canvas
                     Matrix m = new Matrix();
                     // add Scale
                     m.ScaleAt(scale.X, scale.Y, center.X, center.Y);
-                    StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
-                    if (StrokesSelectionClone.Count != 0)
-                    {
-                        strokes = StrokesSelectionClone;
-                    }
-                    else if (Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
+                    if (StrokesSelectionClone.Count == 0 && Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
                     {
                         // add Rotate
                         m.RotateAt(rotate, center.X, center.Y);
                     }
                     // add Translate
                     m.Translate(trans.X, trans.Y);
-                    List<UIElement> elements = new List<UIElement>();
-                    if (ElementsSelectionClone.Count != 0)
-                    {
-                        elements = ElementsSelectionClone;
-                    }
-                    else
-                    {
-                        elements = InkCanvasElementsHelper.GetSelectedElements(inkCanvas);
-                    }
                     // handle UIElements
-                    foreach (UIElement element in elements)
+                    foreach (UIElement element in activeSelectionElements)
                     {
                         ApplyElementMatrixTransform(element, m);
                     }
                     // handle strokes
-                    foreach (Stroke stroke in strokes)
+                    foreach (Stroke stroke in activeSelectionStrokes)
                     {
                         stroke.Transform(m, false);
                         try
@@ -640,6 +633,8 @@ namespace Ink_Canvas
                     inkCanvas.Select(strokes, elementsList);
                     isProgramChangeStrokeSelection = false;
                 }
+
+                RefreshActiveSelectionTargets();
             }
         }
 
@@ -680,6 +675,8 @@ namespace Ink_Canvas
                 StrokesSelectionClone = new StrokeCollection();
                 ElementsSelectionClone = new List<UIElement>();
             }
+            activeSelectionStrokes = new StrokeCollection();
+            activeSelectionElements = new List<UIElement>();
         }
     }
 }

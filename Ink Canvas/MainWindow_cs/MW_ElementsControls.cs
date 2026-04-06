@@ -99,8 +99,6 @@ namespace Ink_Canvas
             {
                 string filePath = openFileDialog.FileName;
 
-                byte[] mediaBytes = await Task.Run(() => File.ReadAllBytes(filePath));
-
                 MediaElement mediaElement = await CreateMediaElementAsync(filePath);
 
                 if (mediaElement != null)

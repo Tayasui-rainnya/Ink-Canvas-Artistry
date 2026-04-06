@@ -462,7 +462,7 @@ namespace Ink_Canvas
                 StylusPointCollection stylusPoints = new StylusPointCollection();
                 Stroke replayStroke = null;
                 int pendingPoints = 0;
-                int batchSize = stroke.StylusPoints.Count == 629 ? ellipseBatchSize : normalBatchSize;
+                int batchSize = IsLikelyEllipseStroke(stroke) ? ellipseBatchSize : normalBatchSize;
 
                 foreach (StylusPoint stylusPoint in stroke.StylusPoints)
                 {
@@ -493,6 +493,27 @@ namespace Ink_Canvas
 
             InkCanvasForInkReplay.Visibility = Visibility.Collapsed;
             inkCanvas.Visibility = Visibility.Visible;
+        }
+
+        private static bool IsLikelyEllipseStroke(Stroke stroke)
+        {
+            if (stroke == null || stroke.StylusPoints == null || stroke.StylusPoints.Count < 100) return false;
+
+            StylusPoint firstPoint = stroke.StylusPoints[0];
+            StylusPoint lastPoint = stroke.StylusPoints[stroke.StylusPoints.Count - 1];
+            Rect bounds = stroke.GetBounds();
+            if (bounds.Width <= 0 || bounds.Height <= 0) return false;
+
+            double minAxis = Math.Min(bounds.Width, bounds.Height);
+            double closureThreshold = Math.Max(6d, minAxis * 0.08);
+            double deltaX = firstPoint.X - lastPoint.X;
+            double deltaY = firstPoint.Y - lastPoint.Y;
+            bool isClosedStroke = deltaX * deltaX + deltaY * deltaY <= closureThreshold * closureThreshold;
+
+            if (!isClosedStroke) return false;
+
+            double aspectRatio = bounds.Width / bounds.Height;
+            return aspectRatio >= 0.15 && aspectRatio <= 6.5;
         }
         bool isStopInkReplay = false;
         private void InkCanvasForInkReplay_MouseDown(object sender, MouseButtonEventArgs e)

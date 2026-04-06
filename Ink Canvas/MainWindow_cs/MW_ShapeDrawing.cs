@@ -1298,10 +1298,11 @@ namespace Ink_Canvas
         {
             double a = 0.5 * (ed.X - st.X);
             double b = 0.5 * (ed.Y - st.Y);
+            double angleStep = CalculateEllipseAngleStep(a, b);
             List<System.Windows.Point> pointList = new List<System.Windows.Point>();
             if (isDrawTop && isDrawBottom)
             {
-                for (double r = 0; r <= 2 * Math.PI; r = r + 0.01)
+                for (double r = 0; r <= 2 * Math.PI; r += angleStep)
                 {
                     pointList.Add(new System.Windows.Point(0.5 * (st.X + ed.X) + a * Math.Cos(r), 0.5 * (st.Y + ed.Y) + b * Math.Sin(r)));
                 }
@@ -1310,14 +1311,14 @@ namespace Ink_Canvas
             {
                 if (isDrawBottom)
                 {
-                    for (double r = 0; r <= Math.PI; r = r + 0.01)
+                    for (double r = 0; r <= Math.PI; r += angleStep)
                     {
                         pointList.Add(new System.Windows.Point(0.5 * (st.X + ed.X) + a * Math.Cos(r), 0.5 * (st.Y + ed.Y) + b * Math.Sin(r)));
                     }
                 }
                 if (isDrawTop)
                 {
-                    for (double r = Math.PI; r <= 2 * Math.PI; r = r + 0.01)
+                    for (double r = Math.PI; r <= 2 * Math.PI; r += angleStep)
                     {
                         pointList.Add(new System.Windows.Point(0.5 * (st.X + ed.X) + a * Math.Cos(r), 0.5 * (st.Y + ed.Y) + b * Math.Sin(r)));
                     }
@@ -1326,11 +1327,31 @@ namespace Ink_Canvas
             return pointList;
         }
 
+        private static double CalculateEllipseAngleStep(double semiMajorAxis, double semiMinorAxis)
+        {
+            double a = Math.Abs(semiMajorAxis);
+            double b = Math.Abs(semiMinorAxis);
+            if (a < 0.1 || b < 0.1) return 0.01;
+
+            // Ramanujan approximation: perimeter ≈ π(a+b)(1 + 3h/(10 + √(4-3h)))
+            double axisSum = a + b;
+            double h = Math.Pow(a - b, 2) / Math.Pow(axisSum, 2);
+            double perimeter = Math.PI * axisSum * (1 + 3 * h / (10 + Math.Sqrt(4 - 3 * h)));
+
+            // Keep geometry smooth while avoiding fixed high-density sampling for every ellipse size.
+            const double targetPointSpacing = 2.2;
+            int pointCount = (int)Math.Ceiling(perimeter / targetPointSpacing);
+            pointCount = Math.Max(180, Math.Min(629, pointCount));
+
+            return (2 * Math.PI) / pointCount;
+        }
+
         private StrokeCollection GenerateDashedLineEllipseStrokeCollection(System.Windows.Point st, System.Windows.Point ed, bool isDrawTop = true, bool isDrawBottom = true)
         {
             double a = 0.5 * (ed.X - st.X);
             double b = 0.5 * (ed.Y - st.Y);
             double step = 0.05;
+            double angleStep = CalculateEllipseAngleStep(a, b);
             List<System.Windows.Point> pointList = new List<System.Windows.Point>();
             StylusPointCollection point;
             Stroke stroke;
@@ -1340,7 +1361,7 @@ namespace Ink_Canvas
                 for (double i = 0.0; i < 1.0; i += step * 1.66)
                 {
                     pointList = new List<Point>();
-                    for (double r = Math.PI * i; r <= Math.PI * (i + step); r = r + 0.01)
+                    for (double r = Math.PI * i; r <= Math.PI * (i + step); r += angleStep)
                     {
                         pointList.Add(new System.Windows.Point(0.5 * (st.X + ed.X) + a * Math.Cos(r), 0.5 * (st.Y + ed.Y) + b * Math.Sin(r)));
                     }
@@ -1357,7 +1378,7 @@ namespace Ink_Canvas
                 for (double i = 1.0; i < 2.0; i += step * 1.66)
                 {
                     pointList = new List<Point>();
-                    for (double r = Math.PI * i; r <= Math.PI * (i + step); r = r + 0.01)
+                    for (double r = Math.PI * i; r <= Math.PI * (i + step); r += angleStep)
                     {
                         pointList.Add(new System.Windows.Point(0.5 * (st.X + ed.X) + a * Math.Cos(r), 0.5 * (st.Y + ed.Y) + b * Math.Sin(r)));
                     }

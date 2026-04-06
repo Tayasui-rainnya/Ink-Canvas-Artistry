@@ -403,15 +403,20 @@ namespace Ink_Canvas
                 PptNavigationTextBlockBottom.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 LogHelper.NewLog("PowerPoint Slide Show Loading process complete");
 
-                new Thread(new ThreadStart(() =>
-                {
-                    Thread.Sleep(100);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        ViewboxFloatingBarMarginAnimation();
-                    });
-                })).Start();
+                _ = ScheduleFloatingBarMarginRefreshAsync();
             });
+        }
+
+        private async Task ScheduleFloatingBarMarginRefreshAsync()
+        {
+            await Task.Delay(100);
+            if (!Dispatcher.CheckAccess())
+            {
+                await Dispatcher.InvokeAsync(ViewboxFloatingBarMarginAnimation);
+                return;
+            }
+
+            ViewboxFloatingBarMarginAnimation();
         }
 
         bool isEnteredSlideShowEndEvent = false; //防止重复调用本函数导致墨迹保存失效

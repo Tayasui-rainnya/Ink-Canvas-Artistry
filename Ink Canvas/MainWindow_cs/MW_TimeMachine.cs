@@ -29,6 +29,7 @@ namespace Ink_Canvas
         private StrokeCollection AddedStroke;
         private StrokeCollection CuboidStrokeCollection;
         private Dictionary<Stroke, Tuple<StylusPointCollection, StylusPointCollection>> StrokeManipulationHistory;
+        private int pendingManipulatedStrokeCount = 0;
         private Dictionary<Stroke, StylusPointCollection> StrokeInitialHistory = new Dictionary<Stroke, StylusPointCollection>();
         private Dictionary<string, Tuple<object, TransformGroup>> ElementsManipulationHistory;
 
@@ -383,16 +384,18 @@ namespace Ink_Canvas
                 return;
             }
             var stroke = sender as Stroke;
-            var selectedStrokes = inkCanvas.GetSelectedStrokes();
-            int count = selectedStrokes.Count > 0 ? selectedStrokes.Count : inkCanvas.Strokes.Count;
 
             if (StrokeManipulationHistory == null)
             {
                 StrokeManipulationHistory = new Dictionary<Stroke, Tuple<StylusPointCollection, StylusPointCollection>>();
+                var selectedStrokes = inkCanvas.GetSelectedStrokes();
+                pendingManipulatedStrokeCount = selectedStrokes.Count > 0 ? selectedStrokes.Count : inkCanvas.Strokes.Count;
             }
             StrokeManipulationHistory[stroke] =
-                new Tuple<StylusPointCollection, StylusPointCollection>(StrokeInitialHistory[stroke], stroke.StylusPoints.Clone());
-            if (StrokeManipulationHistory.Count == count && dec.Count == 0 && !isGridInkCanvasSelectionCoverMouseDown)
+                new Tuple<StylusPointCollection, StylusPointCollection>(StrokeInitialHistory[stroke], null);
+            if (pendingManipulatedStrokeCount > 0
+                && StrokeManipulationHistory.Count == pendingManipulatedStrokeCount
+                && dec.Count == 0 && !isGridInkCanvasSelectionCoverMouseDown)
             {
                 ToCommitStrokeManipulationHistoryAfterMouseUp();
             }
@@ -402,18 +405,32 @@ namespace Ink_Canvas
         {
             if (StrokeManipulationHistory == null && ElementsManipulationHistory == null)
             {
+                pendingManipulatedStrokeCount = 0;
                 return;
             }
             if(StrokeManipulationHistory?.Count > 0 || ElementsManipulationHistory?.Count > 0)
             {
-                timeMachine.CommitStrokeManipulationHistory(StrokeManipulationHistory, ElementsManipulationHistory);
                 if (StrokeManipulationHistory != null)
                 {
+                    var finalizedStrokeManipulationHistory = new Dictionary<Stroke, Tuple<StylusPointCollection, StylusPointCollection>>();
                     foreach (var item in StrokeManipulationHistory)
+                    {
+                        var initialStylusPoints = item.Value.Item1;
+                        var currentStylusPoints = item.Value.Item2 ?? item.Key.StylusPoints.Clone();
+                        finalizedStrokeManipulationHistory[item.Key] =
+                            new Tuple<StylusPointCollection, StylusPointCollection>(initialStylusPoints, currentStylusPoints);
+                    }
+                    timeMachine.CommitStrokeManipulationHistory(finalizedStrokeManipulationHistory, ElementsManipulationHistory);
+                    foreach (var item in finalizedStrokeManipulationHistory)
                     {
                         StrokeInitialHistory[item.Key] = item.Value.Item2;
                     }
                     StrokeManipulationHistory = null;
+                    pendingManipulatedStrokeCount = 0;
+                }
+                else
+                {
+                    timeMachine.CommitStrokeManipulationHistory(null, ElementsManipulationHistory);
                 }
                 if (ElementsManipulationHistory != null)
                 {

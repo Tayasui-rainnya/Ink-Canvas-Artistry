@@ -269,6 +269,7 @@ namespace Ink_Canvas
         Point centerPoint;
         InkCanvasEditingMode lastInkCanvasEditingMode = InkCanvasEditingMode.Ink;
         bool isSingleFingerDragMode = false;
+        int lastTouchDownStrokeCount = 0;
 
         private void inkCanvas_PreviewTouchDown(object sender, TouchEventArgs e)
         {
@@ -279,8 +280,8 @@ namespace Ink_Canvas
                 TouchPoint touchPoint = e.GetTouchPoint(inkCanvas);
                 centerPoint = touchPoint.Position;
 
-                //记录第一根手指点击时的 StrokeCollection
-                lastTouchDownStrokeCollection = inkCanvas.Strokes.Clone();
+                // 仅记录数量，避免在落笔瞬间深拷贝大量墨迹导致卡顿
+                lastTouchDownStrokeCount = inkCanvas.Strokes.Count;
             }
             //设备两个及两个以上，将画笔功能关闭
             if (dec.Count > 1 || isSingleFingerDragMode || !Settings.Gesture.IsEnableTwoFingerGesture)
@@ -308,14 +309,16 @@ namespace Ink_Canvas
             inkCanvas.Opacity = 1;
             if (dec.Count == 0)
             {
-                if (lastTouchDownStrokeCollection.Count() != inkCanvas.Strokes.Count() &&
+                if (lastTouchDownStrokeCount != inkCanvas.Strokes.Count &&
                     !(drawingShapeMode == 9 && !isFirstTouchCuboid))
                 {
+                    // 延迟到抬手后再备份，降低写入过程中的主线程压力
                     int whiteboardIndex = CurrentWhiteboardIndex;
                     if (currentMode == 0)
                     {
                         whiteboardIndex = 0;
                     }
+                    lastTouchDownStrokeCollection = inkCanvas.Strokes.Clone();
                     strokeCollections[whiteboardIndex] = lastTouchDownStrokeCollection;
                 }
             }

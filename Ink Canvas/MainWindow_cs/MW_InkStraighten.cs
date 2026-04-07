@@ -25,6 +25,7 @@ namespace Ink_Canvas
             public double LowSpeedDisplacement;
             public bool IsTriggered;
             public bool IsCommitted;
+            public bool IsInputSuppressed;
             public Stroke PreviewStroke;
             public Point LatestPoint;
         }
@@ -116,6 +117,11 @@ namespace Ink_Canvas
                         && (now - session.LowSpeedStartTimestamp).TotalMilliseconds >= ClampInkStraightenHoldDurationMs())
                     {
                         session.IsTriggered = true;
+                        if (!session.IsInputSuppressed && inkCanvas.EditingMode == InkCanvasEditingMode.Ink)
+                        {
+                            inkCanvas.EditingMode = InkCanvasEditingMode.None;
+                            session.IsInputSuppressed = true;
+                        }
                         UpdateInkStraightenPreview(session, currentPoint);
                     }
                     else if (session.LowSpeedDisplacement > Settings.InkStraighten.DisplacementThresholdPx)
@@ -168,6 +174,10 @@ namespace Ink_Canvas
 
             if (session.IsCommitted)
             {
+                if (session.IsInputSuppressed && inkCanvas.EditingMode == InkCanvasEditingMode.None)
+                {
+                    inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                }
                 _inkStraightenSessions.Remove(pointerId);
                 return;
             }
@@ -181,12 +191,23 @@ namespace Ink_Canvas
 
             if (session.IsTriggered)
             {
-                _pendingInkStraightenQueue.Enqueue(new PendingInkStraighten
+                var straightStroke = new Stroke(new StylusPointCollection
                 {
-                    StartPoint = session.StartPoint,
-                    EndPoint = session.LatestPoint,
-                    CreatedAt = DateTime.UtcNow
-                });
+                    new StylusPoint(session.StartPoint.X, session.StartPoint.Y, 0.5f),
+                    new StylusPoint(session.LatestPoint.X, session.LatestPoint.Y, 0.5f)
+                })
+                {
+                    DrawingAttributes = inkCanvas.DefaultDrawingAttributes.Clone()
+                };
+
+                _currentCommitType = CommitReason.UserInput;
+                inkCanvas.Strokes.Add(straightStroke);
+                session.IsCommitted = true;
+            }
+
+            if (session.IsInputSuppressed && inkCanvas.EditingMode == InkCanvasEditingMode.None)
+            {
+                inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
             }
 
             _inkStraightenSessions.Remove(pointerId);

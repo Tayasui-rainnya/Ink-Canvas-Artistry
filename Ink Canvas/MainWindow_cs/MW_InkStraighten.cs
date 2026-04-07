@@ -72,12 +72,17 @@ namespace Ink_Canvas
                 return;
             }
 
+            var now = DateTime.UtcNow;
             _inkStraightenSessions[pointerId] = new InkStraightenSession
             {
                 StartPoint = startPoint,
                 LastPoint = startPoint,
                 LatestPoint = startPoint,
-                LastTimestamp = DateTime.UtcNow
+                LastTimestamp = now,
+                IsLowSpeedCandidate = true,
+                LowSpeedStartTimestamp = now,
+                LowSpeedAnchorPoint = startPoint,
+                LowSpeedDisplacement = 0
             };
         }
 
@@ -112,7 +117,8 @@ namespace Ink_Canvas
                     }
                     else
                     {
-                        session.LowSpeedDisplacement += deltaDistance;
+                        session.LowSpeedDisplacement =
+                            Distance(currentPoint, session.LowSpeedAnchorPoint) * GetInputScaleFactor();
                     }
 
                     if (session.LowSpeedDisplacement <= Settings.InkStraighten.DisplacementThresholdPx

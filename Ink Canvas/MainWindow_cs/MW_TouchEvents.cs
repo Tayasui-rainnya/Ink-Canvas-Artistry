@@ -104,10 +104,16 @@ namespace Ink_Canvas
                     try
                     {
                         // 触摸屏 TabletDeviceType.Touch 
-                        inkCanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
+                        var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
+                        if (strokeVisual?.Stroke == null || strokeVisual.Stroke.StylusPoints.Count == 0)
+                        {
+                            inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
+                            return;
+                        }
+                        inkCanvas.Strokes.Add(strokeVisual.Stroke);
                         await Task.Delay(5); // 避免渲染墨迹完成前预览墨迹被删除导致墨迹闪烁
                         inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
-                        inkCanvas_StrokeCollected(inkCanvas, new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
+                        inkCanvas_StrokeCollected(inkCanvas, new InkCanvasStrokeCollectedEventArgs(strokeVisual.Stroke));
                     }
                     catch(Exception ex) {
                         LogHelper.WriteLogToFile(ex.ToString(), LogHelper.LogType.Error);

@@ -91,7 +91,11 @@ namespace Ink_Canvas
 
         private void UpdateInkStraightenSession(int pointerId, Point currentPoint)
         {
-            if (!_inkStraightenSessions.TryGetValue(pointerId, out var session) || !IsInkStraightenAvailable())
+            if (!_inkStraightenSessions.TryGetValue(pointerId, out var session))
+            {
+                return;
+            }
+            if (!session.IsTriggered && !IsInkStraightenAvailable())
             {
                 return;
             }
@@ -162,7 +166,8 @@ namespace Ink_Canvas
                     StrokeStartLineCap = PenLineCap.Round,
                     StrokeEndLineCap = PenLineCap.Round
                 };
-                inkCanvas.Children.Add(session.PreviewLine);
+                Panel.SetZIndex(session.PreviewLine, 9999);
+                Main_Grid.Children.Add(session.PreviewLine);
             }
             session.PreviewLine.X1 = session.StartPoint.X;
             session.PreviewLine.Y1 = session.StartPoint.Y;
@@ -187,9 +192,9 @@ namespace Ink_Canvas
                 return;
             }
 
-            if (session.PreviewLine != null && inkCanvas.Children.Contains(session.PreviewLine))
+            if (session.PreviewLine != null && Main_Grid.Children.Contains(session.PreviewLine))
             {
-                inkCanvas.Children.Remove(session.PreviewLine);
+                Main_Grid.Children.Remove(session.PreviewLine);
                 session.PreviewLine = null;
             }
 
@@ -247,9 +252,9 @@ namespace Ink_Canvas
                 return false;
             }
 
-            if (matchedSession.PreviewLine != null && inkCanvas.Children.Contains(matchedSession.PreviewLine))
+            if (matchedSession.PreviewLine != null && Main_Grid.Children.Contains(matchedSession.PreviewLine))
             {
-                inkCanvas.Children.Remove(matchedSession.PreviewLine);
+                Main_Grid.Children.Remove(matchedSession.PreviewLine);
                 matchedSession.PreviewLine = null;
             }
 
@@ -314,7 +319,7 @@ namespace Ink_Canvas
         private void HandleMouseStraightenUp(MouseButtonEventArgs e)
         {
             if (HasActiveStylusStraightenSession()) return;
-            if (e.ChangedButton == MouseButton.Left)
+            if (e == null || e.ChangedButton == MouseButton.Left)
             {
                 EndInkStraightenSession(MousePointerId);
             }

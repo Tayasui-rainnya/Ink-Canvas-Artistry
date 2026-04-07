@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Point = System.Windows.Point;
 
 namespace Ink_Canvas
@@ -26,7 +27,7 @@ namespace Ink_Canvas
             public bool IsTriggered;
             public bool IsCommitted;
             public bool IsInputSuppressed;
-            public Stroke PreviewStroke;
+            public Line PreviewLine;
             public Point LatestPoint;
         }
 
@@ -150,31 +151,23 @@ namespace Ink_Canvas
 
         private void UpdateInkStraightenPreview(InkStraightenSession session, Point currentPoint)
         {
-            var lineStroke = new Stroke(new StylusPointCollection
+            if (session.PreviewLine == null)
             {
-                new StylusPoint(session.StartPoint.X, session.StartPoint.Y, 0.5f),
-                new StylusPoint(currentPoint.X, currentPoint.Y, 0.5f)
-            })
-            {
-                DrawingAttributes = inkCanvas.DefaultDrawingAttributes.Clone()
-            };
-
-            var previousCommitType = _currentCommitType;
-            try
-            {
-                _currentCommitType = CommitReason.CodeInput;
-                if (session.PreviewStroke != null && inkCanvas.Strokes.Contains(session.PreviewStroke))
+                var drawingAttributes = inkCanvas.DefaultDrawingAttributes;
+                session.PreviewLine = new Line
                 {
-                    inkCanvas.Strokes.Remove(session.PreviewStroke);
-                }
-                inkCanvas.Strokes.Add(lineStroke);
+                    IsHitTestVisible = false,
+                    Stroke = new SolidColorBrush(drawingAttributes.Color),
+                    StrokeThickness = Math.Max(1, drawingAttributes.Width),
+                    StrokeStartLineCap = PenLineCap.Round,
+                    StrokeEndLineCap = PenLineCap.Round
+                };
+                inkCanvas.Children.Add(session.PreviewLine);
             }
-            finally
-            {
-                _currentCommitType = previousCommitType;
-            }
-
-            session.PreviewStroke = lineStroke;
+            session.PreviewLine.X1 = session.StartPoint.X;
+            session.PreviewLine.Y1 = session.StartPoint.Y;
+            session.PreviewLine.X2 = currentPoint.X;
+            session.PreviewLine.Y2 = currentPoint.Y;
         }
 
         private void EndInkStraightenSession(int pointerId)
@@ -194,18 +187,10 @@ namespace Ink_Canvas
                 return;
             }
 
-            if (session.PreviewStroke != null && inkCanvas.Strokes.Contains(session.PreviewStroke))
+            if (session.PreviewLine != null && inkCanvas.Children.Contains(session.PreviewLine))
             {
-                var previousCommitType = _currentCommitType;
-                try
-                {
-                    _currentCommitType = CommitReason.CodeInput;
-                    inkCanvas.Strokes.Remove(session.PreviewStroke);
-                }
-                finally
-                {
-                    _currentCommitType = previousCommitType;
-                }
+                inkCanvas.Children.Remove(session.PreviewLine);
+                session.PreviewLine = null;
             }
 
             if (session.IsTriggered)
@@ -262,18 +247,10 @@ namespace Ink_Canvas
                 return false;
             }
 
-            if (matchedSession.PreviewStroke != null && inkCanvas.Strokes.Contains(matchedSession.PreviewStroke))
+            if (matchedSession.PreviewLine != null && inkCanvas.Children.Contains(matchedSession.PreviewLine))
             {
-                var previousCommitType = _currentCommitType;
-                try
-                {
-                    _currentCommitType = CommitReason.CodeInput;
-                    inkCanvas.Strokes.Remove(matchedSession.PreviewStroke);
-                }
-                finally
-                {
-                    _currentCommitType = previousCommitType;
-                }
+                inkCanvas.Children.Remove(matchedSession.PreviewLine);
+                matchedSession.PreviewLine = null;
             }
 
             var straightStroke = new Stroke(new StylusPointCollection

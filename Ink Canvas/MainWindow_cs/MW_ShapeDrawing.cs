@@ -1635,23 +1635,7 @@ namespace Ink_Canvas
             lastTempStrokeCollection = null;
             if (StrokeManipulationHistory?.Count > 0 || ElementsManipulationHistory?.Count > 0)
             {
-                timeMachine.CommitStrokeManipulationHistory(StrokeManipulationHistory, ElementsManipulationHistory);
-                if(StrokeManipulationHistory?.Count > 0)
-                {
-                    foreach (var item in StrokeManipulationHistory)
-                    {
-                        StrokeInitialHistory[item.Key] = item.Value.Item2;
-                    }
-                    StrokeManipulationHistory = null;
-                }
-                if (ElementsManipulationHistory?.Count > 0)
-                {
-                    foreach (var item in ElementsManipulationHistory)
-                    {
-                        ElementsInitialHistory[item.Key] = item.Value.Item2;
-                    }
-                    ElementsManipulationHistory = null;
-                }
+                ToCommitStrokeManipulationHistoryAfterMouseUp();
             }
             if (DrawingAttributesHistory.Count > 0)
             {

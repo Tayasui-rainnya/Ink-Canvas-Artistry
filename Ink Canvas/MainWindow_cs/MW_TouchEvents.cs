@@ -309,6 +309,9 @@ namespace Ink_Canvas
             inkCanvas.Opacity = 1;
             if (dec.Count == 0)
             {
+                // 双指手势结束后立即提交变换历史，避免切页时遗漏本次位移/缩放结果
+                ToCommitStrokeManipulationHistoryAfterMouseUp();
+
                 if (lastTouchDownStrokeCount != inkCanvas.Strokes.Count &&
                     !(drawingShapeMode == 9 && !isFirstTouchCuboid))
                 {

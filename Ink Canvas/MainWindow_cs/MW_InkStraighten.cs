@@ -40,6 +40,11 @@ namespace Ink_Canvas
         private readonly Dictionary<int, InkStraightenSession> _inkStraightenSessions = new Dictionary<int, InkStraightenSession>();
         private readonly Queue<PendingInkStraighten> _pendingInkStraightenQueue = new Queue<PendingInkStraighten>();
 
+        private bool HasActiveStylusStraightenSession()
+        {
+            return _inkStraightenSessions.Keys.Any(id => id != MousePointerId);
+        }
+
         private bool IsInkStraightenAvailable()
         {
             return Settings?.InkStraighten != null
@@ -154,13 +159,20 @@ namespace Ink_Canvas
                 DrawingAttributes = inkCanvas.DefaultDrawingAttributes.Clone()
             };
 
-            _currentCommitType = CommitReason.CodeInput;
-            if (session.PreviewStroke != null && inkCanvas.Strokes.Contains(session.PreviewStroke))
+            var previousCommitType = _currentCommitType;
+            try
             {
-                inkCanvas.Strokes.Remove(session.PreviewStroke);
+                _currentCommitType = CommitReason.CodeInput;
+                if (session.PreviewStroke != null && inkCanvas.Strokes.Contains(session.PreviewStroke))
+                {
+                    inkCanvas.Strokes.Remove(session.PreviewStroke);
+                }
+                inkCanvas.Strokes.Add(lineStroke);
             }
-            inkCanvas.Strokes.Add(lineStroke);
-            _currentCommitType = CommitReason.UserInput;
+            finally
+            {
+                _currentCommitType = previousCommitType;
+            }
 
             session.PreviewStroke = lineStroke;
         }
@@ -184,9 +196,16 @@ namespace Ink_Canvas
 
             if (session.PreviewStroke != null && inkCanvas.Strokes.Contains(session.PreviewStroke))
             {
-                _currentCommitType = CommitReason.CodeInput;
-                inkCanvas.Strokes.Remove(session.PreviewStroke);
-                _currentCommitType = CommitReason.UserInput;
+                var previousCommitType = _currentCommitType;
+                try
+                {
+                    _currentCommitType = CommitReason.CodeInput;
+                    inkCanvas.Strokes.Remove(session.PreviewStroke);
+                }
+                finally
+                {
+                    _currentCommitType = previousCommitType;
+                }
             }
 
             if (session.IsTriggered)
@@ -245,9 +264,16 @@ namespace Ink_Canvas
 
             if (matchedSession.PreviewStroke != null && inkCanvas.Strokes.Contains(matchedSession.PreviewStroke))
             {
-                _currentCommitType = CommitReason.CodeInput;
-                inkCanvas.Strokes.Remove(matchedSession.PreviewStroke);
-                _currentCommitType = CommitReason.UserInput;
+                var previousCommitType = _currentCommitType;
+                try
+                {
+                    _currentCommitType = CommitReason.CodeInput;
+                    inkCanvas.Strokes.Remove(matchedSession.PreviewStroke);
+                }
+                finally
+                {
+                    _currentCommitType = previousCommitType;
+                }
             }
 
             var straightStroke = new Stroke(new StylusPointCollection
@@ -260,10 +286,17 @@ namespace Ink_Canvas
             };
 
             SetNewBackupOfStroke();
-            _currentCommitType = CommitReason.ShapeRecognition;
-            inkCanvas.Strokes.Remove(rawStroke);
-            inkCanvas.Strokes.Add(straightStroke);
-            _currentCommitType = CommitReason.UserInput;
+            var previousReplaceCommitType = _currentCommitType;
+            try
+            {
+                _currentCommitType = CommitReason.ShapeRecognition;
+                inkCanvas.Strokes.Remove(rawStroke);
+                inkCanvas.Strokes.Add(straightStroke);
+            }
+            finally
+            {
+                _currentCommitType = previousReplaceCommitType;
+            }
             matchedSession.IsCommitted = true;
             return true;
         }
@@ -285,6 +318,7 @@ namespace Ink_Canvas
 
         private void HandleMouseStraightenDown(MouseButtonEventArgs e)
         {
+            if (HasActiveStylusStraightenSession()) return;
             if (e?.ChangedButton == MouseButton.Left)
             {
                 StartInkStraightenSession(MousePointerId, e.GetPosition(inkCanvas));
@@ -293,6 +327,7 @@ namespace Ink_Canvas
 
         private void HandleMouseStraightenMove(MouseEventArgs e)
         {
+            if (HasActiveStylusStraightenSession()) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 UpdateInkStraightenSession(MousePointerId, e.GetPosition(inkCanvas));
@@ -301,7 +336,8 @@ namespace Ink_Canvas
 
         private void HandleMouseStraightenUp(MouseButtonEventArgs e)
         {
-            if (e == null || e.ChangedButton == MouseButton.Left)
+            if (HasActiveStylusStraightenSession()) return;
+            if (e.ChangedButton == MouseButton.Left)
             {
                 EndInkStraightenSession(MousePointerId);
             }
@@ -349,10 +385,17 @@ namespace Ink_Canvas
             };
 
             SetNewBackupOfStroke();
-            _currentCommitType = CommitReason.ShapeRecognition;
-            inkCanvas.Strokes.Remove(rawStroke);
-            inkCanvas.Strokes.Add(straightStroke);
-            _currentCommitType = CommitReason.UserInput;
+            var previousCommitType = _currentCommitType;
+            try
+            {
+                _currentCommitType = CommitReason.ShapeRecognition;
+                inkCanvas.Strokes.Remove(rawStroke);
+                inkCanvas.Strokes.Add(straightStroke);
+            }
+            finally
+            {
+                _currentCommitType = previousCommitType;
+            }
             return true;
         }
     }

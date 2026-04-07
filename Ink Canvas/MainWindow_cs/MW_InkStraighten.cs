@@ -31,15 +31,7 @@ namespace Ink_Canvas
             public Point LatestPoint;
         }
 
-        private class PendingInkStraighten
-        {
-            public Point StartPoint;
-            public Point EndPoint;
-            public DateTime CreatedAt;
-        }
-
         private readonly Dictionary<int, InkStraightenSession> _inkStraightenSessions = new Dictionary<int, InkStraightenSession>();
-        private readonly Queue<PendingInkStraighten> _pendingInkStraightenQueue = new Queue<PendingInkStraighten>();
 
         private bool HasActiveStylusStraightenSession()
         {
@@ -327,58 +319,20 @@ namespace Ink_Canvas
 
         private bool TryApplyPendingInkStraighten(Stroke rawStroke)
         {
-            if (TryApplyActiveInkStraighten(rawStroke))
-            {
-                return true;
-            }
+            return TryApplyActiveInkStraighten(rawStroke);
+        }
 
-            if (_pendingInkStraightenQueue.Count == 0 || rawStroke == null || rawStroke.StylusPoints.Count == 0)
+        private void Window_PreviewMouseUpForStraighten(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
             {
-                return false;
+                EndInkStraightenSession(MousePointerId);
             }
+        }
 
-            var now = DateTime.UtcNow;
-            while (_pendingInkStraightenQueue.Count > 0 && (now - _pendingInkStraightenQueue.Peek().CreatedAt).TotalSeconds > 2)
-            {
-                _pendingInkStraightenQueue.Dequeue();
-            }
-
-            if (_pendingInkStraightenQueue.Count == 0)
-            {
-                return false;
-            }
-
-            Point rawStartPoint = rawStroke.StylusPoints.First().ToPoint();
-            var candidate = _pendingInkStraightenQueue.Peek();
-            if (Distance(rawStartPoint, candidate.StartPoint) > 24)
-            {
-                return false;
-            }
-
-            _pendingInkStraightenQueue.Dequeue();
-
-            var straightStroke = new Stroke(new StylusPointCollection
-            {
-                new StylusPoint(candidate.StartPoint.X, candidate.StartPoint.Y, rawStroke.StylusPoints.First().PressureFactor),
-                new StylusPoint(candidate.EndPoint.X, candidate.EndPoint.Y, rawStroke.StylusPoints.Last().PressureFactor)
-            })
-            {
-                DrawingAttributes = rawStroke.DrawingAttributes.Clone()
-            };
-
-            SetNewBackupOfStroke();
-            var previousCommitType = _currentCommitType;
-            try
-            {
-                _currentCommitType = CommitReason.ShapeRecognition;
-                inkCanvas.Strokes.Remove(rawStroke);
-                inkCanvas.Strokes.Add(straightStroke);
-            }
-            finally
-            {
-                _currentCommitType = previousCommitType;
-            }
-            return true;
+        private void Window_PreviewStylusUpForStraighten(object sender, StylusEventArgs e)
+        {
+            EndInkStraightenSession(e.StylusDevice.Id);
         }
     }
 }

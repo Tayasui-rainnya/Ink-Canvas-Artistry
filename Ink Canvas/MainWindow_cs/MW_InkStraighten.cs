@@ -33,9 +33,9 @@ namespace Ink_Canvas
 
         private readonly Dictionary<int, InkStraightenSession> _inkStraightenSessions = new Dictionary<int, InkStraightenSession>();
 
-        private bool HasActiveStylusStraightenSession()
+        private static bool IsPromotedFromStylus(MouseEventArgs e)
         {
-            return _inkStraightenSessions.Keys.Any(id => id != MousePointerId);
+            return e?.StylusDevice != null;
         }
 
         private bool IsInkStraightenAvailable()
@@ -292,7 +292,7 @@ namespace Ink_Canvas
 
         private void HandleMouseStraightenDown(MouseButtonEventArgs e)
         {
-            if (HasActiveStylusStraightenSession()) return;
+            if (IsPromotedFromStylus(e)) return;
             if (e?.ChangedButton == MouseButton.Left)
             {
                 StartInkStraightenSession(MousePointerId, e.GetPosition(inkCanvas));
@@ -301,7 +301,7 @@ namespace Ink_Canvas
 
         private void HandleMouseStraightenMove(MouseEventArgs e)
         {
-            if (HasActiveStylusStraightenSession()) return;
+            if (IsPromotedFromStylus(e)) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 UpdateInkStraightenSession(MousePointerId, e.GetPosition(inkCanvas));
@@ -310,7 +310,7 @@ namespace Ink_Canvas
 
         private void HandleMouseStraightenUp(MouseButtonEventArgs e)
         {
-            if (HasActiveStylusStraightenSession()) return;
+            if (e != null && IsPromotedFromStylus(e)) return;
             if (e == null || e.ChangedButton == MouseButton.Left)
             {
                 EndInkStraightenSession(MousePointerId);

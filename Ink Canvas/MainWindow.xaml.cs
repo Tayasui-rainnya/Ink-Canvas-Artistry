@@ -79,6 +79,8 @@ namespace Ink_Canvas
             timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
             inkCanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
+            PreviewMouseUp += Window_PreviewMouseUpForStraighten;
+            PreviewStylusUp += Window_PreviewStylusUpForStraighten;
 
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             try

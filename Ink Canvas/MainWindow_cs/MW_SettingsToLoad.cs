@@ -520,6 +520,22 @@ namespace Ink_Canvas
             {
                 Settings.InkToShape = new InkToShape();
             }
+            // InkStraighten
+            if (Settings.InkStraighten != null)
+            {
+                ToggleSwitchEnableInkStraighten.IsOn = Settings.InkStraighten.IsInkStraightenEnabled;
+                SliderInkStraightenHoldDuration.Value = Settings.InkStraighten.HoldDurationMs;
+                SliderInkStraightenSpeedThreshold.Value = Settings.InkStraighten.SpeedThresholdPxPerMs;
+                SliderInkStraightenDisplacementThreshold.Value = Settings.InkStraighten.DisplacementThresholdPx;
+            }
+            else
+            {
+                Settings.InkStraighten = new InkStraighten();
+                ToggleSwitchEnableInkStraighten.IsOn = true;
+                SliderInkStraightenHoldDuration.Value = 800;
+                SliderInkStraightenSpeedThreshold.Value = 0.03;
+                SliderInkStraightenDisplacementThreshold.Value = 4;
+            }
             // RandSettings
             if (Settings.RandSettings != null)
             {

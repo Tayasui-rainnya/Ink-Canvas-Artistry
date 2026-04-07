@@ -870,6 +870,10 @@ namespace Ink_Canvas
             Settings.Gesture.IsEnableTwoFingerRotationOnSelection = true;
 
             Settings.InkToShape.IsInkToShapeEnabled = true;
+            Settings.InkStraighten.IsInkStraightenEnabled = true;
+            Settings.InkStraighten.HoldDurationMs = 800;
+            Settings.InkStraighten.SpeedThresholdPxPerMs = 0.03;
+            Settings.InkStraighten.DisplacementThresholdPx = 4;
 
             Settings.Startup.IsEnableNibMode = false;
             Settings.Startup.IsAutoUpdate = true;
@@ -920,6 +924,34 @@ namespace Ink_Canvas
         {
             if (!isLoaded) return;
             Settings.InkToShape.IsInkToShapeEnabled = ToggleSwitchEnableInkToShape.IsOn;
+            SaveSettingsToFile();
+        }
+
+        private void ToggleSwitchEnableInkStraighten_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.IsInkStraightenEnabled = ToggleSwitchEnableInkStraighten.IsOn;
+            SaveSettingsToFile();
+        }
+
+        private void SliderInkStraightenHoldDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.HoldDurationMs = (int)e.NewValue;
+            SaveSettingsToFile();
+        }
+
+        private void SliderInkStraightenSpeedThreshold_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.SpeedThresholdPxPerMs = Math.Round(e.NewValue, 3);
+            SaveSettingsToFile();
+        }
+
+        private void SliderInkStraightenDisplacementThreshold_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.DisplacementThresholdPx = Math.Round(e.NewValue, 1);
             SaveSettingsToFile();
         }
 

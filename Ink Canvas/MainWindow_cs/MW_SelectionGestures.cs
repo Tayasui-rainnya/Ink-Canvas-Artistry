@@ -17,15 +17,27 @@ namespace Ink_Canvas
     {
         #region Floating Control
 
+        /// <summary>
+        /// 最近一次边框按下对象（用于后续操作引用）。
+        /// </summary>
         object lastBorderMouseDownObject;
 
+        /// <summary>
+        /// 记录边框按下事件源。
+        /// </summary>
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             lastBorderMouseDownObject = sender;
         }
 
+        /// <summary>
+        /// 是否启用“选区克隆”模式。
+        /// </summary>
         bool isStrokeSelectionCloneOn = false;
 
+        /// <summary>
+        /// 切换选区克隆模式并更新图标高亮状态。
+        /// </summary>
         private void BorderStrokeSelectionClone_Click(object sender, RoutedEventArgs e)
         {
             if (isStrokeSelectionCloneOn)
@@ -40,6 +52,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 将当前选区克隆到白板或新页面。
+        /// </summary>
         private void BorderStrokeSelectionCloneToBoardOrNewPage_Click(object sender, RoutedEventArgs e)
         {
             if (currentMode == 0)
@@ -64,16 +79,25 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 选区笔迹变细。
+        /// </summary>
         private void GridPenWidthDecrease_Click(object sender, RoutedEventArgs e)
         {
             ChangeSelectedStrokeThickness(0.8);
         }
 
+        /// <summary>
+        /// 选区笔迹变粗。
+        /// </summary>
         private void GridPenWidthIncrease_Click(object sender, RoutedEventArgs e)
         {
             ChangeSelectedStrokeThickness(1.25);
         }
 
+        /// <summary>
+        /// 选区笔迹粗细恢复为当前默认笔设置。
+        /// </summary>
         private void GridPenWidthRestore_Click(object sender, RoutedEventArgs e)
         {
             foreach (Stroke stroke in inkCanvas.GetSelectedStrokes())
@@ -83,11 +107,17 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 删除当前选区内容。
+        /// </summary>
         private void BorderStrokeSelectionDelete_Click(object sender, RoutedEventArgs e)
         {
             SymbolIconDelete_MouseUp(sender, e);
         }
 
+        /// <summary>
+        /// 将当前选区导出为 PNG 图片。
+        /// </summary>
         private void BtnStrokeSelectionSaveToImage_Click(object sender, RoutedEventArgs e)
         {
             StrokeCollection selectedStrokes = inkCanvas.GetSelectedStrokes();
@@ -154,6 +184,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 按倍数调整选区笔迹粗细并提交历史。
+        /// </summary>
         private void ChangeSelectedStrokeThickness(double multipler)
         {
             foreach (Stroke stroke in inkCanvas.GetSelectedStrokes())
@@ -178,6 +211,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 对当前选区执行翻转/旋转矩阵变换。
+        /// </summary>
         private void MatrixTransform(int type)
         {
             Matrix m = new Matrix();
@@ -221,6 +257,9 @@ namespace Ink_Canvas
             ToCommitStrokeManipulationHistoryAfterMouseUp();
         }
 
+        /// <summary>
+        /// 将矩阵变换应用到单个元素并记录变换历史。
+        /// </summary>
         private void ApplyElementMatrixTransform(UIElement element, Matrix matrix)
         {
             FrameworkElement frameworkElement = element as FrameworkElement;
@@ -248,11 +287,17 @@ namespace Ink_Canvas
                 new Tuple<object, TransformGroup>(ElementsInitialHistory[frameworkElement.Name], transformGroup.Clone());
         }
 
+        /// <summary>
+        /// 水平翻转选区。
+        /// </summary>
         private void BtnFlipHorizontal_Click(object sender, RoutedEventArgs e)
         {
             MatrixTransform(1);
         }
 
+        /// <summary>
+        /// 垂直翻转选区。
+        /// </summary>
         private void BtnFlipVertical_Click(object sender, RoutedEventArgs e)
         {
             MatrixTransform(2);

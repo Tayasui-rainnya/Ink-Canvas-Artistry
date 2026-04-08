@@ -5,8 +5,14 @@ using System.Text;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 前台窗口信息读取工具：窗口标题、类名、位置尺寸与进程名。
+    /// </summary>
     internal class ForegroundWindowInfo
     {
+        /// <summary>
+        /// 获取当前前台窗口句柄。
+        /// </summary>
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
@@ -35,6 +41,9 @@ namespace Ink_Canvas.Helpers
             public int Height => Bottom - Top;
         }
 
+        /// <summary>
+        /// 读取窗口标题文本。
+        /// </summary>
         public static string WindowTitle()
         {
             IntPtr foregroundWindowHandle = GetForegroundWindow();
@@ -46,6 +55,9 @@ namespace Ink_Canvas.Helpers
             return windowTitle.ToString();
         }
 
+        /// <summary>
+        /// 读取窗口类名。
+        /// </summary>
         public static string WindowClassName()
         {
             IntPtr foregroundWindowHandle = GetForegroundWindow();
@@ -57,6 +69,9 @@ namespace Ink_Canvas.Helpers
             return className.ToString();
         }
 
+        /// <summary>
+        /// 读取窗口矩形信息（左上右下坐标及宽高）。
+        /// </summary>
         public static RECT WindowRect()
         {
             IntPtr foregroundWindowHandle = GetForegroundWindow();
@@ -67,6 +82,10 @@ namespace Ink_Canvas.Helpers
             return windowRect;
         }
 
+        /// <summary>
+        /// 获取前台窗口所属进程名称。
+        /// </summary>
+        /// <returns>进程名；若无法获取则返回 <c>Unknown</c>。</returns>
         public static string ProcessName()
         {
             IntPtr foregroundWindowHandle = GetForegroundWindow();

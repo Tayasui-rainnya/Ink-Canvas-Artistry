@@ -18,9 +18,19 @@ namespace Ink_Canvas.Helpers
     public static class EdgeGestureUtil
     {
 
+        /// <summary>
+        /// 系统属性键：是否在全屏时禁用触摸边缘手势。
+        /// </summary>
         private static Guid DISABLE_TOUCH_SCREEN = new Guid("32CE38B2-2C9A-41B1-9BC5-B3784394AA44");
+
+        /// <summary>
+        /// IPropertyStore 接口标识符。
+        /// </summary>
         private static Guid IID_PROPERTY_STORE = new Guid("886d8eeb-8cf2-4446-8d02-cdba1dbdcf99");
 
+        /// <summary>
+        /// PROPVARIANT 中布尔类型对应的 VT 常量值。
+        /// </summary>
         private static short VT_BOOL = 11;
         #region "Structures"
 
@@ -89,7 +99,7 @@ namespace Ink_Canvas.Helpers
 
 
             /// <summary>
-            /// Helper method to gets blob data
+            /// 读取 BLOB 二进制内容。
             /// </summary>
             private byte[] GetBlob()
             {
@@ -99,7 +109,7 @@ namespace Ink_Canvas.Helpers
             }
 
             /// <summary>
-            /// Property value
+            /// 当前属性值（根据 <see cref="vt"/> 自动解析）。
             /// </summary>
             public object Value
             {
@@ -178,6 +188,14 @@ namespace Ink_Canvas.Helpers
         [DllImport("shell32.dll", SetLastError = true)]
         private static extern int SHGetPropertyStoreForWindow(IntPtr handle, ref Guid riid, ref IPropertyStore propertyStore);
 
+        /// <summary>
+        /// 设置窗口是否禁用触摸边缘手势（通常用于全屏场景）。
+        /// </summary>
+        /// <param name="hwnd">目标窗口句柄。</param>
+        /// <param name="enable">
+        /// 传入 <c>true</c> 表示写入“禁用边缘手势”状态；
+        /// 传入 <c>false</c> 表示取消该状态。
+        /// </param>
         public static void DisableEdgeGestures(IntPtr hwnd, bool enable)
         {
             IPropertyStore pPropStore = null;

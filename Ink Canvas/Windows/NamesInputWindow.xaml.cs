@@ -11,6 +11,9 @@ namespace Ink_Canvas
     /// </summary>
     public partial class NamesInputWindow : Window
     {
+        /// <summary>
+        /// 名单导入窗口构造函数。
+        /// </summary>
         public NamesInputWindow()
         {
             InitializeComponent();
@@ -35,6 +38,9 @@ namespace Ink_Canvas
 
         string originText = "";
 
+        /// <summary>
+        /// 窗口加载时读取已保存名单。
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (File.Exists(App.RootPath + "Names.txt"))
@@ -44,6 +50,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 窗口关闭前询问是否保存名单修改。
+        /// </summary>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (originText != TextBoxNames.Text)
@@ -56,6 +65,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 点击关闭按钮。
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Close();

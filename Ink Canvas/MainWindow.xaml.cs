@@ -17,6 +17,9 @@ namespace Ink_Canvas
     {
         #region Window Initialization
 
+        /// <summary>
+        /// 主窗口构造函数：初始化界面状态、事件绑定与基础设置加载。
+        /// </summary>
         public MainWindow()
         {
             /*
@@ -79,6 +82,8 @@ namespace Ink_Canvas
             timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
             inkCanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
+            PreviewMouseUp += Window_PreviewMouseUpForStraighten;
+            PreviewStylusUp += Window_PreviewStylusUpForStraighten;
 
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             try
@@ -98,6 +103,10 @@ namespace Ink_Canvas
         #region Ink Canvas Functions
 
         DrawingAttributes drawingAttributes;
+
+        /// <summary>
+        /// 初始化墨迹画笔与手势事件。
+        /// </summary>
         private void loadPenCanvas()
         {
             try
@@ -114,6 +123,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 墨迹手势识别事件处理。
+        /// </summary>
         private void InkCanvas_Gesture(object sender, InkCanvasGestureEventArgs e)
         {
             ReadOnlyCollection<GestureRecognitionResult> gestures = e.GetGestureRecognitionResults();
@@ -137,6 +149,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 墨迹编辑模式变化事件处理。
+        /// </summary>
         private void inkCanvas_EditingModeChanged(object sender, RoutedEventArgs e)
         {
             var inkCanvas1 = sender as InkCanvas;
@@ -167,6 +182,9 @@ namespace Ink_Canvas
         public static string settingsFileName = "Settings.json";
         bool isLoaded = false;
 
+        /// <summary>
+        /// 窗口加载事件：初始化运行时状态并执行启动逻辑。
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             loadPenCanvas();
@@ -186,6 +204,9 @@ namespace Ink_Canvas
             RegisterGlobalHotkeys();
         }
 
+        /// <summary>
+        /// 窗口关闭前处理：保存配置并释放资源。
+        /// </summary>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             LogHelper.WriteLogToFile("Ink Canvas closing", LogHelper.LogType.Event);
@@ -209,6 +230,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 窗口关闭后收尾逻辑。
+        /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
             LogHelper.WriteLogToFile("Ink Canvas closed", LogHelper.LogType.Event);

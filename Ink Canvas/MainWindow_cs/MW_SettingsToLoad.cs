@@ -12,6 +12,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 读取并应用设置（可选启动场景）。
+        /// </summary>
         private void LoadSettings(bool isStartup = false)
         {
             try
@@ -519,6 +522,22 @@ namespace Ink_Canvas
             else
             {
                 Settings.InkToShape = new InkToShape();
+            }
+            // InkStraighten
+            if (Settings.InkStraighten != null)
+            {
+                ToggleSwitchEnableInkStraighten.IsOn = Settings.InkStraighten.IsInkStraightenEnabled;
+                SliderInkStraightenHoldDuration.Value = Settings.InkStraighten.HoldDurationMs;
+                SliderInkStraightenSpeedThreshold.Value = Settings.InkStraighten.SpeedThresholdPxPerMs;
+                SliderInkStraightenDisplacementThreshold.Value = Settings.InkStraighten.DisplacementThresholdPx;
+            }
+            else
+            {
+                Settings.InkStraighten = new InkStraighten();
+                ToggleSwitchEnableInkStraighten.IsOn = true;
+                SliderInkStraightenHoldDuration.Value = 800;
+                SliderInkStraightenSpeedThreshold.Value = 0.03;
+                SliderInkStraightenDisplacementThreshold.Value = 4;
             }
             // RandSettings
             if (Settings.RandSettings != null)

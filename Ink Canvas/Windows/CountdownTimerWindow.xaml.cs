@@ -14,6 +14,9 @@ namespace Ink_Canvas
     /// </summary>
     public partial class CountdownTimerWindow : Window
     {
+        /// <summary>
+        /// 倒计时窗口构造函数。
+        /// </summary>
         public CountdownTimerWindow()
         {
             InitializeComponent();
@@ -39,6 +42,9 @@ namespace Ink_Canvas
             timer.Interval = 50;
         }
 
+        /// <summary>
+        /// 倒计时轮询事件：刷新剩余时间与进度。
+        /// </summary>
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (!isTimerRunning || isPaused)
@@ -99,6 +105,9 @@ namespace Ink_Canvas
 
         Timer timer = new Timer();
 
+        /// <summary>
+        /// 切换时间显示与调节面板。
+        /// </summary>
         private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (isTimerRunning) return;
@@ -267,6 +276,9 @@ namespace Ink_Canvas
             TextBlockStopTime.Text = (startTime + totalTimeSpan).ToString("t");
         }
 
+        /// <summary>
+        /// 开始/暂停倒计时按钮事件。
+        /// </summary>
         private void BtnStart_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (isPaused && isTimerRunning)
@@ -327,6 +339,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 窗口关闭前处理。
+        /// </summary>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             isTimerRunning = false;

@@ -24,6 +24,9 @@ namespace Ink_Canvas
     {
         #region TwoFingZoomBtn
 
+        /// <summary>
+        /// 双指手势面板显隐切换。
+        /// </summary>
         private void TwoFingerGestureBorder_Click(object sender, RoutedEventArgs e)
         {
             if (TwoFingerGestureBorder.Visibility == Visibility.Visible)
@@ -38,6 +41,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 根据设置刷新双指手势按钮视觉提示。
+        /// </summary>
         private void CheckEnableTwoFingerGestureBtnColorPrompt()
         {
             if (ToggleSwitchEnableMultiTouchMode.IsOn)
@@ -59,6 +65,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 控制双指手势按钮可见性。
+        /// </summary>
         private void CheckEnableTwoFingerGestureBtnVisibility(bool isVisible)
         {
             if (StackPanelCanvasControls.Visibility != Visibility.Visible
@@ -78,12 +87,18 @@ namespace Ink_Canvas
 
         #region Drag
 
+        /// <summary>
+        /// 是否正在拖拽浮动工具栏。
+        /// </summary>
         bool isDragDropInEffect = false;
         Point pos = new Point();
         Point downPos = new Point();
         Point pointDesktop = new Point(-1, -1); //用于记录上次在桌面时的坐标
         Point pointPPT = new Point(-1, -1); //用于记录上次在PPT中的坐标
 
+        /// <summary>
+        /// 浮动栏拖拽移动事件。
+        /// </summary>
         void SymbolIconEmoji_MouseMove(object sender, MouseEventArgs e)
         {
             if (isDragDropInEffect)
@@ -104,6 +119,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 浮动栏拖拽开始事件。
+        /// </summary>
         void SymbolIconEmoji_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (isViewboxFloatingBarMarginAnimationRunning)
@@ -119,6 +137,9 @@ namespace Ink_Canvas
             SymbolIconEmoji2.Width = 28;
         }
 
+        /// <summary>
+        /// 浮动栏拖拽结束/点击切换主控件显隐。
+        /// </summary>
         void SymbolIconEmoji_MouseUp(object sender, MouseButtonEventArgs e)
         {
             isDragDropInEffect = false;
@@ -144,6 +165,9 @@ namespace Ink_Canvas
 
         #endregion
 
+        /// <summary>
+        /// 立即隐藏所有二级面板（无动画）。
+        /// </summary>
         private void HideSubPanelsImmediately()
         {
             BorderTools.Visibility = Visibility.Collapsed;
@@ -155,6 +179,9 @@ namespace Ink_Canvas
             BorderSettings.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// 隐藏二级面板并按模式更新图标高亮状态。
+        /// </summary>
         private async void HideSubPanels(String mode = null, bool autoAlignCenter = false)
         {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);

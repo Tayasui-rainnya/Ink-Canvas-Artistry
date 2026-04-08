@@ -13,15 +13,30 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 最近收集的笔迹集合（用于图形识别窗口）。
+        /// </summary>
         StrokeCollection newStrokes = new StrokeCollection();
+
+        /// <summary>
+        /// 已识别圆形缓存（用于同心/相切判断）。
+        /// </summary>
         List<Circle> circles = new List<Circle>();
 
         //此函数中的所有代码版权所有 WXRIW，在其他项目中使用前必须提前联系（wxriw@outlook.com），谢谢！
+        /// <summary>
+        /// 笔迹收集事件：执行压感模拟、墨迹转图形与历史记录提交。
+        /// </summary>
         private void inkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
             try
             {
                 inkCanvas.Opacity = 1;
+                bool isStraightened = TryApplyPendingInkStraighten(e.Stroke);
+                if (isStraightened)
+                {
+                    return;
+                }
                 if (Settings.InkToShape.IsInkToShapeEnabled && !Environment.Is64BitProcess)
                 {
                     void InkToShapeProcess()
@@ -503,6 +518,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 更新当前笔迹备份快照。
+        /// </summary>
         private void SetNewBackupOfStroke()
         {
             lastTouchDownStrokeCollection = inkCanvas.Strokes.Clone();
@@ -514,6 +532,9 @@ namespace Ink_Canvas
             strokeCollections[whiteboardIndex] = lastTouchDownStrokeCollection;
         }
 
+        /// <summary>
+        /// 计算两点距离。
+        /// </summary>
         public double GetDistance(Point point1, Point point2)
         {
             return Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
@@ -602,11 +623,17 @@ namespace Ink_Canvas
             return newPoint;
         }
 
+        /// <summary>
+        /// 计算中间点（Point）。
+        /// </summary>
         public Point GetCenterPoint(Point point1, Point point2)
         {
             return new Point((point1.X + point2.X) / 2, (point1.Y + point2.Y) / 2);
         }
 
+        /// <summary>
+        /// 计算中间点（StylusPoint）。
+        /// </summary>
         public StylusPoint GetCenterPoint(StylusPoint point1, StylusPoint point2)
         {
             return new StylusPoint((point1.X + point2.X) / 2, (point1.Y + point2.Y) / 2);

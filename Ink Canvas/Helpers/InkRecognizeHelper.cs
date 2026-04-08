@@ -5,9 +5,16 @@ using System.Windows.Media;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 墨迹图形识别辅助类。
+    /// </summary>
     public class InkRecognizeHelper
     {
-        //识别形状
+        /// <summary>
+        /// 对给定笔迹集合进行图形识别。
+        /// </summary>
+        /// <param name="strokes">待识别笔迹集合。</param>
+        /// <returns>识别结果；识别失败时返回默认值。</returns>
         public static ShapeRecognizeResult RecognizeShape(StrokeCollection strokes)
         {
             if (strokes == null || strokes.Count == 0)
@@ -52,6 +59,11 @@ namespace Ink_Canvas.Helpers
             return default;
         }
 
+        /// <summary>
+        /// 判断识别名称是否属于可处理的基础几何图形。
+        /// </summary>
+        /// <param name="name">图形名称。</param>
+        /// <returns>属于受支持图形时返回 <c>true</c>。</returns>
         public static bool IsContainShapeType(string name)
         {
             if (name.Contains("Triangle") || name.Contains("Circle") ||
@@ -65,8 +77,9 @@ namespace Ink_Canvas.Helpers
         }
     }
 
-    //Recognizer 的实现
-
+    /// <summary>
+    /// 手写识别语言枚举。
+    /// </summary>
     public enum RecognizeLanguage
     {
         SimplifiedChinese = 0x0804,
@@ -74,8 +87,14 @@ namespace Ink_Canvas.Helpers
         English = 0x0809
     }
 
+    /// <summary>
+    /// 图形识别结果对象。
+    /// </summary>
     public class ShapeRecognizeResult
     {
+        /// <summary>
+        /// 创建图形识别结果实例。
+        /// </summary>
         public ShapeRecognizeResult(Point centroid, PointCollection hotPoints, AnalysisAlternate analysisAlternate, InkDrawingNode node)
         {
             Centroid = centroid;
@@ -84,12 +103,24 @@ namespace Ink_Canvas.Helpers
             InkDrawingNode = node;
         }
 
+        /// <summary>
+        /// 识别候选结果对象。
+        /// </summary>
         public AnalysisAlternate AnalysisAlternate { get; }
 
+        /// <summary>
+        /// 图形质心。
+        /// </summary>
         public Point Centroid { get; set; }
 
+        /// <summary>
+        /// 图形关键点集合。
+        /// </summary>
         public PointCollection HotPoints { get; }
 
+        /// <summary>
+        /// 图形绘制节点。
+        /// </summary>
         public InkDrawingNode InkDrawingNode { get; }
     }
 
@@ -180,10 +211,14 @@ namespace Ink_Canvas.Helpers
     //}
 
 
-    //用于自动控制其他形状相对于圆的位置
-
+    /// <summary>
+    /// 圆形几何信息对象（用于图形相对定位计算）。
+    /// </summary>
     public class Circle
     {
+        /// <summary>
+        /// 创建圆形信息对象。
+        /// </summary>
         public Circle(Point centroid, double r, Stroke stroke)
         {
             Centroid = centroid;
@@ -191,10 +226,19 @@ namespace Ink_Canvas.Helpers
             Stroke = stroke;
         }
 
+        /// <summary>
+        /// 圆心坐标。
+        /// </summary>
         public Point Centroid { get; set; }
 
+        /// <summary>
+        /// 半径。
+        /// </summary>
         public double R { get; set; }
 
+        /// <summary>
+        /// 对应笔迹对象。
+        /// </summary>
         public Stroke Stroke { get; set; }
     }
 }

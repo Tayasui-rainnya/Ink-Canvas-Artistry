@@ -6,6 +6,11 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 在系统启动目录创建快捷方式，实现开机自启动。
+        /// </summary>
+        /// <param name="exeName">快捷方式名称。</param>
+        /// <returns>创建成功返回 <c>true</c>。</returns>
         public static bool StartAutomaticallyCreate(string exeName)
         {
             try
@@ -30,6 +35,11 @@ namespace Ink_Canvas
             return false;
         }
 
+        /// <summary>
+        /// 删除系统启动目录中的快捷方式，关闭开机自启动。
+        /// </summary>
+        /// <param name="exeName">快捷方式名称。</param>
+        /// <returns>删除成功返回 <c>true</c>。</returns>
         public static bool StartAutomaticallyDel(string exeName)
         {
             try

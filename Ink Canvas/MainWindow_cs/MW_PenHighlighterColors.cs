@@ -5,6 +5,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 高亮笔透明度滑块变更事件。
+        /// </summary>
         private void InkAlphaSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!isLoaded) return;
@@ -17,30 +20,36 @@ namespace Ink_Canvas
             CheckColorTheme();
         }
 
+        /// <summary>切换高亮红色。</summary>
         private void BtnHighlighterColorRed_Click(object sender, RoutedEventArgs e)
         {
             CheckLastColor(101);
         }
 
+        /// <summary>切换高亮橙色。</summary>
         private void BtnHighlighterColorOrange_Click(object sender, RoutedEventArgs e)
         {
             CheckLastColor(102);
         }
 
+        /// <summary>切换高亮黄色。</summary>
         private void BtnHighlighterColorYellow_Click(object sender, RoutedEventArgs e)
         {
             CheckLastColor(103);
         }
 
+        /// <summary>切换高亮青色。</summary>
         private void BtnHighlighterColorTeal_Click(object sender, RoutedEventArgs e)
         {
             CheckLastColor(104);
         }
+        /// <summary>切换高亮蓝色。</summary>
         private void BtnHighlighterColorBlue_Click(object sender, RoutedEventArgs e)
         {
             CheckLastColor(105);
         }
 
+        /// <summary>切换高亮紫色。</summary>
         private void BtnHighlighterColorPurple_Click(object sender, RoutedEventArgs e)
         {
             CheckLastColor(106);

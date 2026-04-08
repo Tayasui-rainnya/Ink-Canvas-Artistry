@@ -10,6 +10,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 切换白板背景（黑板/白板）并同步主题与工具栏配色。
+        /// </summary>
         private void BoardChangeBackgroundColorBtn_Click(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -43,6 +46,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 板擦按钮行为：未激活时展开面板，激活时切换为点擦模式。
+        /// </summary>
         private void BoardEraserIcon_Click(object sender, RoutedEventArgs e)
         {
             if (BoardEraser.Opacity != 1)
@@ -80,6 +86,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 笔划擦除按钮行为：未激活时展开面板，激活时切换为笔划擦模式。
+        /// </summary>
         private void BoardEraserIconByStrokes_Click(object sender, RoutedEventArgs e)
         {
             if (BoardEraserByStrokes.Opacity != 1)
@@ -102,18 +111,27 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 删除图标入口（先切换到画笔工具后执行删除逻辑）。
+        /// </summary>
         private void BoardSymbolIconDelete_Click(object sender, RoutedEventArgs e)
         {
             PenIcon_Click(null, null);
             SymbolIconDelete_MouseUp(sender, e);
         }
 
+        /// <summary>
+        /// 启动希沃视频展台。
+        /// </summary>
         private void BoardLaunchEasiCamera_Click(object sender, RoutedEventArgs e)
         {
             ImageBlackboard_Click(null, null);
             SoftwareLauncher.LaunchEasiCamera("希沃视频展台");
         }
 
+        /// <summary>
+        /// 打开 Desmos 在线计算器。
+        /// </summary>
         private void BoardLaunchDesmos_Click(object sender, RoutedEventArgs e)
         {
             HideSubPanelsImmediately();

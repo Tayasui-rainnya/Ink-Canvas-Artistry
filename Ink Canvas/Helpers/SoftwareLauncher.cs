@@ -5,11 +5,18 @@ using System.Runtime.InteropServices;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 外部软件启动辅助类（当前用于启动希沃相关组件）。
+    /// </summary>
     internal class SoftwareLauncher
     {
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        /// <summary>
+        /// 按软件名称尝试定位并启动 EasiCamera 启动器。
+        /// </summary>
+        /// <param name="softwareName">软件显示名称关键字。</param>
         public static void LaunchEasiCamera(string softwareName)
         {
             string executablePath = FindEasiCameraExecutablePath(softwareName);
@@ -33,6 +40,11 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 从卸载注册表中查找指定软件的安装路径，并推导启动器路径。
+        /// </summary>
+        /// <param name="softwareName">软件显示名称关键字。</param>
+        /// <returns>启动器完整路径；未找到时返回 <c>null</c>。</returns>
         private static string FindEasiCameraExecutablePath(string softwareName)
         {
             string executablePath = null;

@@ -4,20 +4,39 @@ using System.Reflection;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 应用日志辅助类，提供文本日志与对象属性日志写入能力。
+    /// </summary>
     class LogHelper
     {
+        /// <summary>
+        /// 日志文件名（位于 <see cref="App.RootPath"/> 下）。
+        /// </summary>
         public static string LogFile = "Log.txt";
 
+        /// <summary>
+        /// 以 Info 级别写入一条日志。
+        /// </summary>
+        /// <param name="str">日志内容。</param>
         public static void NewLog(string str)
         {
             WriteLogToFile(str, LogType.Info);
         }
 
+        /// <summary>
+        /// 异常日志入口（当前保留空实现）。
+        /// </summary>
+        /// <param name="ex">异常对象。</param>
         public static void NewLog(Exception ex)
         {
 
         }
 
+        /// <summary>
+        /// 将字符串日志写入日志文件。
+        /// </summary>
+        /// <param name="str">日志内容。</param>
+        /// <param name="logType">日志级别。</param>
         public static void WriteLogToFile(string str, LogType logType = LogType.Info)
         {
             string strLogType = "Info";
@@ -47,6 +66,11 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 将对象公开属性逐项写入日志文件，便于调试状态。
+        /// </summary>
+        /// <param name="obj">待记录对象。</param>
+        /// <param name="logType">日志级别。</param>
         public static void WriteObjectLogToFile(object obj, LogType logType = LogType.Info)
         {
             string strLogType = "Info";
@@ -91,6 +115,9 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 日志级别枚举。
+        /// </summary>
         public enum LogType
         {
             Info,

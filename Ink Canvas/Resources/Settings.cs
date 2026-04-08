@@ -2,6 +2,9 @@
 
 namespace Ink_Canvas
 {
+    /// <summary>
+    /// 应用全量配置根对象。
+    /// </summary>
     public class Settings
     {
         [JsonProperty("advanced")]
@@ -18,12 +21,17 @@ namespace Ink_Canvas
         public Gesture Gesture { get; set; } = new Gesture();
         [JsonProperty("inkToShape")]
         public InkToShape InkToShape { get; set; } = new InkToShape();
+        [JsonProperty("inkStraighten")]
+        public InkStraighten InkStraighten { get; set; } = new InkStraighten();
         [JsonProperty("startup")]
         public Startup Startup { get; set; } = new Startup();
         [JsonProperty("randSettings")]
         public RandSettings RandSettings { get; set; } = new RandSettings();
     }
 
+    /// <summary>
+    /// 画布相关配置。
+    /// </summary>
     public class Canvas
     {
         [JsonProperty("inkWidth")]
@@ -50,6 +58,9 @@ namespace Ink_Canvas
         public OptionalOperation HyperbolaAsymptoteOption { get; set; } = OptionalOperation.Ask;
     }
 
+    /// <summary>
+    /// 可选操作枚举。
+    /// </summary>
     public enum OptionalOperation
     {
         Yes,
@@ -57,6 +68,9 @@ namespace Ink_Canvas
         Ask
     }
 
+    /// <summary>
+    /// 手势相关配置。
+    /// </summary>
     public class Gesture
     {
         [JsonIgnore]
@@ -80,6 +94,9 @@ namespace Ink_Canvas
         public MatrixTransformCenterPointOptions MatrixTransformCenterPoint { get; set; } = MatrixTransformCenterPointOptions.CanvasCenterPoint;
     }
 
+    /// <summary>
+    /// 矩阵变换中心点策略。
+    /// </summary>
     public enum MatrixTransformCenterPointOptions
     {
         CanvasCenterPoint,
@@ -87,6 +104,9 @@ namespace Ink_Canvas
         GestureOperationCenterPoint
     }
 
+    /// <summary>
+    /// 启动与更新相关配置。
+    /// </summary>
     public class Startup
     {
         [JsonProperty("isAutoUpdate")]
@@ -108,6 +128,9 @@ namespace Ink_Canvas
         public bool IsFoldAtStartup { get; set; } = false;
     }
 
+    /// <summary>
+    /// 外观与按钮显示配置。
+    /// </summary>
     public class Appearance
     {
         [JsonProperty("isEnableDisPlayFloatBarText")]
@@ -206,6 +229,9 @@ namespace Ink_Canvas
         public int Theme { get; set; } = 0;            
     }
 
+    /// <summary>
+    /// PowerPoint 集成行为配置。
+    /// </summary>
     public class PowerPointSettings
     {
         [JsonProperty("isShowPPTNavigationBottom")]
@@ -242,6 +268,9 @@ namespace Ink_Canvas
         public bool IsSupportWPS { get; set; } = true;
     }
 
+    /// <summary>
+    /// 自动化行为配置。
+    /// </summary>
     public class Automation
     {
         [JsonIgnore]
@@ -367,6 +396,21 @@ namespace Ink_Canvas
     {
         [JsonProperty("isInkToShapeEnabled")]
         public bool IsInkToShapeEnabled { get; set; } = true;
+    }
+
+    public class InkStraighten
+    {
+        [JsonProperty("isInkStraightenEnabled")]
+        public bool IsInkStraightenEnabled { get; set; } = true;
+
+        [JsonProperty("holdDurationMs")]
+        public int HoldDurationMs { get; set; } = 800;
+
+        [JsonProperty("speedThresholdPxPerMs")]
+        public double SpeedThresholdPxPerMs { get; set; } = 0.03;
+
+        [JsonProperty("displacementThresholdPx")]
+        public double DisplacementThresholdPx { get; set; } = 4;
     }
 
     public class RandSettings {

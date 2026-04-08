@@ -13,17 +13,35 @@ namespace Ink_Canvas
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Process-wide mutex used to ensure a single app instance by default.
+        /// </summary>
         System.Threading.Mutex mutex;
 
+        /// <summary>
+        /// Startup arguments captured during application initialization.
+        /// </summary>
         public static string[] StartArgs = null;
+
+        /// <summary>
+        /// Root directory used for logs, settings, and runtime assets.
+        /// </summary>
         public static string RootPath = Environment.GetEnvironmentVariable("APPDATA") + "\\Ink Canvas\\";
 
+        /// <summary>
+        /// Initializes application-level event handlers.
+        /// </summary>
         public App()
         {
             this.Startup += new StartupEventHandler(App_Startup);
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
+        /// <summary>
+        /// Handles uncaught UI-thread exceptions, records diagnostics, and suppresses crash termination.
+        /// </summary>
+        /// <param name="sender">Exception event source.</param>
+        /// <param name="e">Exception details and handling flag.</param>
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             Ink_Canvas.MainWindow.ShowNewMessage("抱歉，出现未预期的异常，可能导致 Ink Canvas 画板运行不稳定。\n建议保存墨迹后重启应用。", true);
@@ -31,6 +49,11 @@ namespace Ink_Canvas
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Initializes runtime state, enforces single-instance launch, and stores startup arguments.
+        /// </summary>
+        /// <param name="sender">Startup event source.</param>
+        /// <param name="e">Startup event data containing command-line arguments.</param>
         void App_Startup(object sender, StartupEventArgs e)
         {
             /*if (!StoreHelper.IsStoreApp) */RootPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
@@ -51,6 +74,11 @@ namespace Ink_Canvas
             StartArgs = e.Args;
         }
 
+        /// <summary>
+        /// Applies custom mouse-wheel scrolling behavior for wrapped <see cref="ScrollViewerEx"/> controls.
+        /// </summary>
+        /// <param name="sender">Scroll viewer receiving the wheel event.</param>
+        /// <param name="e">Mouse wheel event data.</param>
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             try

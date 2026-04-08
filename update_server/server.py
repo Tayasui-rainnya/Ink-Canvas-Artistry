@@ -1,3 +1,11 @@
+"""FastAPI update server for Ink Canvas Artistry.
+
+This module exposes two endpoints:
+
+* ``GET /version``: returns the latest published application version.
+* ``GET /download/{filename}``: downloads an update package from the updates folder.
+"""
+
 import os
 import logging
 import uvicorn
@@ -35,6 +43,14 @@ if not os.path.isfile(version_file_path):
 
 @app.get("/version", response_class=PlainTextResponse)
 async def get_version():
+    """Read and return the current version string from ``version.txt``.
+
+    Returns:
+        str: A plain-text semantic version value, for example ``1.2.3``.
+
+    Raises:
+        HTTPException: When the version file is missing or cannot be read.
+    """
     logging.info("Request received for /version")
     try:
         with open(version_file_path, 'r') as f:
@@ -54,6 +70,17 @@ async def get_version():
 
 @app.get("/download/{filename}")
 async def download_file(filename: str):
+    """Validate and stream an update file from the local update directory.
+
+    Args:
+        filename: Name of the update package requested by client.
+
+    Returns:
+        FileResponse: Binary file stream for the requested package.
+
+    Raises:
+        HTTPException: If the filename is invalid, the file is missing, or serving fails.
+    """
     logging.info(f"Request received for /download/{filename}")
 
     if ".." in filename or filename.startswith("/"):

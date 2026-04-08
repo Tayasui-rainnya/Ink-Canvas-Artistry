@@ -16,6 +16,9 @@ namespace Ink_Canvas
     {
         #region Behavior
 
+        /// <summary>
+        /// 自动更新开关切换事件。
+        /// </summary>
         private void ToggleSwitchIsAutoUpdate_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -23,6 +26,9 @@ namespace Ink_Canvas
             IsAutoUpdateWithSilenceBlock.Visibility = ToggleSwitchIsAutoUpdate.IsOn ? Visibility.Visible : Visibility.Collapsed;
             SaveSettingsToFile();
         }
+        /// <summary>
+        /// 静默更新开关切换事件。
+        /// </summary>
         private void ToggleSwitchIsAutoUpdateWithSilence_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -31,6 +37,9 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 静默更新起始时间变更事件。
+        /// </summary>
         private void AutoUpdateWithSilenceStartTimeComboBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -38,6 +47,9 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 静默更新结束时间变更事件。
+        /// </summary>
         private void AutoUpdateWithSilenceEndTimeComboBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -45,6 +57,9 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 开机自启开关切换事件。
+        /// </summary>
         private void ToggleSwitchRunAtStartup_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -62,6 +77,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 启动时收纳开关切换事件。
+        /// </summary>
         private void ToggleSwitchFoldAtStartup_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -69,6 +87,9 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// PPT 支持开关切换事件。
+        /// </summary>
         private void ToggleSwitchSupportPowerPoint_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -86,6 +107,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 新放映自动显示画布开关切换事件。
+        /// </summary>
         private void ToggleSwitchShowCanvasAtNewSlideShow_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -98,6 +122,9 @@ namespace Ink_Canvas
 
         #region Startup
 
+        /// <summary>
+        /// Nib 模式开关切换事件（同步主界面与白板面板）。
+        /// </summary>
         private void ToggleSwitchEnableNibMode_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -870,6 +897,10 @@ namespace Ink_Canvas
             Settings.Gesture.IsEnableTwoFingerRotationOnSelection = true;
 
             Settings.InkToShape.IsInkToShapeEnabled = true;
+            Settings.InkStraighten.IsInkStraightenEnabled = true;
+            Settings.InkStraighten.HoldDurationMs = 800;
+            Settings.InkStraighten.SpeedThresholdPxPerMs = 0.03;
+            Settings.InkStraighten.DisplacementThresholdPx = 4;
 
             Settings.Startup.IsEnableNibMode = false;
             Settings.Startup.IsAutoUpdate = true;
@@ -920,6 +951,34 @@ namespace Ink_Canvas
         {
             if (!isLoaded) return;
             Settings.InkToShape.IsInkToShapeEnabled = ToggleSwitchEnableInkToShape.IsOn;
+            SaveSettingsToFile();
+        }
+
+        private void ToggleSwitchEnableInkStraighten_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.IsInkStraightenEnabled = ToggleSwitchEnableInkStraighten.IsOn;
+            SaveSettingsToFile();
+        }
+
+        private void SliderInkStraightenHoldDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.HoldDurationMs = (int)e.NewValue;
+            SaveSettingsToFile();
+        }
+
+        private void SliderInkStraightenSpeedThreshold_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.SpeedThresholdPxPerMs = Math.Round(e.NewValue, 3);
+            SaveSettingsToFile();
+        }
+
+        private void SliderInkStraightenDisplacementThreshold_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!isLoaded) return;
+            Settings.InkStraighten.DisplacementThresholdPx = Math.Round(e.NewValue, 1);
             SaveSettingsToFile();
         }
 

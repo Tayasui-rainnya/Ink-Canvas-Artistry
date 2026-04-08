@@ -9,13 +9,21 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>检测 PPT 运行状态定时器。</summary>
         Timer timerCheckPPT = new Timer();
+        /// <summary>自动清理进程定时器。</summary>
         Timer timerKillProcess = new Timer();
+        /// <summary>自动收纳浮窗定时器。</summary>
         Timer timerCheckAutoFold = new Timer();
+        /// <summary>检测到的可用最新版本号。</summary>
         string AvailableLatestVersion = null;
+        /// <summary>静默更新时段检查定时器。</summary>
         Timer timerCheckAutoUpdateWithSilence = new Timer();
         bool isHidingSubPanelsWhenInking = false; // 避免书写时触发二次关闭二级菜单导致动画不连续
 
+        /// <summary>
+        /// 初始化与启动主定时器参数及事件绑定。
+        /// </summary>
         private void InitTimers()
         {
             timerCheckPPT.Elapsed += TimerCheckPPT_Elapsed;
@@ -28,6 +36,9 @@ namespace Ink_Canvas
             timerCheckAutoUpdateWithSilence.Interval = 1000 * 60 * 60;
         }
 
+        /// <summary>
+        /// 定时清理指定第三方进程（按自动化设置执行）。
+        /// </summary>
         private void TimerKillProcess_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
@@ -76,6 +87,9 @@ namespace Ink_Canvas
         bool foldFloatingBarByUser = false, // 保持收纳操作不受自动收纳的控制
             unfoldFloatingBarByUser = false; // 允许用户在希沃软件内进行展开操作
 
+        /// <summary>
+        /// 自动收纳/展开浮动栏逻辑轮询。
+        /// </summary>
         private void timerCheckAutoFold_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (isFloatingBarChangingHideMode) return;
@@ -122,6 +136,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 静默时段更新轮询：满足条件时触发静默安装。
+        /// </summary>
         private void timerCheckAutoUpdateWithSilence_Elapsed(object sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>

@@ -17,7 +17,14 @@ namespace Ink_Canvas
     {
         #region Multi-Touch
 
+        /// <summary>
+        /// 是否处于多点触控绘制模式。
+        /// </summary>
         bool isInMultiTouchMode = false;
+
+        /// <summary>
+        /// 多点触控模式开关按钮事件。
+        /// </summary>
         private void BorderMultiTouchMode_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (isInMultiTouchMode)
@@ -42,6 +49,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 多点触控按下处理：根据触摸宽度决定擦除或书写模式。
+        /// </summary>
         private void MainWindow_TouchDown(object sender, TouchEventArgs e)
         {
             if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint
@@ -82,6 +92,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 多点触控下触笔按下处理。
+        /// </summary>
         private void MainWindow_StylusDown(object sender, StylusDownEventArgs e)
         {
             if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint
@@ -91,6 +104,9 @@ namespace Ink_Canvas
             TouchDownPointsList[e.StylusDevice.Id] = InkCanvasEditingMode.None;
         }
 
+        /// <summary>
+        /// 多点触控下触笔抬起处理：提交预览笔迹并清理缓存。
+        /// </summary>
         private async void MainWindow_StylusUp(object sender, StylusEventArgs e)
         {
             try
@@ -104,10 +120,16 @@ namespace Ink_Canvas
                     try
                     {
                         // 触摸屏 TabletDeviceType.Touch 
-                        inkCanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
+                        var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
+                        if (strokeVisual?.Stroke == null || strokeVisual.Stroke.StylusPoints.Count == 0)
+                        {
+                            inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
+                            return;
+                        }
+                        inkCanvas.Strokes.Add(strokeVisual.Stroke);
                         await Task.Delay(5); // 避免渲染墨迹完成前预览墨迹被删除导致墨迹闪烁
                         inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
-                        inkCanvas_StrokeCollected(inkCanvas, new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
+                        inkCanvas_StrokeCollected(inkCanvas, new InkCanvasStrokeCollectedEventArgs(strokeVisual.Stroke));
                     }
                     catch(Exception ex) {
                         LogHelper.WriteLogToFile(ex.ToString(), LogHelper.LogType.Error);
@@ -133,6 +155,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 多点触控下触笔移动处理：更新预览笔迹。
+        /// </summary>
         private void MainWindow_StylusMove(object sender, StylusEventArgs e)
         {
             try
@@ -154,6 +179,9 @@ namespace Ink_Canvas
             catch { }
         }
 
+        /// <summary>
+        /// 获取或创建指定触点的笔迹可视对象。
+        /// </summary>
         private StrokeVisual GetStrokeVisual(int id)
         {
             if (StrokeVisualList.TryGetValue(id, out var visual))
@@ -171,6 +199,9 @@ namespace Ink_Canvas
             return strokeVisual;
         }
 
+        /// <summary>
+        /// 获取指定触点对应的可视容器。
+        /// </summary>
         private VisualCanvas GetVisualCanvas(int id)
         {
             if (VisualCanvasList.TryGetValue(id, out var visualCanvas))
@@ -180,6 +211,9 @@ namespace Ink_Canvas
             return null;
         }
 
+        /// <summary>
+        /// 获取指定触点记录的编辑模式。
+        /// </summary>
         private InkCanvasEditingMode GetTouchDownPointsList(int id)
         {
             if (TouchDownPointsList.TryGetValue(id, out var inkCanvasEditingMode))
@@ -189,8 +223,17 @@ namespace Ink_Canvas
             return inkCanvas.EditingMode;
         }
 
+        /// <summary>
+        /// 触点 id 与按下时编辑模式映射。
+        /// </summary>
         private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } = new Dictionary<int, InkCanvasEditingMode>();
+        /// <summary>
+        /// 触点 id 与笔迹可视对象映射。
+        /// </summary>
         private Dictionary<int, StrokeVisual> StrokeVisualList { get; } = new Dictionary<int, StrokeVisual>();
+        /// <summary>
+        /// 触点 id 与可视容器映射。
+        /// </summary>
         private Dictionary<int, VisualCanvas> VisualCanvasList { get; } = new Dictionary<int, VisualCanvas>();
 
         #endregion

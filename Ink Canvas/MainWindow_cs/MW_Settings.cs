@@ -251,7 +251,7 @@ namespace Ink_Canvas
             );
 
             UpdateBoardButtonGroupSeparators(
-                false,
+                true,
                 (BtnBoardSelect, BoardSelect),
                 (BtnBoardPen, BoardPen),
                 (BtnBoardAreaEraser, BoardEraser),

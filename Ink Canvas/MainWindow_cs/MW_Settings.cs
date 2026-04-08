@@ -245,11 +245,13 @@ namespace Ink_Canvas
                     : Visibility.Collapsed;
 
             UpdateBoardButtonGroupSeparators(
+                true,
                 (BtnBoardGesture, BoardGestureBorder),
                 (BtnBoardCanvas, BoardCanvasBorder)
             );
 
             UpdateBoardButtonGroupSeparators(
+                false,
                 (BtnBoardSelect, BoardSelect),
                 (BtnBoardPen, BoardPen),
                 (BtnBoardAreaEraser, BoardEraser),
@@ -261,7 +263,7 @@ namespace Ink_Canvas
             );
         }
 
-        private void UpdateBoardButtonGroupSeparators(params (UIElement Element, Border Border)[] buttons)
+        private void UpdateBoardButtonGroupSeparators(bool applyCornerRadius, params (UIElement Element, Border Border)[] buttons)
         {
             int firstVisible = -1;
             int lastVisible = -1;
@@ -278,7 +280,9 @@ namespace Ink_Canvas
                 bool isFirst = i == firstVisible;
                 bool isLast = i == lastVisible;
                 buttons[i].Border.BorderThickness = new Thickness(0, 0, isLast ? 0 : 1, 0);
-                buttons[i].Border.CornerRadius = new CornerRadius(isFirst ? 5 : 0, isFirst ? 5 : 0, isLast ? 5 : 0, isLast ? 5 : 0);
+                buttons[i].Border.CornerRadius = applyCornerRadius
+                    ? new CornerRadius(isFirst ? 5 : 0, isFirst ? 5 : 0, isLast ? 5 : 0, isLast ? 5 : 0)
+                    : new CornerRadius(0);
             }
         }
 

@@ -6,21 +6,36 @@ using System.Windows.Media;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 用于承载单个 <see cref="DrawingVisual"/> 的轻量可视化容器。
+    /// </summary>
     public class VisualCanvas : FrameworkElement
     {
+        /// <summary>
+        /// 返回指定索引的可视子元素。
+        /// </summary>
         protected override Visual GetVisualChild(int index)
         {
             return Visual;
         }
 
+        /// <summary>
+        /// 当前可视子元素数量（固定为 1）。
+        /// </summary>
         protected override int VisualChildrenCount => 1;
 
+        /// <summary>
+        /// 初始化可视化容器并挂载目标 <see cref="DrawingVisual"/>。
+        /// </summary>
         public VisualCanvas(DrawingVisual visual)
         {
             Visual = visual;
             AddVisualChild(visual);
         }
 
+        /// <summary>
+        /// 被承载的可视化对象。
+        /// </summary>
         public DrawingVisual Visual { get; }
     }
 
@@ -45,7 +60,7 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         ///     创建显示笔迹的类
         /// </summary>
-        /// <param name="drawingAttributes"></param>
+        /// <param name="drawingAttributes">笔迹绘制属性。</param>
         public StrokeVisual(DrawingAttributes drawingAttributes)
         {
             _drawingAttributes = drawingAttributes;
@@ -59,7 +74,7 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         ///     在笔迹中添加点
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">要追加的触控点。</param>
         public void Add(StylusPoint point)
         {
             if (Stroke == null)
@@ -90,6 +105,9 @@ namespace Ink_Canvas.Helpers
 
         private readonly DrawingAttributes _drawingAttributes;
 
+        /// <summary>
+        /// 隐式转换占位（当前未实现）。
+        /// </summary>
         public static implicit operator Stroke(StrokeVisual v)
         {
             throw new NotImplementedException();

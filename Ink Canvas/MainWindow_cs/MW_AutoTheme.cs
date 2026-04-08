@@ -11,6 +11,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 获取主窗口当前主题（Light/Dark）。
+        /// </summary>
         public string GetMainWindowTheme()
         {
             if (currentMode != 0)
@@ -23,6 +26,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 从应用资源字典中移除指定 URI 的字典资源。
+        /// </summary>
         void RemoveResourceDictionary(Uri uri)
         {
             var dictionaries = Application.Current.Resources.MergedDictionaries;
@@ -34,6 +40,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 主题下拉框变更事件：保存设置并立即应用。
+        /// </summary>
         private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isLoaded) return;
@@ -42,6 +51,9 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 根据当前白板/黑板模式切换画布主题资源。
+        /// </summary>
         private void SetBoardTheme()
         {
             var lightBoardUri = new Uri("Resources/Styles/Light-Board.xaml", UriKind.Relative);
@@ -60,6 +72,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 应用主主题资源并同步 iNKORE 主题状态。
+        /// </summary>
         private void SetTheme(string theme)
         {
             var lightUri = new Uri("Resources/Styles/Light.xaml", UriKind.Relative);
@@ -93,6 +108,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 系统偏好变更处理：按用户设置应用亮/暗/跟随系统主题。
+        /// </summary>
         private void SystemEvents_UserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
         {
             switch (Settings.Appearance.Theme)
@@ -110,6 +128,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 判断系统主题是否为浅色。
+        /// </summary>
         private bool IsSystemThemeLight()
         {
             bool light = false;

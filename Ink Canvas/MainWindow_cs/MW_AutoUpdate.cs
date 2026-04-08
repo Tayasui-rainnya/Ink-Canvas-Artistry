@@ -5,6 +5,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 自动更新主流程：检查版本、下载安装包，并根据设置触发立即安装或静默时段安装。
+        /// </summary>
         private async void AutoUpdate()
         {
             AvailableLatestVersion = await AutoUpdateHelper.CheckForUpdates();

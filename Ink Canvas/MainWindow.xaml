@@ -1023,7 +1023,7 @@
                                             Background="{TemplateBinding Background}"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="5">
+                                            CornerRadius="0">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                         <ControlTemplate.Triggers>
@@ -1059,6 +1059,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -1249,6 +1250,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -1294,6 +1296,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
@@ -1340,6 +1343,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
@@ -1933,7 +1937,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,0.25,1">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2015,7 +2019,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,0.25,1">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2062,7 +2066,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,0.25,1">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2312,6 +2316,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
@@ -2350,6 +2355,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
@@ -2390,6 +2396,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
+                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel

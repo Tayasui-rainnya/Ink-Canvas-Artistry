@@ -243,6 +243,38 @@ namespace Ink_Canvas
                 BoardGestureCanvasContainer.Visibility == Visibility.Visible
                     ? Visibility.Visible
                     : Visibility.Collapsed;
+
+            UpdateBoardButtonGroupSeparators(
+                (BtnBoardGesture, BoardGestureBorder),
+                (BtnBoardCanvas, BoardCanvasBorder)
+            );
+
+            UpdateBoardButtonGroupSeparators(
+                (BtnBoardSelect, BoardSelect),
+                (BtnBoardPen, BoardPen),
+                (BtnBoardAreaEraser, BoardEraser),
+                (BtnBoardStrokeEraser, BoardEraserByStrokes),
+                (BtnBoardShape, BoardGeometry),
+                (BtnBoardInsertImage, BoardInsertImageBorder),
+                (BtnBoardUndo, BoardUndo),
+                (BtnBoardRedo, BoardRedo)
+            );
+        }
+
+        private void UpdateBoardButtonGroupSeparators(params (UIElement Element, Border Border)[] buttons)
+        {
+            int lastVisible = -1;
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (buttons[i].Element.Visibility == Visibility.Visible) lastVisible = i;
+            }
+
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (buttons[i].Element.Visibility != Visibility.Visible) continue;
+                bool isLast = i == lastVisible;
+                buttons[i].Border.BorderThickness = new Thickness(0, 0, isLast ? 0 : 0.25, 0);
+            }
         }
 
         private void ApplyScaling()

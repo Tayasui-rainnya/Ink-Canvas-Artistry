@@ -12,6 +12,9 @@ namespace Ink_Canvas
     public partial class MainWindow : Window
     {
         #region Image
+        /// <summary>
+        /// 插入图片元素。
+        /// </summary>
         private async void BtnImageInsert_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -39,6 +42,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 创建图片元素并按设置进行压缩与缓存复制。
+        /// </summary>
         private async Task<Image> CreateAndCompressImageAsync(string filePath)
         {
             string savePath = Path.Combine(Settings.Automation.AutoSavedStrokesLocation, "File Dependency");
@@ -90,6 +96,9 @@ namespace Ink_Canvas
         #endregion
 
         #region Media
+        /// <summary>
+        /// 插入媒体元素。
+        /// </summary>
         private async void BtnMediaInsert_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -123,6 +132,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 创建媒体元素并复制媒体文件到依赖目录。
+        /// </summary>
         private async Task<MediaElement> CreateMediaElementAsync(string filePath)
         {
             string savePath = Path.Combine(Settings.Automation.AutoSavedStrokesLocation, "File Dependency");
@@ -154,6 +166,9 @@ namespace Ink_Canvas
         }
         #endregion
 
+        /// <summary>
+        /// 将元素缩放并居中到画布可视区域。
+        /// </summary>
         private void CenterAndScaleElement(FrameworkElement element)
         {
             double maxWidth = SystemParameters.PrimaryScreenWidth / 2;

@@ -31,13 +31,22 @@ namespace Ink_Canvas
             public Point LatestPoint;
         }
 
+        /// <summary>
+        /// 当前活动的墨迹拉直会话集合（按指针 id 管理）。
+        /// </summary>
         private readonly Dictionary<int, InkStraightenSession> _inkStraightenSessions = new Dictionary<int, InkStraightenSession>();
 
+        /// <summary>
+        /// 判断输入事件是否由触控笔提升而来。
+        /// </summary>
         private static bool IsPromotedFromStylus(MouseEventArgs e)
         {
             return e?.StylusDevice != null;
         }
 
+        /// <summary>
+        /// 判断当前是否满足墨迹拉直可用条件。
+        /// </summary>
         private bool IsInkStraightenAvailable()
         {
             return Settings?.InkStraighten != null
@@ -65,6 +74,9 @@ namespace Ink_Canvas
             return Math.Max(200, Math.Min(2000, Settings.InkStraighten.HoldDurationMs));
         }
 
+        /// <summary>
+        /// 启动墨迹拉直会话。
+        /// </summary>
         private void StartInkStraightenSession(int pointerId, Point startPoint)
         {
             if (!IsInkStraightenAvailable())
@@ -86,6 +98,9 @@ namespace Ink_Canvas
             };
         }
 
+        /// <summary>
+        /// 更新墨迹拉直会话状态。
+        /// </summary>
         private void UpdateInkStraightenSession(int pointerId, Point currentPoint)
         {
             if (!_inkStraightenSessions.TryGetValue(pointerId, out var session))
@@ -151,6 +166,9 @@ namespace Ink_Canvas
             session.LastTimestamp = now;
         }
 
+        /// <summary>
+        /// 更新墨迹拉直预览效果。
+        /// </summary>
         private void UpdateInkStraightenPreview(InkStraightenSession session, Point currentPoint)
         {
             if (session.PreviewLine == null)
@@ -173,6 +191,9 @@ namespace Ink_Canvas
             session.PreviewLine.Y2 = currentPoint.Y;
         }
 
+        /// <summary>
+        /// 结束指定墨迹拉直会话并清理预览。
+        /// </summary>
         private void EndInkStraightenSession(int pointerId)
         {
             if (!_inkStraightenSessions.TryGetValue(pointerId, out var session))
@@ -220,6 +241,9 @@ namespace Ink_Canvas
             _inkStraightenSessions.Remove(pointerId);
         }
 
+        /// <summary>
+        /// 尝试将活动拉直结果应用到新笔迹。
+        /// </summary>
         private bool TryApplyActiveInkStraighten(Stroke rawStroke)
         {
             if (rawStroke == null || rawStroke.StylusPoints.Count == 0)

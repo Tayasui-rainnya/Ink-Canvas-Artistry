@@ -12,6 +12,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 读取并应用设置（可选启动场景）。
+        /// </summary>
         private void LoadSettings(bool isStartup = false)
         {
             try

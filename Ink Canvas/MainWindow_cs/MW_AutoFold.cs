@@ -9,8 +9,14 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 浮动栏收纳状态与动画中状态标记。
+        /// </summary>
         bool isFloatingBarFolded = false, isFloatingBarChangingHideMode = false;
 
+        /// <summary>
+        /// 收纳浮动工具栏到侧边。
+        /// </summary>
         private async void FoldFloatingBar_Click(object sender, RoutedEventArgs e)
         {
             if (sender == null)
@@ -57,6 +63,9 @@ namespace Ink_Canvas
             isFloatingBarChangingHideMode = false;
         }
 
+        /// <summary>
+        /// 展开浮动工具栏。
+        /// </summary>
         private async void UnFoldFloatingBar_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (sender == null || BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
@@ -101,6 +110,9 @@ namespace Ink_Canvas
             isFloatingBarChangingHideMode = false;
         }
 
+        /// <summary>
+        /// 侧边面板边距动画。
+        /// </summary>
         private async void SidePannelMarginAnimation(int MarginFromEdge) // Possible value: -40, -16
         {
             await Dispatcher.InvokeAsync(() =>

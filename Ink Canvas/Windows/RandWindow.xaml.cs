@@ -15,6 +15,9 @@ namespace Ink_Canvas {
     /// Interaction logic for RandWindow.xaml
     /// </summary>
     public partial class RandWindow : Window {
+        /// <summary>
+        /// 抽奖窗口构造函数。
+        /// </summary>
         public RandWindow() {
             InitializeComponent();
             AnimationsHelper.ShowWithSlideFromBottomAndFade(this, 0.25);
@@ -36,6 +39,9 @@ namespace Ink_Canvas {
             }
         }
 
+        /// <summary>
+        /// 自动抽取模式构造函数。
+        /// </summary>
         public RandWindow(bool IsAutoClose) {
             InitializeComponent();
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
@@ -72,18 +78,27 @@ namespace Ink_Canvas {
         public int PeopleCount = 60;
         public List<string> Names = new List<string>();
 
+        /// <summary>
+        /// 增加抽取人数。
+        /// </summary>
         private void BorderBtnAdd_MouseUp(object sender, MouseButtonEventArgs e) {
             if (TotalCount >= PeopleCount) return;
             TotalCount++;
             LabelNumberCount.Text = TotalCount.ToString();
         }
 
+        /// <summary>
+        /// 减少抽取人数。
+        /// </summary>
         private void BorderBtnMinus_MouseUp(object sender, MouseButtonEventArgs e) {
             if (TotalCount < 2) return;
             TotalCount--;
             LabelNumberCount.Text = TotalCount.ToString();
         }
 
+        /// <summary>
+        /// 执行随机抽取流程。
+        /// </summary>
         private void BorderBtnRand_MouseUp(object sender, MouseButtonEventArgs e) {
             Random random = new Random();// randSeed + DateTime.Now.Millisecond / 10 % 10);
             string outputString = "";

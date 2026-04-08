@@ -10,6 +10,9 @@ namespace Ink_Canvas.ProcessBars
     /// </summary>
     public partial class CycleProcessBar : UserControl
     {
+        /// <summary>
+        /// 环形进度条控件构造函数。
+        /// </summary>
         public CycleProcessBar()
         {
             InitializeComponent();
@@ -21,6 +24,9 @@ namespace Ink_Canvas.ProcessBars
             set { SetRingColor(value); }
         }
 
+        /// <summary>
+        /// 设置环形描边颜色。
+        /// </summary>
         private void SetRingColor(bool isPaused)
         {
             if (isPaused)
@@ -33,6 +39,9 @@ namespace Ink_Canvas.ProcessBars
             }
         }
 
+        /// <summary>
+        /// 将十六进制字符串转换为颜色。
+        /// </summary>
         private Color StringToColor(string colorStr)
         {
             Byte[] argb = new Byte[4];
@@ -47,6 +56,9 @@ namespace Ink_Canvas.ProcessBars
             return Color.FromArgb(argb[0], argb[1], argb[2], argb[3]);//#FFFFFFFF
         }
 
+        /// <summary>
+        /// 单个十六进制字符转字节值。
+        /// </summary>
         private static byte toByte(char c)
         {
             byte b = (byte)"0123456789ABCDEF".IndexOf(c);

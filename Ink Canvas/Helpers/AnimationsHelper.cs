@@ -5,8 +5,14 @@ using System.Windows.Media.Animation;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 常用 UI 动画辅助类（显示/隐藏过渡）。
+    /// </summary>
     internal class AnimationsHelper
     {
+        /// <summary>
+        /// 自下向上滑入并淡入显示元素。
+        /// </summary>
         public static void ShowWithSlideFromBottomAndFade(UIElement element, double duration = 0.15)
         {
             try
@@ -47,6 +53,9 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 自左向右滑入并淡入显示元素。
+        /// </summary>
         public static void ShowWithSlideFromLeftAndFade(UIElement element, double duration = 0.25)
         {
             try
@@ -87,6 +96,9 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 以左侧为基准缩放显示元素。
+        /// </summary>
         public static void ShowWithScaleFromLeft(UIElement element, double duration = 0.5)
         {
             try
@@ -128,6 +140,9 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 以右侧为基准缩放显示元素。
+        /// </summary>
         public static void ShowWithScaleFromRight(UIElement element, double duration = 0.5)
         {
             try
@@ -169,6 +184,9 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 以底部为基准缩放显示元素。
+        /// </summary>
         public static void ShowWithScaleFromBottom(UIElement element, double duration = 0.5)
         {
             try
@@ -210,6 +228,9 @@ namespace Ink_Canvas.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// 滑出并淡出隐藏元素。
+        /// </summary>
         public static void HideWithSlideAndFade(UIElement element, double duration = 0.15)
         {
             try

@@ -263,17 +263,22 @@ namespace Ink_Canvas
 
         private void UpdateBoardButtonGroupSeparators(params (UIElement Element, Border Border)[] buttons)
         {
+            int firstVisible = -1;
             int lastVisible = -1;
             for (int i = 0; i < buttons.Length; i++)
             {
-                if (buttons[i].Element.Visibility == Visibility.Visible) lastVisible = i;
+                if (buttons[i].Element.Visibility != Visibility.Visible) continue;
+                if (firstVisible == -1) firstVisible = i;
+                lastVisible = i;
             }
 
             for (int i = 0; i < buttons.Length; i++)
             {
                 if (buttons[i].Element.Visibility != Visibility.Visible) continue;
+                bool isFirst = i == firstVisible;
                 bool isLast = i == lastVisible;
-                buttons[i].Border.BorderThickness = new Thickness(0, 0, isLast ? 0 : 0.25, 0);
+                buttons[i].Border.BorderThickness = new Thickness(0, 0, isLast ? 0 : 1, 0);
+                buttons[i].Border.CornerRadius = new CornerRadius(isFirst ? 5 : 0, isFirst ? 5 : 0, isLast ? 5 : 0, isLast ? 5 : 0);
             }
         }
 

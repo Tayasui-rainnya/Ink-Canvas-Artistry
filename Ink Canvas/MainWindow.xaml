@@ -1052,6 +1052,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="TwoFingerGestureBorder_Click">
                             <Border
@@ -1243,6 +1244,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="BoardChangeBackgroundColorBtn_Click">
                             <Border
@@ -1289,6 +1291,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="SymbolIconSelect_Click">
                             <Border
@@ -1336,6 +1339,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="PenIcon_Click">
                             <Border
@@ -1929,6 +1933,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="BoardEraserIcon_Click">
                             <Border
@@ -2011,6 +2016,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="BoardEraserIconByStrokes_Click">
                             <Border
@@ -2058,6 +2064,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="ImageDrawShape_Click">
                             <Border
@@ -2309,6 +2316,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="BtnImageInsert_Click">
                             <Border
@@ -2348,6 +2356,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="SymbolIconUndo_Click">
                             <Border
@@ -2389,6 +2398,7 @@
                             Width="60"
                             Height="55"
                             Padding="0"
+                            Background="Transparent"
                             BorderThickness="0"
                             Click="SymbolIconRedo_Click">
                             <Border

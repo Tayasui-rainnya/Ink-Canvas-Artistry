@@ -1040,8 +1040,14 @@
                         </Style>
                     </Grid.Resources>
                     <ikw:SimpleStackPanel Orientation="Horizontal">
-
-                        <Button
+                        <Border
+                            x:Name="BoardGestureCanvasContainer"
+                            Background="{DynamicResource BoardBarBackground}"
+                            BorderBrush="{DynamicResource BoardBarBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <ikw:SimpleStackPanel Orientation="Horizontal">
+                                <Button
                             x:Name="BtnBoardGesture"
                             Width="60"
                             Height="55"
@@ -1053,9 +1059,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
-                                CornerRadius="5,0,0,5">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ui:FontIcon
                                         Width="26"
@@ -1074,7 +1078,7 @@
                                         Text="手势" />
                                 </Grid>
                             </Border>
-                        </Button>
+                                </Button>
                         <Grid Width="0" Margin="0,0,0,5">
                             <Viewbox
                                 Name="BoardTwoFingerGestureBorder"
@@ -1233,7 +1237,7 @@
                                 </Border>
                             </Viewbox>
                         </Grid>
-                        <Button
+                                <Button
                             x:Name="BtnBoardCanvas"
                             Width="60"
                             Height="55"
@@ -1245,9 +1249,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
-                                CornerRadius="0,5,5,0">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ui:FontIcon
                                         Width="26"
@@ -1265,13 +1267,22 @@
                                         Text="画布" />
                                 </Grid>
                             </Border>
-                        </Button>
+                                </Button>
+                            </ikw:SimpleStackPanel>
+                        </Border>
                         <Border
                             x:Name="BoardGestureCanvasSpacing"
                             Width="5"
                             Height="1"
                             Background="Transparent" />
-                        <Button
+                        <Border
+                            x:Name="BoardMainButtonsContainer"
+                            Background="{DynamicResource BoardBarBackground}"
+                            BorderBrush="{DynamicResource BoardBarBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <ikw:SimpleStackPanel Orientation="Horizontal">
+                                <Button
                             x:Name="BtnBoardSelect"
                             Width="60"
                             Height="55"
@@ -1283,9 +1294,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
-                                CornerRadius="5,0,0,5">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -1318,8 +1327,9 @@
                                         Text="选择" />
                                 </Grid>
                             </Border>
-                        </Button>
-                        <Button
+                                </Button>
+                                <Button
+                            x:Name="BtnBoardPen"
                             Width="60"
                             Height="55"
                             Padding="0"
@@ -1330,8 +1340,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,0.25,1">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         x:Name="BoardPenIcon"
@@ -1357,7 +1366,7 @@
                                         Text="墨迹" />
                                 </Grid>
                             </Border>
-                        </Button>
+                                </Button>
                         <Border>
                             <Grid Width="0">
                                 <Border
@@ -2291,7 +2300,7 @@
                                 </ikw:SimpleStackPanel>
                             </Border>
                         </Border>
-                        <Button
+                                <Button
                             x:Name="BtnBoardInsertImage"
                             Width="60"
                             Height="55"
@@ -2303,8 +2312,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,0.25,1">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2329,8 +2337,8 @@
                                         Text="插入图片" />
                                 </Grid>
                             </Border>
-                        </Button>
-                        <Button
+                                </Button>
+                                <Button
                             x:Name="BtnBoardUndo"
                             Width="60"
                             Height="55"
@@ -2342,8 +2350,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,0.25,1">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2370,8 +2377,8 @@
                                         Text="撤销" />
                                 </Grid>
                             </Border>
-                        </Button>
-                        <Button
+                                </Button>
+                                <Button
                             x:Name="BtnBoardRedo"
                             Width="60"
                             Height="55"
@@ -2383,9 +2390,7 @@
                                 Width="60"
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
-                                CornerRadius="0,5,5,0">
+                                BorderThickness="0">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2412,7 +2417,9 @@
                                         Text="重做" />
                                 </Grid>
                             </Border>
-                        </Button>
+                                </Button>
+                            </ikw:SimpleStackPanel>
+                        </Border>
                         <Button
                             Width="60"
                             Height="55"

@@ -226,6 +226,10 @@ namespace Ink_Canvas
         {
             BtnBoardGesture.Visibility = Settings.Appearance.IsShowBoardGestureButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardCanvas.Visibility = Settings.Appearance.IsShowBoardCanvasButton ? Visibility.Visible : Visibility.Collapsed;
+            BoardGestureCanvasContainer.Visibility =
+                BtnBoardGesture.Visibility == Visibility.Visible || BtnBoardCanvas.Visibility == Visibility.Visible
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
             BtnBoardSelect.Visibility = Settings.Appearance.IsShowBoardSelectButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardAreaEraser.Visibility = Settings.Appearance.IsShowBoardAreaEraserButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardStrokeEraser.Visibility = Settings.Appearance.IsShowBoardStrokeEraserButton ? Visibility.Visible : Visibility.Collapsed;
@@ -233,51 +237,12 @@ namespace Ink_Canvas
             BtnBoardInsertImage.Visibility = Settings.Appearance.IsShowBoardInsertImageButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardUndo.Visibility = Settings.Appearance.IsShowBoardUndoButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardRedo.Visibility = Settings.Appearance.IsShowBoardRedoButton ? Visibility.Visible : Visibility.Collapsed;
+            BoardMainButtonsContainer.Visibility = Visibility.Visible;
 
             BoardGestureCanvasSpacing.Visibility =
-                BtnBoardGesture.Visibility == Visibility.Visible || BtnBoardCanvas.Visibility == Visibility.Visible
+                BoardGestureCanvasContainer.Visibility == Visibility.Visible
                     ? Visibility.Visible
                     : Visibility.Collapsed;
-
-            UpdateBoardButtonGroupStyles(
-                (BtnBoardGesture, BoardGestureBorder),
-                (BtnBoardCanvas, BoardCanvasBorder)
-            );
-
-            UpdateBoardButtonGroupStyles(
-                (BtnBoardSelect, BoardSelect),
-                (BoardPen, BoardPen),
-                (BtnBoardAreaEraser, BoardEraser),
-                (BtnBoardStrokeEraser, BoardEraserByStrokes),
-                (BtnBoardShape, BoardGeometry),
-                (BtnBoardInsertImage, BoardInsertImageBorder),
-                (BtnBoardUndo, BoardUndo),
-                (BtnBoardRedo, BoardRedo)
-            );
-        }
-
-        private void UpdateBoardButtonGroupStyles(params (UIElement Element, Border Border)[] buttons)
-        {
-            int firstVisible = -1;
-            int lastVisible = -1;
-            for (int i = 0; i < buttons.Length; i++)
-            {
-                if (buttons[i].Element.Visibility != Visibility.Visible) continue;
-                if (firstVisible == -1) firstVisible = i;
-                lastVisible = i;
-            }
-
-            for (int i = 0; i < buttons.Length; i++)
-            {
-                bool isVisible = buttons[i].Element.Visibility == Visibility.Visible;
-                if (!isVisible) continue;
-
-                bool isFirst = i == firstVisible;
-                bool isLast = i == lastVisible;
-
-                buttons[i].Border.BorderThickness = new Thickness(isFirst ? 1 : 0, 1, isLast ? 1 : 0.25, 1);
-                buttons[i].Border.CornerRadius = new CornerRadius(isFirst ? 5 : 0, isFirst ? 5 : 0, isLast ? 5 : 0, isLast ? 5 : 0);
-            }
         }
 
         private void ApplyScaling()

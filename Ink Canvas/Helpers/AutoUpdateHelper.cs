@@ -11,10 +11,20 @@ using System.Windows.Controls;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 自动更新辅助类：负责检查版本、下载安装包、执行安装与清理更新目录。
+    /// </summary>
     internal class AutoUpdateHelper
     {
+        /// <summary>
+        /// 更新服务基础地址。
+        /// </summary>
         private const string UpdateServerBaseUrl = "http://8.134.100.248:8080";
 
+        /// <summary>
+        /// 检查服务器版本是否高于当前本地版本。
+        /// </summary>
+        /// <returns>若有更新返回远端版本号；否则返回 <c>null</c>。</returns>
         public static async Task<string> CheckForUpdates()
         {
             try
@@ -56,6 +66,11 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 从指定地址读取远程版本号文本。
+        /// </summary>
+        /// <param name="fileUrl">版本文件 URL。</param>
+        /// <returns>去除空白后的版本字符串；失败时返回 <c>null</c>。</returns>
         public static async Task<string> GetRemoteVersion(string fileUrl)
         {
             using (HttpClient client = new HttpClient())
@@ -85,9 +100,21 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 本地更新缓存目录路径。
+        /// </summary>
         private static string updatesFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Ink Canvas Artistry", "AutoUpdate");
+
+        /// <summary>
+        /// 下载状态记录文件路径（按版本生成）。
+        /// </summary>
         private static string statusFilePath = null;
 
+        /// <summary>
+        /// 下载指定版本安装包，并写入下载状态标记文件。
+        /// </summary>
+        /// <param name="version">目标版本号。</param>
+        /// <returns>下载成功返回 <c>true</c>，否则返回 <c>false</c>。</returns>
         public static async Task<bool> DownloadSetupFileAndSaveStatus(string version)
         {
             try
@@ -134,6 +161,11 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 下载文件到目标路径，失败时抛出异常交由上层处理。
+        /// </summary>
+        /// <param name="fileUrl">下载地址。</param>
+        /// <param name="destinationPath">本地保存路径。</param>
         private static async Task DownloadFile(string fileUrl, string destinationPath)
         {
             string directory = Path.GetDirectoryName(destinationPath);
@@ -180,6 +212,10 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 将安装包下载状态写入状态文件。
+        /// </summary>
+        /// <param name="isSuccess">是否下载成功。</param>
         private static void SaveDownloadStatus(bool isSuccess)
         {
             try
@@ -205,6 +241,11 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 启动指定版本安装程序并退出当前应用。
+        /// </summary>
+        /// <param name="version">待安装版本号。</param>
+        /// <param name="isInSilence">是否使用更静默的安装参数。</param>
         public static void InstallNewVersionApp(string version, bool isInSilence)
         {
             try
@@ -230,6 +271,10 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 通过命令行执行安装命令，并在启动后关闭当前应用。
+        /// </summary>
+        /// <param name="command">要执行的命令行内容。</param>
         private static void ExecuteCommandLine(string command)
         {
             try
@@ -261,6 +306,9 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 删除自动更新缓存目录及其中全部文件。
+        /// </summary>
         public static void DeleteUpdatesFolder()
         {
             try

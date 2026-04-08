@@ -8,6 +8,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 保存全屏截图到自动保存目录。
+        /// </summary>
         private void SaveScreenshot(bool isHideNotification, string fileName = null)
         {
             var bitmap = GetScreenshotBitmap();
@@ -33,6 +36,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 保存全屏截图到桌面。
+        /// </summary>
         private void SaveScreenShotToDesktop()
         {
             var bitmap = GetScreenshotBitmap();
@@ -42,6 +48,9 @@ namespace Ink_Canvas
             if (Settings.Automation.IsAutoSaveStrokesAtScreenshot) SaveInkCanvasFile(false, false);
         }
 
+        /// <summary>
+        /// 保存 PPT 相关截图到专用目录。
+        /// </summary>
         private void SavePPTScreenshot(string fileName)
         {
             var bitmap = GetScreenshotBitmap();
@@ -63,6 +72,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 捕获当前虚拟屏幕并返回位图对象。
+        /// </summary>
         private Bitmap GetScreenshotBitmap()
         {
             Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;

@@ -326,11 +326,26 @@ namespace Ink_Canvas.Helpers
         }
     }
 
+    /// <summary>
+    /// 自动更新静默时段的时间选项与判定辅助类。
+    /// </summary>
     internal class AutoUpdateWithSilenceTimeComboBox
     {
+        /// <summary>
+        /// 小时候选列表（00-23）。
+        /// </summary>
         public static ObservableCollection<string> Hours { get; set; } = new ObservableCollection<string>();
+
+        /// <summary>
+        /// 分钟候选列表（按 20 分钟步进）。
+        /// </summary>
         public static ObservableCollection<string> Minutes { get; set; } = new ObservableCollection<string>();
 
+        /// <summary>
+        /// 初始化静默时段下拉框选项（仅首次初始化）。
+        /// </summary>
+        /// <param name="startTimeComboBox">静默开始时间下拉框。</param>
+        /// <param name="endTimeComboBox">静默结束时间下拉框。</param>
         public static void InitializeAutoUpdateWithSilenceTimeComboBoxOptions(ComboBox startTimeComboBox, ComboBox endTimeComboBox)
         {
             if (Hours.Any() || Minutes.Any()) return;
@@ -348,6 +363,12 @@ namespace Ink_Canvas.Helpers
             endTimeComboBox.ItemsSource = timeOptions;
         }
 
+        /// <summary>
+        /// 判断当前时间是否处于静默时段。
+        /// </summary>
+        /// <param name="startTime">静默开始时间，格式 HH:mm。</param>
+        /// <param name="endTime">静默结束时间，格式 HH:mm。</param>
+        /// <returns>在静默时段内返回 <c>true</c>，否则返回 <c>false</c>。</returns>
         public static bool CheckIsInSilencePeriod(string startTime, string endTime)
         {
             if (string.IsNullOrEmpty(startTime) || string.IsNullOrEmpty(endTime)) return false;

@@ -19,10 +19,15 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>PowerPoint 应用实例。</summary>
         public static Microsoft.Office.Interop.PowerPoint.Application pptApplication = null;
+        /// <summary>当前演示文稿对象。</summary>
         public static Microsoft.Office.Interop.PowerPoint.Presentation presentation = null;
+        /// <summary>当前演示文稿的幻灯片集合。</summary>
         public static Microsoft.Office.Interop.PowerPoint.Slides slides = null;
+        /// <summary>当前幻灯片对象。</summary>
         public static Microsoft.Office.Interop.PowerPoint.Slide slide = null;
+        /// <summary>当前演示文稿页数。</summary>
         public static int slidescount = 0;
 
         /*
@@ -75,6 +80,9 @@ namespace Ink_Canvas
         }
         */
 
+        /// <summary>
+        /// WPS 兼容支持开关事件。
+        /// </summary>
         private void ToggleSwitchSupportWPS_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
@@ -83,10 +91,19 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 是否启用 WPS 兼容支持。
+        /// </summary>
         public static bool isWPSSupportOn => Settings.PowerPointSettings.IsSupportWPS;
 
+        /// <summary>
+        /// 是否正在显示“恢复隐藏页”提示窗口。
+        /// </summary>
         public static bool IsShowingRestoreHiddenSlidesWindow = false;
 
+        /// <summary>
+        /// 定时检测并接管 PowerPoint 放映流程。
+        /// </summary>
         private void TimerCheckPPT_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (IsShowingRestoreHiddenSlidesWindow) return;
@@ -246,6 +263,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 演示文稿关闭事件：释放事件绑定并恢复轮询。
+        /// </summary>
         private void PptApplication_PresentationClose(Presentation Pres)
         {
             pptApplication.PresentationClose -= PptApplication_PresentationClose;

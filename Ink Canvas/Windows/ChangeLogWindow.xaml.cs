@@ -10,6 +10,9 @@ namespace Ink_Canvas
     /// </summary>
     public partial class ChangeLogWindow : Window
     {
+        /// <summary>
+        /// 更新日志窗口构造函数。
+        /// </summary>
         public ChangeLogWindow()
         {
             InitializeComponent();
@@ -31,6 +34,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 窗口加载时刷新版本信息。
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Version 2.1.0-beta
@@ -66,6 +72,9 @@ namespace Ink_Canvas
 
         }
 
+        /// <summary>
+        /// 关闭按钮点击事件。
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Close();

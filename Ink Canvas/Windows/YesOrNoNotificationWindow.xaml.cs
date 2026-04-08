@@ -9,6 +9,9 @@ namespace Ink_Canvas
         private readonly Action _yesAction;
         private readonly Action _noAction;
 
+        /// <summary>
+        /// 创建“是/否”确认提示窗口。
+        /// </summary>
         public YesOrNoNotificationWindow(string text, Action yesAction = null, Action noAction = null)
         {
             _yesAction = yesAction;
@@ -29,6 +32,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 点击“是”按钮事件。
+        /// </summary>
         private void ButtonYes_Click(object sender, RoutedEventArgs e)
         {
             if (_yesAction == null)
@@ -41,6 +47,9 @@ namespace Ink_Canvas
 
         }
 
+        /// <summary>
+        /// 点击“否”按钮事件。
+        /// </summary>
         private void ButtonNo_Click(object sender, RoutedEventArgs e)
         {
             if (_noAction == null)
@@ -52,6 +61,9 @@ namespace Ink_Canvas
             Close();
         }
 
+        /// <summary>
+        /// 关闭后重置“隐藏页提示窗口”显示标记。
+        /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
             MainWindow.IsShowingRestoreHiddenSlidesWindow = false;

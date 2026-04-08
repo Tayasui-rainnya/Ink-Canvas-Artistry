@@ -4,8 +4,16 @@ using System.Windows;
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 自动保存文件清理工具：按时间阈值删除旧文件并回收空目录。
+    /// </summary>
     internal class DelAutoSavedFiles
     {
+        /// <summary>
+        /// 删除指定目录中超过阈值天数的自动保存文件。
+        /// </summary>
+        /// <param name="directoryPath">根目录路径。</param>
+        /// <param name="daysThreshold">保留天数阈值。</param>
         public static void DeleteFilesOlder(string directoryPath, int daysThreshold)
         {
             string[] extensionsToDel = { ".icstk", ".icart", ".png" };
@@ -53,6 +61,10 @@ namespace Ink_Canvas.Helpers
             }
         }
 
+        /// <summary>
+        /// 递归删除空文件夹。
+        /// </summary>
+        /// <param name="directoryPath">待处理目录。</param>
         private static void DeleteEmptyFolders(string directoryPath)
         {
             foreach (string dir in Directory.GetDirectories(directoryPath))

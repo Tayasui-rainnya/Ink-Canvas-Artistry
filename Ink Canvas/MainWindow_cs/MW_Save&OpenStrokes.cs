@@ -14,6 +14,9 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 点击保存按钮：隐藏工具栏并触发手动保存。
+        /// </summary>
         private void SymbolIconSaveStrokes_Click(object sender, RoutedEventArgs e)
         {
             if (inkCanvas.Visibility != Visibility.Visible) return;
@@ -23,6 +26,9 @@ namespace Ink_Canvas
             SaveInkCanvasFile(true, true);
         }
 
+        /// <summary>
+        /// 保存当前墨迹与元素到 .icart 文件（zip 容器）。
+        /// </summary>
         private void SaveInkCanvasFile(bool newNotice = true, bool saveByUser = false)
         {
             try
@@ -72,6 +78,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 将图片/媒体等依赖文件写入压缩包。
+        /// </summary>
         private void SaveRelatedUrlFiles(ZipArchive archive)
         {
             string dependencyFolder = "File Dependency";
@@ -93,6 +102,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 将单个本地文件加入压缩包指定目录。
+        /// </summary>
         private void AddFileToArchive(ZipArchive archive, string filePath, string folderName)
         {
             if (File.Exists(filePath))
@@ -109,6 +121,9 @@ namespace Ink_Canvas
 
 
 
+        /// <summary>
+        /// 点击打开按钮：载入 .icart/.icstk 文件。
+        /// </summary>
         private void SymbolIconOpenInkCanvasFile_Click(object sender, RoutedEventArgs e)
         {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);
@@ -228,6 +243,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 从压缩包中解压依赖资源文件到目标目录。
+        /// </summary>
         private void ExtractUrlFiles(ZipArchive archive, string outputDirectory)
         {
             foreach (var entry in archive.Entries)

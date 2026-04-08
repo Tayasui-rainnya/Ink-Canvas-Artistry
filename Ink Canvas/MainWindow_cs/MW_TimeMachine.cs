@@ -50,6 +50,9 @@ namespace Ink_Canvas
         private TimeMachine timeMachine = new TimeMachine();
 
 
+        /// <summary>
+        /// 通过名称戳获取画布元素。
+        /// </summary>
         public UIElement GetElementByTimestamp(InkCanvas inkCanvas, string timestamp)
         {
             foreach (UIElement child in inkCanvas.Children)
@@ -62,6 +65,9 @@ namespace Ink_Canvas
             return null;
         }
 
+        /// <summary>
+        /// 将历史记录项应用到画布。
+        /// </summary>
         private void ApplyHistoryToCanvas(TimeMachineHistory item)
         {
             _currentCommitType = CommitReason.CodeInput;
@@ -259,16 +265,25 @@ namespace Ink_Canvas
             _currentCommitType = CommitReason.UserInput;
         }
 
+        /// <summary>
+        /// 撤销状态变化回调：更新 UI 可用状态。
+        /// </summary>
         private void TimeMachine_OnUndoStateChanged(bool status)
         {
             Icon_Undo.IsEnabled = status;
         }
 
+        /// <summary>
+        /// 重做状态变化回调：更新 UI 可用状态。
+        /// </summary>
         private void TimeMachine_OnRedoStateChanged(bool status)
         {
             Icon_Redo.IsEnabled = status;
         }
 
+        /// <summary>
+        /// 墨迹集合变化事件：维护历史与相关事件绑定。
+        /// </summary>
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
         {
             if (!isHidingSubPanelsWhenInking)
@@ -329,6 +344,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 绘制属性变化事件：记录属性变更历史。
+        /// </summary>
         private void Stroke_DrawingAttributesChanged(object sender, PropertyDataChangedEventArgs e)
         {
             var key = sender as Stroke;
@@ -401,6 +419,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 在鼠标抬起后提交笔迹变换历史。
+        /// </summary>
         private void ToCommitStrokeManipulationHistoryAfterMouseUp()
         {
             if (StrokeManipulationHistory == null && ElementsManipulationHistory == null)

@@ -2,6 +2,9 @@
 
 namespace Ink_Canvas.Helpers
 {
+    /// <summary>
+    /// 基于 UI Automation 的窗口存在性检查工具。
+    /// </summary>
     internal class WinTabWindowsChecker
     {
         /*
@@ -42,6 +45,12 @@ namespace Ink_Canvas.Helpers
         }
         */
 
+        /// <summary>
+        /// 检查指定标题窗口是否存在。
+        /// </summary>
+        /// <param name="windowName">目标窗口标题或标题关键字。</param>
+        /// <param name="matchFullName">是否要求完整标题匹配。</param>
+        /// <returns>存在返回 <c>true</c>，否则返回 <c>false</c>。</returns>
         public static bool IsWindowExisted(string windowName, bool matchFullName = true)
         {
             // 获取Win+Tab预览中的窗口

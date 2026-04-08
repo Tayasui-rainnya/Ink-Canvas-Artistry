@@ -10,8 +10,14 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 当前画笔颜色编号。
+        /// </summary>
         int inkColor = 1;
 
+        /// <summary>
+        /// 画笔粗细滑块变更事件（同步主面板与白板面板）。
+        /// </summary>
         private void InkWidthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!isLoaded) return;
@@ -31,6 +37,9 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 切换颜色后的状态检查与选区颜色应用。
+        /// </summary>
         private void ColorSwitchCheck()
         {
             forceEraser = false;
@@ -82,6 +91,9 @@ namespace Ink_Canvas
             isLongPressSelected = false;
         }
 
+        /// <summary>
+        /// 是否使用亮色主题配色（桌面/白板分离）。
+        /// </summary>
         bool isUselightThemeColor = false, isDesktopUselightThemeColor = false;
         int lastDesktopInkColor = 1, lastBoardInkColor = 5;
         Dictionary<int, Color> inkColorLightThemeMapping = new Dictionary<int, Color>
@@ -109,6 +121,9 @@ namespace Ink_Canvas
             { 8, Color.FromRgb(234, 88, 12) }  // Orange
         };
 
+        /// <summary>
+        /// 根据当前主题与颜色编号更新画笔颜色和 UI 色板。
+        /// </summary>
         private void CheckColorTheme(bool changeColorTheme = false)
         {
             if (changeColorTheme)

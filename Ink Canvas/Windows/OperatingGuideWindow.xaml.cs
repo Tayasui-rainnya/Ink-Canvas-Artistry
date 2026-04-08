@@ -11,6 +11,9 @@ namespace Ink_Canvas
     /// </summary>
     public partial class OperatingGuideWindow : Window
     {
+        /// <summary>
+        /// 操作指南窗口构造函数。
+        /// </summary>
         public OperatingGuideWindow()
         {
             InitializeComponent();
@@ -33,16 +36,25 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 点击关闭按钮。
+        /// </summary>
         private void BtnClose_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Close();
         }
 
+        /// <summary>
+        /// 窗口拖动事件。
+        /// </summary>
         private void WindowDragMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed) DragMove();
         }
 
+        /// <summary>
+        /// 抑制触控边界反馈动画。
+        /// </summary>
         private void SCManipulationBoundaryFeedback(object sender, ManipulationBoundaryFeedbackEventArgs e) {
             e.Handled = true;
         }

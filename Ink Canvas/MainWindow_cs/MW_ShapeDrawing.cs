@@ -17,6 +17,9 @@ namespace Ink_Canvas
     {
         #region Floating Bar Control
 
+        /// <summary>
+        /// 打开/关闭图形绘制面板。
+        /// </summary>
         private void ImageDrawShape_Click(object sender, RoutedEventArgs e)
         {
             if (BorderDrawShape.Visibility == Visibility.Visible)
@@ -38,6 +41,9 @@ namespace Ink_Canvas
 
         #region Buttons
 
+        /// <summary>
+        /// 切换图形面板自动隐藏开关。
+        /// </summary>
         private void SymbolIconPinBorderDrawShape_MouseUp(object sender, MouseButtonEventArgs e)
         {
             ToggleSwitchDrawShapeBorderAutoHide.IsOn = !ToggleSwitchDrawShapeBorderAutoHide.IsOn;
@@ -57,6 +63,9 @@ namespace Ink_Canvas
         object lastMouseDownSender = null;
         DateTime lastMouseDownTime = DateTime.MinValue;
 
+        /// <summary>
+        /// 图形按钮按下入口：长按可进入持续图形绘制模式。
+        /// </summary>
         private async void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             lastMouseDownSender = sender;
@@ -101,6 +110,9 @@ namespace Ink_Canvas
             }
         }
 
+        /// <summary>
+        /// 切换到普通画笔模式。
+        /// </summary>
         private void BtnPen_Click(object sender, RoutedEventArgs e)
         {
             forceEraser = false;
@@ -111,6 +123,9 @@ namespace Ink_Canvas
             isLongPressSelected = false;
         }
 
+        /// <summary>
+        /// 检查多点触控模式下是否允许图形绘制。
+        /// </summary>
         private Task<bool> CheckIsDrawingShapesInMultiTouchMode()
         {
             if (isInMultiTouchMode)
@@ -468,6 +483,9 @@ namespace Ink_Canvas
 
         #endregion
 
+        /// <summary>
+        /// 触控移动时更新图形预览。
+        /// </summary>
         private void inkCanvas_TouchMove(object sender, TouchEventArgs e)
         {
             if (isSingleFingerDragMode) return;
@@ -505,6 +523,9 @@ namespace Ink_Canvas
                                                                                              //double drawMultiStepShapeSpecialParameter2 = 0.0; //多笔完成的图形 特殊参数 通常用于表示b
         double drawMultiStepShapeSpecialParameter3 = 0.0; //多笔完成的图形 特殊参数 通常用于表示k
 
+        /// <summary>
+        /// 根据起止点生成当前图形并更新预览。
+        /// </summary>
         private void MouseTouchMove(Point endP)
         {
             List<System.Windows.Point> pointList;
@@ -1283,6 +1304,9 @@ namespace Ink_Canvas
         Point CuboidFrontRectIniP = new Point();
         Point CuboidFrontRectEndP = new Point();
 
+        /// <summary>
+        /// 触控抬起时提交图形笔迹并结束绘制。
+        /// </summary>
         private void Main_Grid_TouchUp(object sender, TouchEventArgs e)
         {
             inkCanvas_MouseUp(sender, null);

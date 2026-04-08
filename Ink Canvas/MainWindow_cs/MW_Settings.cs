@@ -281,7 +281,7 @@ namespace Ink_Canvas
                 bool isLast = i == lastVisible;
                 buttons[i].Border.BorderThickness = new Thickness(0, 0, isLast ? 0 : 1, 0);
                 buttons[i].Border.CornerRadius = applyCornerRadius
-                    ? new CornerRadius(isFirst ? 5 : 0, isFirst ? 5 : 0, isLast ? 5 : 0, isLast ? 5 : 0)
+                    ? new CornerRadius(isFirst ? 5 : 0, isLast ? 5 : 0, isLast ? 5 : 0, isFirst ? 5 : 0)
                     : new CornerRadius(0);
             }
         }

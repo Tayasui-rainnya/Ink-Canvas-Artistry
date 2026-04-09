@@ -263,6 +263,18 @@ namespace Ink_Canvas
             );
         }
 
+        /// <summary>
+        /// Updates group-internal separator lines and optional end-cap corner radii
+        /// for a horizontally arranged set of board toolbar buttons.
+        /// </summary>
+        /// <param name="applyCornerRadius">
+        /// True to round only the first visible button's left corners and the last
+        /// visible button's right corners; false to force all corners to 0.
+        /// </param>
+        /// <param name="buttons">
+        /// Tuple list mapping each button element to its visual border that receives
+        /// separator thickness and corner radius updates.
+        /// </param>
         private void UpdateBoardButtonGroupSeparators(bool applyCornerRadius, params (UIElement Element, Border Border)[] buttons)
         {
             int firstVisible = -1;

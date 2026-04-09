@@ -106,7 +106,7 @@ namespace Ink_Canvas
                 }
                 //LogHelper.WriteLogToFile("windowTitle | " + windowTitle + " | windowProcessName | " + windowProcessName);
 
-                bool isAutoFoldByCustomForegroundExe = isForegroundProcessChanged && IsProcessMatchedByAutoFoldList(windowProcessName);
+                bool isCurrentProcessMatchedByCustomForegroundExe = IsProcessMatchedByAutoFoldList(windowProcessName);
 
                 if (Settings.Automation.IsAutoFoldInEasiNote && windowProcessName == "EasiNote" // 希沃白板
                     && (!(windowTitle.Length == 0 && ForegroundWindowInfo.WindowRect().Height < 500) || !Settings.Automation.IsAutoFoldInEasiNoteIgnoreDesktopAnno)
@@ -120,7 +120,7 @@ namespace Ink_Canvas
                     || Settings.Automation.IsAutoFoldInOldZyBoard && // 中原旧白板
                     (WinTabWindowsChecker.IsWindowExisted("WhiteBoard - DrawingWindow")
                     || WinTabWindowsChecker.IsWindowExisted("InstantAnnotationWindow"))
-                    || isAutoFoldByCustomForegroundExe)
+                    || isCurrentProcessMatchedByCustomForegroundExe)
                 {
                     if (!unfoldFloatingBarByUser && !isFloatingBarFolded)
                     {

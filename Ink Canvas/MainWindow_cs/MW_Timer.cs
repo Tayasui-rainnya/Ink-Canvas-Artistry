@@ -86,7 +86,7 @@ namespace Ink_Canvas
 
         bool foldFloatingBarByUser = false, // 保持收纳操作不受自动收纳的控制
             unfoldFloatingBarByUser = false; // 允许用户在希沃软件内进行展开操作
-        string previousForegroundProcessName = "";
+        volatile string previousForegroundProcessName = "";
 
         /// <summary>
         /// 自动收纳/展开浮动栏逻辑轮询。
@@ -100,6 +100,10 @@ namespace Ink_Canvas
                 string windowTitle = ForegroundWindowInfo.WindowTitle();
                 bool isForegroundProcessChanged = !string.Equals(previousForegroundProcessName, windowProcessName, StringComparison.OrdinalIgnoreCase);
                 previousForegroundProcessName = windowProcessName;
+                if (isForegroundProcessChanged)
+                {
+                    unfoldFloatingBarByUser = false;
+                }
                 //LogHelper.WriteLogToFile("windowTitle | " + windowTitle + " | windowProcessName | " + windowProcessName);
 
                 bool isAutoFoldByCustomForegroundExe = isForegroundProcessChanged && IsProcessMatchedByAutoFoldList(windowProcessName);
@@ -118,7 +122,7 @@ namespace Ink_Canvas
                     || WinTabWindowsChecker.IsWindowExisted("InstantAnnotationWindow"))
                     || isAutoFoldByCustomForegroundExe)
                 {
-                    if ((isAutoFoldByCustomForegroundExe || !unfoldFloatingBarByUser) && !isFloatingBarFolded)
+                    if (!unfoldFloatingBarByUser && !isFloatingBarFolded)
                     {
                         FoldFloatingBar_Click(null, null);
                     }

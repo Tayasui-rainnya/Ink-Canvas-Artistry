@@ -4777,6 +4777,22 @@
                                         Foreground="{DynamicResource SettingsPageForeground}"
                                         Text="进入PPT 放映时自动收纳至侧边栏" />
                                 </ikw:SimpleStackPanel>
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    Foreground="{DynamicResource SettingsPageForeground}"
+                                    Text="前台进程 exe 名称命中时自动收纳（多个值用英文逗号分隔）"
+                                    TextWrapping="Wrap" />
+                                <TextBox
+                                    x:Name="AutoFoldByForegroundExeNamesTextBox"
+                                    Width="370"
+                                    Margin="0,2,0,0"
+                                    HorizontalAlignment="Left"
+                                    TextChanged="AutoFoldByForegroundExeNamesTextBox_TextChanged"
+                                    ToolTip="示例：notepad.exe,WINWORD,powerpnt.exe" />
+                                <TextBlock
+                                    Foreground="{DynamicResource SettingsPageAnnotationForeground}"
+                                    Text="* 仅在前台进程 exe 发生变化时触发一次自动收纳，避免手动展开后被立即再次收纳。"
+                                    TextWrapping="Wrap" />
                                 <Line
                                     Margin="0,4,0,4"
                                     HorizontalAlignment="Center"

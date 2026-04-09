@@ -463,6 +463,7 @@ namespace Ink_Canvas
 
         private void StartOrStoptimerCheckAutoFold()
         {
+            previousForegroundProcessName = "";
             if (Settings.Automation.IsEnableAutoFold)
             {
                 timerCheckAutoFold.Start();
@@ -556,6 +557,14 @@ namespace Ink_Canvas
         {
             if (!isLoaded) return;
             Settings.Automation.IsAutoFoldInPPTSlideShow = ToggleSwitchAutoFoldInPPTSlideShow.IsOn;
+            SaveSettingsToFile();
+            StartOrStoptimerCheckAutoFold();
+        }
+
+        private void AutoFoldByForegroundExeNamesTextBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Automation.AutoFoldByForegroundExeNames = AutoFoldByForegroundExeNamesTextBox.Text?.Trim() ?? "";
             SaveSettingsToFile();
             StartOrStoptimerCheckAutoFold();
         }
@@ -871,6 +880,7 @@ namespace Ink_Canvas
             Settings.Automation.IsAutoFoldInOldZyBoard = false;
             Settings.Automation.IsAutoFoldInMSWhiteboard = false;
             Settings.Automation.IsAutoFoldInPPTSlideShow = false;
+            Settings.Automation.AutoFoldByForegroundExeNames = "";
             Settings.Automation.IsAutoKillPptService = false;
             Settings.Automation.IsAutoKillEasiNote = false;
             Settings.Automation.IsSaveScreenshotsInDateFolders = false;

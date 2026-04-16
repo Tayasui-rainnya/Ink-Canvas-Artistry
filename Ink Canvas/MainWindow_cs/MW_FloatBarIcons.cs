@@ -22,6 +22,8 @@ namespace Ink_Canvas
 {
     public partial class MainWindow : Window
     {
+        private Windows.ScreenMagnifierWindow _screenMagnifierWindow;
+
         #region TwoFingZoomBtn
 
         /// <summary>
@@ -342,6 +344,7 @@ namespace Ink_Canvas
             if (currentMode == 0)
             {
                 currentMode = 1;
+                _screenMagnifierWindow?.Close();
                 //进入画板
                 PPTNavigationBottomLeft.Visibility = Visibility.Collapsed;
                 PPTNavigationBottomRight.Visibility = Visibility.Collapsed;
@@ -564,6 +567,20 @@ namespace Ink_Canvas
             {
                 AnimationsHelper.ShowWithSlideFromBottomAndFade(BorderTools);
                 AnimationsHelper.ShowWithSlideFromBottomAndFade(BoardBorderTools);
+            }
+        }
+
+        private void SymbolIconMagnifier_Click(object sender, RoutedEventArgs e)
+        {
+            if (_screenMagnifierWindow == null)
+            {
+                _screenMagnifierWindow = new Windows.ScreenMagnifierWindow();
+                _screenMagnifierWindow.Closed += (_, __) => _screenMagnifierWindow = null;
+                _screenMagnifierWindow.Show();
+            }
+            else
+            {
+                _screenMagnifierWindow.Activate();
             }
         }
 

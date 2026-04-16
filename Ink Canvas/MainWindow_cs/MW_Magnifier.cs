@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using DrawingBitmap = System.Drawing.Bitmap;
 using DrawingGraphics = System.Drawing.Graphics;
+using DrawingCopyPixelOperation = System.Drawing.CopyPixelOperation;
 using DrawingPixelFormat = System.Drawing.Imaging.PixelFormat;
 using DrawingSize = System.Drawing.Size;
 using Point = System.Windows.Point;
@@ -52,10 +53,10 @@ namespace Ink_Canvas
             magnifierRefreshTimer.Interval = TimeSpan.FromMilliseconds(33);
             magnifierRefreshTimer.Tick += (_, __) => RefreshMagnifierFrame();
 
-            if (double.IsNaN(Canvas.GetLeft(BorderMagnifierViewport)))
+            if (double.IsNaN(System.Windows.Controls.Canvas.GetLeft(BorderMagnifierViewport)))
             {
-                Canvas.SetLeft(BorderMagnifierViewport, 80);
-                Canvas.SetTop(BorderMagnifierViewport, 80);
+                System.Windows.Controls.Canvas.SetLeft(BorderMagnifierViewport, 80);
+                System.Windows.Controls.Canvas.SetTop(BorderMagnifierViewport, 80);
             }
         }
 
@@ -79,10 +80,10 @@ namespace Ink_Canvas
             isMagnifierEnabled = true;
             CanvasMagnifierLayer.Visibility = Visibility.Visible;
 
-            if (double.IsNaN(Canvas.GetLeft(BorderMagnifierViewport)))
+            if (double.IsNaN(System.Windows.Controls.Canvas.GetLeft(BorderMagnifierViewport)))
             {
-                Canvas.SetLeft(BorderMagnifierViewport, Math.Max(40, (ActualWidth - BorderMagnifierViewport.Width) / 2));
-                Canvas.SetTop(BorderMagnifierViewport, Math.Max(40, (ActualHeight - BorderMagnifierViewport.Height) / 2));
+                System.Windows.Controls.Canvas.SetLeft(BorderMagnifierViewport, Math.Max(40, (ActualWidth - BorderMagnifierViewport.Width) / 2));
+                System.Windows.Controls.Canvas.SetTop(BorderMagnifierViewport, Math.Max(40, (ActualHeight - BorderMagnifierViewport.Height) / 2));
             }
 
             magnifierRefreshTimer.Start();
@@ -118,8 +119,8 @@ namespace Ink_Canvas
         {
             if (!isMagnifierEnabled || !IsVisible) return;
 
-            double left = Canvas.GetLeft(BorderMagnifierViewport);
-            double top = Canvas.GetTop(BorderMagnifierViewport);
+            double left = System.Windows.Controls.Canvas.GetLeft(BorderMagnifierViewport);
+            double top = System.Windows.Controls.Canvas.GetTop(BorderMagnifierViewport);
             if (double.IsNaN(left) || double.IsNaN(top)) return;
 
             double viewportWidth = BorderMagnifierContent.ActualWidth;
@@ -145,7 +146,7 @@ namespace Ink_Canvas
                 {
                     using (DrawingGraphics g = DrawingGraphics.FromImage(bitmap))
                     {
-                        g.CopyFromScreen(captureX, captureY, 0, 0, new DrawingSize(captureWidth, captureHeight), CopyPixelOperation.SourceCopy);
+                        g.CopyFromScreen(captureX, captureY, 0, 0, new DrawingSize(captureWidth, captureHeight), DrawingCopyPixelOperation.SourceCopy);
                     }
 
                     IntPtr hBitmap = bitmap.GetHbitmap();
@@ -180,8 +181,8 @@ namespace Ink_Canvas
 
             isMagnifierDragging = true;
             magnifierDragStart = e.GetPosition(this);
-            magnifierStartLeft = Canvas.GetLeft(BorderMagnifierViewport);
-            magnifierStartTop = Canvas.GetTop(BorderMagnifierViewport);
+            magnifierStartLeft = System.Windows.Controls.Canvas.GetLeft(BorderMagnifierViewport);
+            magnifierStartTop = System.Windows.Controls.Canvas.GetTop(BorderMagnifierViewport);
             BorderMagnifierHandle.CaptureMouse();
         }
 
@@ -193,8 +194,8 @@ namespace Ink_Canvas
             double targetLeft = magnifierStartLeft + current.X - magnifierDragStart.X;
             double targetTop = magnifierStartTop + current.Y - magnifierDragStart.Y;
 
-            Canvas.SetLeft(BorderMagnifierViewport, Math.Max(0, Math.Min(ActualWidth - BorderMagnifierViewport.ActualWidth, targetLeft)));
-            Canvas.SetTop(BorderMagnifierViewport, Math.Max(0, Math.Min(ActualHeight - BorderMagnifierViewport.ActualHeight, targetTop)));
+            System.Windows.Controls.Canvas.SetLeft(BorderMagnifierViewport, Math.Max(0, Math.Min(ActualWidth - BorderMagnifierViewport.ActualWidth, targetLeft)));
+            System.Windows.Controls.Canvas.SetTop(BorderMagnifierViewport, Math.Max(0, Math.Min(ActualHeight - BorderMagnifierViewport.ActualHeight, targetTop)));
 
             RefreshMagnifierFrame();
         }

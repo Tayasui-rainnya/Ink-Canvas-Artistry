@@ -466,12 +466,7 @@ namespace Ink_Canvas
             string magnifierPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "InkCanvasMagnifier.exe");
             if (!File.Exists(magnifierPath))
             {
-                ShowNotificationAsync(new Notification
-                {
-                    Title = "放大镜启动失败",
-                    Message = "未找到 InkCanvasMagnifier.exe，请先构建/部署放大镜程序。",
-                    Icon = NotificationIcon.Error
-                });
+                ShowNotificationAsync("放大镜启动失败：未找到 InkCanvasMagnifier.exe，请先构建或部署放大镜程序。");
                 return;
             }
 

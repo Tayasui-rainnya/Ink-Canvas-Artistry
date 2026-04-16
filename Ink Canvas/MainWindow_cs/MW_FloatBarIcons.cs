@@ -17,6 +17,7 @@ using Point = System.Windows.Point;
 using System.Diagnostics;
 using iNKORE.UI.WPF.Modern.Controls;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Ink_Canvas
 {
@@ -455,6 +456,30 @@ namespace Ink_Canvas
             AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
 
             new RandWindow(true).ShowDialog();
+        }
+
+        private void SymbolIconMagnifier_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationsHelper.HideWithSlideAndFade(BorderTools);
+            AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
+
+            string magnifierPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "InkCanvasMagnifier.exe");
+            if (!File.Exists(magnifierPath))
+            {
+                ShowNotificationAsync(new Notification
+                {
+                    Title = "放大镜启动失败",
+                    Message = "未找到 InkCanvasMagnifier.exe，请先构建/部署放大镜程序。",
+                    Icon = NotificationIcon.Error
+                });
+                return;
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = magnifierPath,
+                UseShellExecute = true
+            });
         }
 
         private async void GridInkReplayButton_Click(object sender, RoutedEventArgs e)

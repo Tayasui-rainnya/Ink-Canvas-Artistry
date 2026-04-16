@@ -82,7 +82,7 @@ namespace Ink_Canvas_Magnifier
             {
                 using (var graphics = Drawing.Graphics.FromImage(bitmap))
                 {
-                    graphics.CopyFromScreen(captureX, captureY, 0, 0, bitmap.Size, CopyPixelOperation.SourceCopy);
+                    graphics.CopyFromScreen(captureX, captureY, 0, 0, bitmap.Size, Drawing.CopyPixelOperation.SourceCopy);
                 }
 
                 IntPtr hBitmap = bitmap.GetHbitmap();

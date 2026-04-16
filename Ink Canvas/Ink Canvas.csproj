@@ -77,6 +77,11 @@
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\Ink Canvas Magnifier\Ink Canvas Magnifier.csproj">
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="iNKORE.UI.WPF.Modern">
 			<Version>0.9.30</Version>
 		</PackageReference>
@@ -168,4 +173,11 @@
 	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
 	  </None>
 	</ItemGroup>
+	<Target Name="CopyMagnifierArtifacts" AfterTargets="Build">
+		<ItemGroup>
+			<MagnifierArtifacts Include="..\Ink Canvas Magnifier\bin\$(Configuration)\**\InkCanvasMagnifier.exe" />
+			<MagnifierArtifacts Include="..\Ink Canvas Magnifier\bin\$(Configuration)\**\InkCanvasMagnifier.exe.config" />
+		</ItemGroup>
+		<Copy SourceFiles="@(MagnifierArtifacts)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(MagnifierArtifacts)' != ''" />
+	</Target>
 </Project>

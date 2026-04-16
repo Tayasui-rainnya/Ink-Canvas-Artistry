@@ -17,6 +17,7 @@ namespace Ink_Canvas.Windows
         private System.Windows.Point _dragStartPoint;
         private bool _isDragging;
         private bool _isCaptureInProgress;
+        private bool _excludeFromCaptureEnabled;
 
         public ScreenMagnifierWindow()
         {
@@ -39,6 +40,7 @@ namespace Ink_Canvas.Windows
             };
             _refreshTimer.Tick += RefreshTimer_Tick;
 
+            SourceInitialized += (_, __) => TryEnableExcludeFromCapture();
             Loaded += (_, __) => _refreshTimer.Start();
             Closed += (_, __) => _refreshTimer.Stop();
         }
@@ -65,7 +67,9 @@ namespace Ink_Canvas.Windows
             int sourceX = (int)Math.Round(centerX - captureWidth / 2.0);
             int sourceY = (int)Math.Round(centerY - captureHeight / 2.0);
 
-            using (Bitmap source = CaptureScreenWithoutSelf(sourceX, sourceY, captureWidth, captureHeight))
+            using (Bitmap source = _excludeFromCaptureEnabled
+                ? CaptureScreen(sourceX, sourceY, captureWidth, captureHeight)
+                : CaptureScreenWithoutSelf(sourceX, sourceY, captureWidth, captureHeight))
             using (Bitmap scaled = new Bitmap(source, viewportWidth, viewportHeight))
             {
                 IntPtr hBitmap = scaled.GetHbitmap();
@@ -84,6 +88,13 @@ namespace Ink_Canvas.Windows
                     DeleteObject(hBitmap);
                 }
             }
+        }
+
+        private void TryEnableExcludeFromCapture()
+        {
+            IntPtr handle = new WindowInteropHelper(this).Handle;
+            if (handle == IntPtr.Zero) return;
+            _excludeFromCaptureEnabled = SetWindowDisplayAffinity(handle, WDA_EXCLUDEFROMCAPTURE);
         }
 
         private Bitmap CaptureScreenWithoutSelf(int sourceX, int sourceY, int width, int height)
@@ -213,8 +224,14 @@ namespace Ink_Canvas.Windows
         [DllImport("user32.dll")]
         private static extern int ReleaseDC(IntPtr hWnd, IntPtr hDc);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
+
         [DllImport("gdi32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DeleteObject(IntPtr hObject);
+
+        private const uint WDA_EXCLUDEFROMCAPTURE = 0x00000011;
     }
 }

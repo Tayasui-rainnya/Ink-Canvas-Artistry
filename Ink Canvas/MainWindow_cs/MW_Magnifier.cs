@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,6 +6,11 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using DrawingBitmap = System.Drawing.Bitmap;
+using DrawingGraphics = System.Drawing.Graphics;
+using DrawingPixelFormat = System.Drawing.Imaging.PixelFormat;
+using DrawingSize = System.Drawing.Size;
+using Point = System.Windows.Point;
 
 namespace Ink_Canvas
 {
@@ -89,6 +93,14 @@ namespace Ink_Canvas
         private void DisableMagnifier()
         {
             isMagnifierEnabled = false;
+            if (isMagnifierDragging)
+            {
+                isMagnifierDragging = false;
+                if (BorderMagnifierHandle.IsMouseCaptured)
+                {
+                    BorderMagnifierHandle.ReleaseMouseCapture();
+                }
+            }
             magnifierRefreshTimer.Stop();
             CanvasMagnifierLayer.Visibility = Visibility.Collapsed;
             ImageMagnifierContent.Source = null;
@@ -129,11 +141,11 @@ namespace Ink_Canvas
             CanvasMagnifierLayer.Visibility = Visibility.Hidden;
             try
             {
-                using (var bitmap = new Bitmap(captureWidth, captureHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+                using (var bitmap = new DrawingBitmap(captureWidth, captureHeight, DrawingPixelFormat.Format32bppArgb))
                 {
-                    using (Graphics g = Graphics.FromImage(bitmap))
+                    using (DrawingGraphics g = DrawingGraphics.FromImage(bitmap))
                     {
-                        g.CopyFromScreen(captureX, captureY, 0, 0, new System.Drawing.Size(captureWidth, captureHeight), CopyPixelOperation.SourceCopy);
+                        g.CopyFromScreen(captureX, captureY, 0, 0, new DrawingSize(captureWidth, captureHeight), CopyPixelOperation.SourceCopy);
                     }
 
                     IntPtr hBitmap = bitmap.GetHbitmap();

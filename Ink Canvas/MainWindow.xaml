@@ -7329,112 +7329,6 @@
                     </ikw:SimpleStackPanel>
                 </Border>
 
-        <Canvas
-            x:Name="CanvasMagnifierLayer"
-            Background="Transparent"
-            Panel.ZIndex="2500"
-            Visibility="Collapsed">
-            <Border
-                x:Name="BorderMagnifierViewport"
-                Width="360"
-                Height="260"
-                Background="#FF111111"
-                BorderBrush="#FFFFEA00"
-                BorderThickness="3"
-                CornerRadius="6"
-                SnapsToDevicePixels="True">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Border
-                        x:Name="BorderMagnifierContent"
-                        Margin="0"
-                        ClipToBounds="True"
-                        CornerRadius="3,3,0,0">
-                        <Image
-                            x:Name="ImageMagnifierContent"
-                            RenderOptions.BitmapScalingMode="HighQuality"
-                            Stretch="Fill" />
-                    </Border>
-                    <Border
-                        Grid.Row="1"
-                        Height="40"
-                        Background="#DD000000"
-                        BorderBrush="#FFFFFFFF"
-                        BorderThickness="0,1,0,0"
-                        CornerRadius="0,0,3,3">
-                        <Grid Margin="8,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Border
-                                x:Name="BorderMagnifierHandle"
-                                Width="30"
-                                Margin="0,3,8,3"
-                                Cursor="SizeAll"
-                                MouseLeftButtonDown="BorderMagnifierHandle_MouseLeftButtonDown"
-                                MouseLeftButtonUp="BorderMagnifierHandle_MouseLeftButtonUp"
-                                MouseMove="BorderMagnifierHandle_MouseMove">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="21"
-                                    FontWeight="Bold"
-                                    Foreground="#FFFFFFFF"
-                                    Text="⣿" />
-                            </Border>
-                            <Button
-                                Grid.Column="1"
-                                Width="28"
-                                Height="28"
-                                Margin="0,0,8,0"
-                                VerticalAlignment="Center"
-                                Click="BtnMagnifierZoomOut_Click"
-                                Content="-"
-                                FontSize="18"
-                                FontWeight="Bold" />
-                            <Slider
-                                x:Name="SliderMagnifierScale"
-                                Grid.Column="2"
-                                VerticalAlignment="Center"
-                                Maximum="5"
-                                Minimum="1.5"
-                                SmallChange="0.1"
-                                TickFrequency="0.1"
-                                Value="2.5"
-                                ValueChanged="SliderMagnifierScale_ValueChanged" />
-                            <Button
-                                Grid.Column="3"
-                                Width="28"
-                                Height="28"
-                                Margin="8,0,8,0"
-                                VerticalAlignment="Center"
-                                Click="BtnMagnifierZoomIn_Click"
-                                Content="+"
-                                FontSize="18"
-                                FontWeight="Bold" />
-                            <TextBlock
-                                x:Name="TextMagnifierScale"
-                                Grid.Column="4"
-                                Width="42"
-                                VerticalAlignment="Center"
-                                FontSize="13"
-                                FontWeight="SemiBold"
-                                Foreground="#FFFFFFFF"
-                                Text="2.5x"
-                                TextAlignment="Center" />
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Border>
-        </Canvas>
-
                 <Border
                     x:Name="EnableTwoFingerGestureBorder"
                     Width="36"
@@ -7641,6 +7535,112 @@
                 </Border>
             </ikw:SimpleStackPanel>
         </Viewbox>
+        <Canvas
+            x:Name="CanvasMagnifierLayer"
+            Background="Transparent"
+            Panel.ZIndex="2500"
+            Visibility="Collapsed">
+            <Border
+                x:Name="BorderMagnifierViewport"
+                Width="360"
+                Height="260"
+                Background="#FF111111"
+                BorderBrush="#FFFFEA00"
+                BorderThickness="3"
+                CornerRadius="6"
+                SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border
+                        x:Name="BorderMagnifierContent"
+                        Margin="0"
+                        ClipToBounds="True"
+                        CornerRadius="3,3,0,0">
+                        <Image
+                            x:Name="ImageMagnifierContent"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            Stretch="Fill" />
+                    </Border>
+                    <Border
+                        Grid.Row="1"
+                        Height="40"
+                        Background="#DD000000"
+                        BorderBrush="#FFFFFFFF"
+                        BorderThickness="0,1,0,0"
+                        CornerRadius="0,0,3,3">
+                        <Grid Margin="8,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                x:Name="BorderMagnifierHandle"
+                                Width="30"
+                                Margin="0,3,8,3"
+                                Background="Transparent"
+                                Cursor="SizeAll"
+                                MouseLeftButtonDown="BorderMagnifierHandle_MouseLeftButtonDown"
+                                MouseLeftButtonUp="BorderMagnifierHandle_MouseLeftButtonUp"
+                                MouseMove="BorderMagnifierHandle_MouseMove">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="21"
+                                    FontWeight="Bold"
+                                    Foreground="#FFFFFFFF"
+                                    Text="⣿" />
+                            </Border>
+                            <Button
+                                Grid.Column="1"
+                                Width="28"
+                                Height="28"
+                                Margin="0,0,8,0"
+                                VerticalAlignment="Center"
+                                Click="BtnMagnifierZoomOut_Click"
+                                Content="-"
+                                FontSize="18"
+                                FontWeight="Bold" />
+                            <Slider
+                                x:Name="SliderMagnifierScale"
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Maximum="5"
+                                Minimum="1.5"
+                                SmallChange="0.1"
+                                TickFrequency="0.1"
+                                Value="2.5"
+                                ValueChanged="SliderMagnifierScale_ValueChanged" />
+                            <Button
+                                Grid.Column="3"
+                                Width="28"
+                                Height="28"
+                                Margin="8,0,8,0"
+                                VerticalAlignment="Center"
+                                Click="BtnMagnifierZoomIn_Click"
+                                Content="+"
+                                FontSize="18"
+                                FontWeight="Bold" />
+                            <TextBlock
+                                x:Name="TextMagnifierScale"
+                                Grid.Column="4"
+                                Width="42"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                FontWeight="SemiBold"
+                                Foreground="#FFFFFFFF"
+                                Text="2.5x"
+                                TextAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Canvas>
         <!--  // 笑脸拖动 //  -->
         <Grid
             Name="GridForFloatingBarDraging"

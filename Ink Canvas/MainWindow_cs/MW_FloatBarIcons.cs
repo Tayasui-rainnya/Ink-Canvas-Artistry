@@ -342,6 +342,7 @@ namespace Ink_Canvas
             if (currentMode == 0)
             {
                 currentMode = 1;
+                RefreshMagnifierButtonState();
                 //进入画板
                 PPTNavigationBottomLeft.Visibility = Visibility.Collapsed;
                 PPTNavigationBottomRight.Visibility = Visibility.Collapsed;
@@ -371,6 +372,7 @@ namespace Ink_Canvas
             else
             {
                 currentMode = 0;
+                RefreshMagnifierButtonState();
                 //退出画板
                 HideSubPanelsImmediately();
 
@@ -555,6 +557,7 @@ namespace Ink_Canvas
 
         private void SymbolIconTools_Click(object sender, RoutedEventArgs e)
         {
+            RefreshMagnifierButtonState();
             if (BorderTools.Visibility == Visibility.Visible)
             {
                 AnimationsHelper.HideWithSlideAndFade(BorderTools);
@@ -713,6 +716,7 @@ namespace Ink_Canvas
 
 
             StackPanelCanvasControls.Visibility = Visibility.Collapsed;
+            RefreshMagnifierButtonState();
 
             if (!isFloatingBarFolded)
             {
@@ -741,6 +745,7 @@ namespace Ink_Canvas
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
 
                 StackPanelCanvasControls.Visibility = Visibility.Visible;
+                RefreshMagnifierButtonState();
 
                 CheckEnableTwoFingerGestureBtnVisibility(true);
                 inkCanvas.EditingMode = InkCanvasEditingMode.Ink;

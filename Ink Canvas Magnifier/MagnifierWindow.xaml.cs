@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 
 namespace Ink_Canvas_Magnifier
@@ -20,8 +20,8 @@ namespace Ink_Canvas_Magnifier
         private readonly DispatcherTimer _refreshTimer;
 
         private bool _isDragging;
-        private Point _dragStartMousePosition;
-        private Point _dragStartWindowPosition;
+        private System.Windows.Point _dragStartMousePosition;
+        private System.Windows.Point _dragStartWindowPosition;
 
         public MagnifierWindow()
         {
@@ -78,9 +78,9 @@ namespace Ink_Canvas_Magnifier
             if (captureX < virtualScreen.Left) captureX = virtualScreen.Left;
             if (captureY < virtualScreen.Top) captureY = virtualScreen.Top;
 
-            using (var bitmap = new Bitmap(captureWidth, captureHeight, PixelFormat.Format32bppPArgb))
+            using (var bitmap = new Drawing.Bitmap(captureWidth, captureHeight, PixelFormat.Format32bppPArgb))
             {
-                using (var graphics = Graphics.FromImage(bitmap))
+                using (var graphics = Drawing.Graphics.FromImage(bitmap))
                 {
                     graphics.CopyFromScreen(captureX, captureY, 0, 0, bitmap.Size, CopyPixelOperation.SourceCopy);
                 }
@@ -128,7 +128,7 @@ namespace Ink_Canvas_Magnifier
         {
             _isDragging = true;
             _dragStartMousePosition = PointToScreen(e.GetPosition(this));
-            _dragStartWindowPosition = new Point(Left, Top);
+            _dragStartWindowPosition = new System.Windows.Point(Left, Top);
             DragHandleArea.CaptureMouse();
         }
 
@@ -136,7 +136,7 @@ namespace Ink_Canvas_Magnifier
         {
             if (!_isDragging) return;
 
-            Point currentMousePos = PointToScreen(e.GetPosition(this));
+            System.Windows.Point currentMousePos = PointToScreen(e.GetPosition(this));
             Vector delta = currentMousePos - _dragStartMousePosition;
 
             Left = _dragStartWindowPosition.X + delta.X;

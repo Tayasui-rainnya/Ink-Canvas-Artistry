@@ -1,0 +1,171 @@
+<Window
+    x:Class="Ink_Canvas.MagnifierWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    Title="放大镜 - Ink Canvas Artistry"
+    Width="320"
+    Height="400"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    Topmost="True"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    
+    <Grid x:Name="MainGrid">
+        <!-- 放大镜主体区域 -->
+        <Border
+            x:Name="MagnifierBorder"
+            Background="White"
+            BorderBrush="#FF000000"
+            BorderThickness="3"
+            CornerRadius="5">
+            <Grid>
+                <!-- 放大的屏幕内容 -->
+                <Viewbox x:Name="MagnifierViewbox" Stretch="Uniform">
+                    <Grid x:Name="CapturedContentGrid" Width="320" Height="320">
+                        <VisualBrush x:Name="ScreenVisualBrush" Visual="{x:Static Application.Current.MainWindow}">
+                            <VisualBrush.Viewbox>
+                                <Rect x:Name="CaptureRect" X="0" Y="0" Width="320" Height="320" />
+                            </VisualBrush.Viewbox>
+                        </VisualBrush>
+                        <!-- 实际捕获的内容通过代码更新 -->
+                        <Image x:Name="CapturedImage" Stretch="UniformToFill" />
+                    </Grid>
+                </Viewbox>
+            </Grid>
+        </Border>
+        
+        <!-- 左侧大小调节 Handle -->
+        <Border
+            x:Name="LeftResizeHandle"
+            Width="8"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Background="#FF4A90E2"
+            CornerRadius="4"
+            Cursor="SizeWE"
+            MouseDown="LeftResizeHandle_MouseDown"
+            MouseMove="LeftResizeHandle_MouseMove"
+            MouseUp="LeftResizeHandle_MouseUp" />
+        
+        <!-- 右侧大小调节 Handle -->
+        <Border
+            x:Name="RightResizeHandle"
+            Width="8"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Background="#FF4A90E2"
+            CornerRadius="4"
+            Cursor="SizeWE"
+            MouseDown="RightResizeHandle_MouseDown"
+            MouseMove="RightResizeHandle_MouseMove"
+            MouseUp="RightResizeHandle_MouseUp" />
+        
+        <!-- 底部控制栏 -->
+        <Border
+            x:Name="ControlBar"
+            Height="50"
+            VerticalAlignment="Bottom"
+            Background="#FF2C3E50"
+            CornerRadius="0,0,5,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- A. 拖拽手柄区 (最左侧) -->
+                <TextBlock
+                    x:Name="DragHandle"
+                    Grid.Column="0"
+                    Margin="10,0,10,0"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="⣿"
+                    Cursor="SizeAll"
+                    MouseDown="DragHandle_MouseDown"
+                    MouseMove="DragHandle_MouseMove"
+                    MouseUp="DragHandle_MouseUp" />
+                
+                <!-- B. 缩放倍率调节区 (核心功能) -->
+                <StackPanel
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="5">
+                    
+                    <!-- 减小按钮 -->
+                    <Button
+                        x:Name="BtnZoomOut"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        Background="#FF4A90E2"
+                        BorderThickness="0"
+                        Content="-"
+                        FontSize="16"
+                        Foreground="White"
+                        Click="BtnZoomOut_Click" />
+                    
+                    <!-- 滑块 -->
+                    <Slider
+                        x:Name="ZoomSlider"
+                        Width="100"
+                        MinWidth="80"
+                        Minimum="1.5"
+                        Maximum="5.0"
+                        Value="2.5"
+                        TickFrequency="0.5"
+                        IsSnapToTickEnabled="False"
+                        ValueChanged="ZoomSlider_ValueChanged" />
+                    
+                    <!-- 增大按钮 -->
+                    <Button
+                        x:Name="BtnZoomIn"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        Background="#FF4A90E2"
+                        BorderThickness="0"
+                        Content="+"
+                        FontSize="16"
+                        Foreground="White"
+                        Click="BtnZoomIn_Click" />
+                    
+                    <!-- 倍率显示 -->
+                    <TextBlock
+                        x:Name="ZoomRatioText"
+                        MinWidth="40"
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="White"
+                        Text="2.5x" />
+                </StackPanel>
+                
+                <!-- 关闭按钮 -->
+                <Button
+                    x:Name="BtnClose"
+                    Grid.Column="2"
+                    Width="28"
+                    Height="28"
+                    Margin="0,0,10,0"
+                    Padding="0"
+                    Background="#FFE74C3C"
+                    BorderThickness="0"
+                    Content="×"
+                    FontSize="18"
+                    Foreground="White"
+                    Click="BtnClose_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

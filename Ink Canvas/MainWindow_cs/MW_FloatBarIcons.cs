@@ -442,6 +442,13 @@ namespace Ink_Canvas
             new OperatingGuideWindow().Show();
         }
 
+        private void MagnifierIcon_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationsHelper.HideWithSlideAndFade(BorderTools);
+            AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
+            new MagnifierWindow().Show();
+        }
+
         private void SymbolIconRand_Click(object sender, RoutedEventArgs e)
         {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);

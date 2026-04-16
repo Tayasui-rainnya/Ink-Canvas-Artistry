@@ -152,6 +152,7 @@ namespace Ink_Canvas.Windows
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (ZoomText == null || MagnifierImage == null) return;
             ZoomText.Text = $"{ZoomSlider.Value:F1}x";
             UpdateMagnifiedView();
         }

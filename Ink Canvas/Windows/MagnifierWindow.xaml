@@ -28,11 +28,6 @@
                 <!-- 放大的屏幕内容 -->
                 <Viewbox x:Name="MagnifierViewbox" Stretch="Uniform">
                     <Grid x:Name="CapturedContentGrid" Width="320" Height="320">
-                        <VisualBrush x:Name="ScreenVisualBrush" Visual="{x:Static Application.Current.MainWindow}">
-                            <VisualBrush.Viewbox>
-                                <Rect x:Name="CaptureRect" X="0" Y="0" Width="320" Height="320" />
-                            </VisualBrush.Viewbox>
-                        </VisualBrush>
                         <!-- 实际捕获的内容通过代码更新 -->
                         <Image x:Name="CapturedImage" Stretch="UniformToFill" />
                     </Grid>

@@ -14,7 +14,7 @@ namespace Ink_Canvas.Windows
     public partial class ScreenMagnifierWindow : Window
     {
         private readonly DispatcherTimer _refreshTimer;
-        private Point _dragStartPoint;
+        private System.Windows.Point _dragStartPoint;
         private bool _isDragging;
 
         public ScreenMagnifierWindow()
@@ -116,7 +116,7 @@ namespace Ink_Canvas.Windows
         {
             if (!_isDragging) return;
 
-            Point screenPoint = PointToScreen(e.GetPosition(this));
+            System.Windows.Point screenPoint = PointToScreen(e.GetPosition(this));
             Left = screenPoint.X - _dragStartPoint.X;
             Top = screenPoint.Y - _dragStartPoint.Y;
         }

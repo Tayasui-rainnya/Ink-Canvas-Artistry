@@ -16,6 +16,7 @@ namespace Ink_Canvas.Windows
         private readonly DispatcherTimer _refreshTimer;
         private System.Windows.Point _dragStartPoint;
         private bool _isDragging;
+        private bool _isCaptureInProgress;
 
         public ScreenMagnifierWindow()
         {
@@ -49,6 +50,8 @@ namespace Ink_Canvas.Windows
 
         private void UpdateMagnifiedView()
         {
+            if (_isCaptureInProgress) return;
+
             int viewportWidth = Math.Max(1, (int)Math.Round(ActualWidth));
             int viewportHeight = Math.Max(1, (int)Math.Round(ActualHeight - 40));
             double zoom = ZoomSlider.Value;
@@ -62,7 +65,7 @@ namespace Ink_Canvas.Windows
             int sourceX = (int)Math.Round(centerX - captureWidth / 2.0);
             int sourceY = (int)Math.Round(centerY - captureHeight / 2.0);
 
-            using (Bitmap source = CaptureScreen(sourceX, sourceY, captureWidth, captureHeight))
+            using (Bitmap source = CaptureScreenWithoutSelf(sourceX, sourceY, captureWidth, captureHeight))
             using (Bitmap scaled = new Bitmap(source, viewportWidth, viewportHeight))
             {
                 IntPtr hBitmap = scaled.GetHbitmap();
@@ -80,6 +83,23 @@ namespace Ink_Canvas.Windows
                 {
                     DeleteObject(hBitmap);
                 }
+            }
+        }
+
+        private Bitmap CaptureScreenWithoutSelf(int sourceX, int sourceY, int width, int height)
+        {
+            _isCaptureInProgress = true;
+            double originalOpacity = Opacity;
+            try
+            {
+                Opacity = 0;
+                Dispatcher.Invoke(DispatcherPriority.Render, new Action(() => { }));
+                return CaptureScreen(sourceX, sourceY, width, height);
+            }
+            finally
+            {
+                Opacity = originalOpacity;
+                _isCaptureInProgress = false;
             }
         }
 

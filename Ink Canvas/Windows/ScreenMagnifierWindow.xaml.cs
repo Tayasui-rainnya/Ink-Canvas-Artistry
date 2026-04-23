@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Forms;
+using WinForms = System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -136,8 +136,8 @@ namespace Ink_Canvas.Windows
             if (source?.CompositionTarget != null)
             {
                 Matrix fromDevice = source.CompositionTarget.TransformFromDevice;
-                var cursor = System.Windows.Forms.Cursor.Position;
-                Screen screen = Screen.FromPoint(cursor);
+                var cursor = WinForms.Cursor.Position;
+                WinForms.Screen screen = WinForms.Screen.FromPoint(cursor);
                 Rect workAreaPx = new Rect(screen.WorkingArea.Left, screen.WorkingArea.Top, screen.WorkingArea.Width, screen.WorkingArea.Height);
                 Rect workAreaDip = Rect.Transform(workAreaPx, fromDevice);
 
@@ -196,7 +196,7 @@ namespace Ink_Canvas.Windows
             int srcW = Math.Max(1, (int)Math.Round(sizeDev.X));
             int srcH = Math.Max(1, (int)Math.Round(sizeDev.Y));
 
-            using (var bitmap = new Bitmap(srcW, srcH, PixelFormat.Format32bppPArgb))
+            using (var bitmap = new Bitmap(srcW, srcH, System.Drawing.Imaging.PixelFormat.Format32bppPArgb))
             {
                 using (Graphics g = Graphics.FromImage(bitmap))
                 {

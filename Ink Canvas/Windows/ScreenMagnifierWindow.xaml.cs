@@ -74,6 +74,12 @@ namespace Ink_Canvas.Windows
             Closed += ScreenMagnifierWindow_Closed;
         }
 
+        private void RefreshZoomLabel()
+        {
+            if (TxtZoom == null || ZoomSlider == null) return;
+            TxtZoom.Text = $"{ZoomSlider.Value:F1}x";
+        }
+
         private void ScreenMagnifierWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Left = (SystemParameters.WorkArea.Width - Width) / 2;
@@ -83,6 +89,7 @@ namespace Ink_Canvas.Windows
             ApplyCaptureExclusion(magnifierHandle);
             ApplyCaptureExclusion(_mainWindowHandle);
 
+            RefreshZoomLabel();
             _captureTimer.Start();
         }
 
@@ -99,7 +106,7 @@ namespace Ink_Canvas.Windows
 
         private void RenderMagnifiedFrame()
         {
-            if (!IsLoaded || ActualWidth < 40 || ActualHeight < 60) return;
+            if (!IsLoaded || ImageViewport == null || ZoomSlider == null || ActualWidth < 40 || ActualHeight < 60) return;
 
             double zoom = ZoomSlider.Value;
             double captureWidth = ActualWidth / zoom;
@@ -157,7 +164,9 @@ namespace Ink_Canvas.Windows
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            TxtZoom.Text = $"{e.NewValue:F1}x";
+            if (TxtZoom == null || ZoomSlider == null) return;
+
+            RefreshZoomLabel();
             RenderMagnifiedFrame();
         }
 

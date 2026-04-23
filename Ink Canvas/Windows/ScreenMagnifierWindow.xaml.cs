@@ -25,6 +25,40 @@ namespace Ink_Canvas.Windows
 
         public event EventHandler RequestClose;
 
+        private static bool IsExcludeFromCaptureSupported()
+        {
+            Version osVersion = Environment.OSVersion.Version;
+            return osVersion.Major >= 10 && (osVersion.Build >= 19041 || osVersion.Major > 10);
+        }
+
+        private void ApplyCaptureExclusion(IntPtr windowHandle)
+        {
+            if (windowHandle == IntPtr.Zero || !IsExcludeFromCaptureSupported()) return;
+
+            try
+            {
+                SetWindowDisplayAffinity(windowHandle, WdaExcludeFromCapture);
+            }
+            catch
+            {
+                // 低版本系统或驱动环境下可能不支持，忽略并降级为普通采集。
+            }
+        }
+
+        private void ClearCaptureExclusion(IntPtr windowHandle)
+        {
+            if (windowHandle == IntPtr.Zero || !IsExcludeFromCaptureSupported()) return;
+
+            try
+            {
+                SetWindowDisplayAffinity(windowHandle, WdaNone);
+            }
+            catch
+            {
+                // 忽略恢复失败，避免关闭流程抛异常。
+            }
+        }
+
         public ScreenMagnifierWindow(IntPtr mainWindowHandle)
         {
             _mainWindowHandle = mainWindowHandle;
@@ -46,11 +80,8 @@ namespace Ink_Canvas.Windows
             Top = (SystemParameters.WorkArea.Height - Height) / 2;
 
             IntPtr magnifierHandle = new WindowInteropHelper(this).Handle;
-            SetWindowDisplayAffinity(magnifierHandle, WdaExcludeFromCapture);
-            if (_mainWindowHandle != IntPtr.Zero)
-            {
-                SetWindowDisplayAffinity(_mainWindowHandle, WdaExcludeFromCapture);
-            }
+            ApplyCaptureExclusion(magnifierHandle);
+            ApplyCaptureExclusion(_mainWindowHandle);
 
             _captureTimer.Start();
         }
@@ -60,11 +91,8 @@ namespace Ink_Canvas.Windows
             _captureTimer.Stop();
 
             IntPtr magnifierHandle = new WindowInteropHelper(this).Handle;
-            SetWindowDisplayAffinity(magnifierHandle, WdaNone);
-            if (_mainWindowHandle != IntPtr.Zero)
-            {
-                SetWindowDisplayAffinity(_mainWindowHandle, WdaNone);
-            }
+            ClearCaptureExclusion(magnifierHandle);
+            ClearCaptureExclusion(_mainWindowHandle);
 
             RequestClose?.Invoke(this, EventArgs.Empty);
         }

@@ -1,6 +1,5 @@
 using Ink_Canvas.Windows;
 using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -8,7 +7,6 @@ namespace Ink_Canvas
 {
     public partial class MainWindow
     {
-        private Thread magnifierUiThread;
         private ScreenMagnifierWindow magnifierWindow;
 
         private void SymbolIconMagnifier_Click(object sender, RoutedEventArgs e)
@@ -33,39 +31,35 @@ namespace Ink_Canvas
             if (magnifierWindow != null) return;
 
             IntPtr mainHandle = new WindowInteropHelper(this).Handle;
-            using (var initSignal = new ManualResetEvent(false))
+            magnifierWindow = new ScreenMagnifierWindow(mainHandle)
             {
-                magnifierUiThread = new Thread(() =>
-                {
-                    var window = new ScreenMagnifierWindow(mainHandle);
-                    magnifierWindow = window;
-                    window.RequestClose += (_, __) => magnifierWindow = null;
-                    initSignal.Set();
-                    window.Show();
-                    System.Windows.Threading.Dispatcher.Run();
-                });
+                Owner = this
+            };
+            magnifierWindow.RequestClose += MagnifierWindow_RequestClose;
+            magnifierWindow.Show();
+        }
 
-                magnifierUiThread.SetApartmentState(ApartmentState.STA);
-                magnifierUiThread.IsBackground = true;
-                magnifierUiThread.Start();
-                initSignal.WaitOne();
+        private void MagnifierWindow_RequestClose(object sender, EventArgs e)
+        {
+            if (magnifierWindow != null)
+            {
+                magnifierWindow.RequestClose -= MagnifierWindow_RequestClose;
             }
+
+            magnifierWindow = null;
         }
 
         private void CloseMagnifierWindow()
         {
-            ScreenMagnifierWindow window = magnifierWindow;
-            if (window == null) return;
+            if (magnifierWindow == null) return;
 
-            window.Dispatcher.BeginInvoke(new Action(() =>
+            magnifierWindow.RequestClose -= MagnifierWindow_RequestClose;
+            if (magnifierWindow.IsVisible)
             {
-                if (window.IsVisible)
-                {
-                    window.Close();
-                }
+                magnifierWindow.Close();
+            }
 
-                window.Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Background);
-            }));
+            magnifierWindow = null;
         }
 
         private void UpdateMagnifierToolButtonVisibility()

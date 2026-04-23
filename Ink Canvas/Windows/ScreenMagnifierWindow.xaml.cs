@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -18,7 +16,6 @@ namespace Ink_Canvas.Windows
         private readonly DispatcherTimer _refreshTimer;
         private System.Windows.Point _dragStartPoint;
         private bool _isDragging;
-        private readonly Dictionary<IntPtr, uint> _windowAffinityBackup = new Dictionary<IntPtr, uint>();
 
         public ScreenMagnifierWindow()
         {
@@ -43,11 +40,7 @@ namespace Ink_Canvas.Windows
 
             SourceInitialized += (_, __) => TryEnableExcludeFromCapture();
             Loaded += (_, __) => _refreshTimer.Start();
-            Closed += (_, __) =>
-            {
-                _refreshTimer.Stop();
-                RestoreCaptureAffinity();
-            };
+            Closed += (_, __) => _refreshTimer.Stop();
         }
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
@@ -93,33 +86,9 @@ namespace Ink_Canvas.Windows
 
         private void TryEnableExcludeFromCapture()
         {
-            _windowAffinityBackup.Clear();
-
-            int currentProcessId = Process.GetCurrentProcess().Id;
-            EnumWindows((hWnd, lParam) =>
-            {
-                if (!IsWindowVisible(hWnd)) return true;
-                GetWindowThreadProcessId(hWnd, out uint processId);
-                if (processId != (uint)currentProcessId) return true;
-
-                uint existingAffinity = WDA_NONE;
-                _ = GetWindowDisplayAffinity(hWnd, out existingAffinity);
-                if (SetWindowDisplayAffinity(hWnd, WDA_EXCLUDEFROMCAPTURE))
-                {
-                    _windowAffinityBackup[hWnd] = existingAffinity;
-                }
-                return true;
-            }, IntPtr.Zero);
-
-        }
-
-        private void RestoreCaptureAffinity()
-        {
-            foreach (KeyValuePair<IntPtr, uint> item in _windowAffinityBackup)
-            {
-                _ = SetWindowDisplayAffinity(item.Key, item.Value);
-            }
-            _windowAffinityBackup.Clear();
+            IntPtr handle = new WindowInteropHelper(this).Handle;
+            if (handle == IntPtr.Zero) return;
+            _ = SetWindowDisplayAffinity(handle, WDA_EXCLUDEFROMCAPTURE);
         }
 
         private static Bitmap CaptureScreen(int sourceX, int sourceY, int width, int height)
@@ -236,27 +205,10 @@ namespace Ink_Canvas.Windows
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
 
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetWindowDisplayAffinity(IntPtr hWnd, out uint pdwAffinity);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool IsWindowVisible(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
         [DllImport("gdi32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DeleteObject(IntPtr hObject);
 
-        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-        private const uint WDA_NONE = 0x00000000;
         private const uint WDA_EXCLUDEFROMCAPTURE = 0x00000011;
     }
 }

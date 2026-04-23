@@ -91,7 +91,7 @@ namespace Ink_Canvas.Windows
             {
                 using (Graphics g = Graphics.FromImage(bitmap))
                 {
-                    g.CopyFromScreen(srcX, srcY, 0, 0, new Size(srcW, srcH), CopyPixelOperation.SourceCopy);
+                    g.CopyFromScreen(srcX, srcY, 0, 0, new System.Drawing.Size(srcW, srcH), CopyPixelOperation.SourceCopy);
                 }
 
                 IntPtr hBitmap = bitmap.GetHbitmap();

@@ -3,8 +3,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -13,6 +15,7 @@ namespace Ink_Canvas.Windows
     public partial class ScreenMagnifierWindow : Window
     {
         private const uint WdaNone = 0x00000000;
+        private const uint WdaMonitor = 0x00000001;
         private const uint WdaExcludeFromCapture = 0x00000011;
 
         private readonly IntPtr _mainWindowHandle;
@@ -23,6 +26,11 @@ namespace Ink_Canvas.Windows
         private System.Windows.Point _resizeStartPoint;
         private double _resizeStartWidth;
 
+        private uint _selfOriginalAffinity = WdaNone;
+        private uint _mainOriginalAffinity = WdaNone;
+        private bool _hasSelfOriginalAffinity;
+        private bool _hasMainOriginalAffinity;
+
         public event EventHandler RequestClose;
 
         private static bool IsExcludeFromCaptureSupported()
@@ -31,32 +39,74 @@ namespace Ink_Canvas.Windows
             return osVersion.Major >= 10 && (osVersion.Build >= 19041 || osVersion.Major > 10);
         }
 
-        private void ApplyCaptureExclusion(IntPtr windowHandle)
+        private static bool TrySetWindowAffinity(IntPtr windowHandle, uint affinity)
         {
-            if (windowHandle == IntPtr.Zero || !IsExcludeFromCaptureSupported()) return;
+            if (windowHandle == IntPtr.Zero) return false;
 
             try
             {
-                SetWindowDisplayAffinity(windowHandle, WdaExcludeFromCapture);
+                return SetWindowDisplayAffinity(windowHandle, affinity);
             }
             catch
             {
-                // 低版本系统或驱动环境下可能不支持，忽略并降级为普通采集。
+                return false;
             }
         }
 
-        private void ClearCaptureExclusion(IntPtr windowHandle)
+        private static bool TryGetWindowAffinity(IntPtr windowHandle, out uint affinity)
         {
-            if (windowHandle == IntPtr.Zero || !IsExcludeFromCaptureSupported()) return;
+            affinity = WdaNone;
+            if (windowHandle == IntPtr.Zero) return false;
 
             try
             {
-                SetWindowDisplayAffinity(windowHandle, WdaNone);
+                return GetWindowDisplayAffinity(windowHandle, out affinity);
             }
             catch
             {
-                // 忽略恢复失败，避免关闭流程抛异常。
+                return false;
             }
+        }
+
+        private void ApplyCaptureExclusion(IntPtr windowHandle, bool isMainWindow)
+        {
+            if (windowHandle == IntPtr.Zero || !IsExcludeFromCaptureSupported()) return;
+
+            if (TryGetWindowAffinity(windowHandle, out uint originalAffinity))
+            {
+                if (isMainWindow)
+                {
+                    _mainOriginalAffinity = originalAffinity;
+                    _hasMainOriginalAffinity = true;
+                }
+                else
+                {
+                    _selfOriginalAffinity = originalAffinity;
+                    _hasSelfOriginalAffinity = true;
+                }
+            }
+
+            if (!TrySetWindowAffinity(windowHandle, WdaExcludeFromCapture))
+            {
+                _ = TrySetWindowAffinity(windowHandle, WdaMonitor);
+            }
+        }
+
+        private void ClearCaptureExclusion(IntPtr windowHandle, bool isMainWindow)
+        {
+            if (windowHandle == IntPtr.Zero || !IsExcludeFromCaptureSupported()) return;
+
+            uint affinityToRestore = WdaNone;
+            if (isMainWindow && _hasMainOriginalAffinity)
+            {
+                affinityToRestore = _mainOriginalAffinity;
+            }
+            else if (!isMainWindow && _hasSelfOriginalAffinity)
+            {
+                affinityToRestore = _selfOriginalAffinity;
+            }
+
+            _ = TrySetWindowAffinity(windowHandle, affinityToRestore);
         }
 
         public ScreenMagnifierWindow(IntPtr mainWindowHandle)
@@ -82,12 +132,27 @@ namespace Ink_Canvas.Windows
 
         private void ScreenMagnifierWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Left = (SystemParameters.WorkArea.Width - Width) / 2;
-            Top = (SystemParameters.WorkArea.Height - Height) / 2;
+            PresentationSource source = PresentationSource.FromVisual(this);
+            if (source?.CompositionTarget != null)
+            {
+                Matrix fromDevice = source.CompositionTarget.TransformFromDevice;
+                var cursor = System.Windows.Forms.Cursor.Position;
+                Screen screen = Screen.FromPoint(cursor);
+                Rect workAreaPx = new Rect(screen.WorkingArea.Left, screen.WorkingArea.Top, screen.WorkingArea.Width, screen.WorkingArea.Height);
+                Rect workAreaDip = Rect.Transform(workAreaPx, fromDevice);
+
+                Left = workAreaDip.Left + (workAreaDip.Width - Width) / 2;
+                Top = workAreaDip.Top + (workAreaDip.Height - Height) / 2;
+            }
+            else
+            {
+                Left = (SystemParameters.WorkArea.Width - Width) / 2;
+                Top = (SystemParameters.WorkArea.Height - Height) / 2;
+            }
 
             IntPtr magnifierHandle = new WindowInteropHelper(this).Handle;
-            ApplyCaptureExclusion(magnifierHandle);
-            ApplyCaptureExclusion(_mainWindowHandle);
+            ApplyCaptureExclusion(magnifierHandle, false);
+            ApplyCaptureExclusion(_mainWindowHandle, true);
 
             RefreshZoomLabel();
             _captureTimer.Start();
@@ -98,8 +163,8 @@ namespace Ink_Canvas.Windows
             _captureTimer.Stop();
 
             IntPtr magnifierHandle = new WindowInteropHelper(this).Handle;
-            ClearCaptureExclusion(magnifierHandle);
-            ClearCaptureExclusion(_mainWindowHandle);
+            ClearCaptureExclusion(magnifierHandle, false);
+            ClearCaptureExclusion(_mainWindowHandle, true);
 
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
@@ -108,19 +173,28 @@ namespace Ink_Canvas.Windows
         {
             if (!IsLoaded || ImageViewport == null || ZoomSlider == null || ActualWidth < 40 || ActualHeight < 60) return;
 
+            PresentationSource source = PresentationSource.FromVisual(this);
+            if (source?.CompositionTarget == null) return;
+            Matrix toDevice = source.CompositionTarget.TransformToDevice;
+
             double zoom = ZoomSlider.Value;
-            double captureWidth = ActualWidth / zoom;
-            double captureHeight = (ActualHeight - 42) / zoom;
+            const double barHeightDip = 42;
 
-            if (captureWidth < 1 || captureHeight < 1) return;
+            double captureWidthDip = ActualWidth / zoom;
+            double captureHeightDip = (ActualHeight - barHeightDip) / zoom;
+            if (captureWidthDip < 1 || captureHeightDip < 1) return;
 
-            double centerX = Left + ActualWidth / 2;
-            double centerY = Top + (ActualHeight - 42) / 2;
+            double centerXDip = Left + ActualWidth / 2;
+            double centerYDip = Top + (ActualHeight - barHeightDip) / 2;
 
-            int srcX = (int)Math.Round(centerX - captureWidth / 2);
-            int srcY = (int)Math.Round(centerY - captureHeight / 2);
-            int srcW = Math.Max(1, (int)Math.Round(captureWidth));
-            int srcH = Math.Max(1, (int)Math.Round(captureHeight));
+            System.Windows.Point topLeftDev = toDevice.Transform(
+                new System.Windows.Point(centerXDip - captureWidthDip / 2, centerYDip - captureHeightDip / 2));
+            Vector sizeDev = toDevice.Transform(new Vector(captureWidthDip, captureHeightDip));
+
+            int srcX = (int)Math.Round(topLeftDev.X);
+            int srcY = (int)Math.Round(topLeftDev.Y);
+            int srcW = Math.Max(1, (int)Math.Round(sizeDev.X));
+            int srcH = Math.Max(1, (int)Math.Round(sizeDev.Y));
 
             using (var bitmap = new Bitmap(srcW, srcH, PixelFormat.Format32bppPArgb))
             {
@@ -132,13 +206,13 @@ namespace Ink_Canvas.Windows
                 IntPtr hBitmap = bitmap.GetHbitmap();
                 try
                 {
-                    BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(
+                    BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
                         hBitmap,
                         IntPtr.Zero,
                         Int32Rect.Empty,
                         BitmapSizeOptions.FromEmptyOptions());
-                    source.Freeze();
-                    ImageViewport.Source = source;
+                    bitmapSource.Freeze();
+                    ImageViewport.Source = bitmapSource;
                 }
                 finally
                 {
@@ -199,9 +273,14 @@ namespace Ink_Canvas.Windows
                 delta = -delta;
             }
 
-            double newWidth = Math.Max(260, Math.Min(SystemParameters.WorkArea.Width * 0.95, _resizeStartWidth + delta));
+            double maxWidth = Math.Max(260, SystemParameters.WorkArea.Width * 0.95);
+            double newWidth = Math.Max(260, Math.Min(maxWidth, _resizeStartWidth + delta));
+
+            double maxHeight = Math.Max(180, SystemParameters.WorkArea.Height * 0.8);
+            double newHeight = Math.Min(maxHeight, Math.Max(180, newWidth * 0.66));
+
             Width = newWidth;
-            Height = Math.Max(180, Math.Min(SystemParameters.WorkArea.Height * 0.8, newWidth * 0.66));
+            Height = newHeight;
 
             if (_isLeftHandle)
             {
@@ -221,6 +300,9 @@ namespace Ink_Canvas.Windows
 
         [DllImport("user32.dll")]
         private static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowDisplayAffinity(IntPtr hWnd, out uint pdwAffinity);
 
         [DllImport("gdi32.dll")]
         private static extern bool DeleteObject(IntPtr hObject);

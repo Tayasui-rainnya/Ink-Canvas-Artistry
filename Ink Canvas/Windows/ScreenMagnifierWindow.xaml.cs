@@ -262,7 +262,7 @@ namespace Ink_Canvas.Windows
             }
         }
 
-        private void ResizeHandle_MouseMove(object sender, MouseEventArgs e)
+        private void ResizeHandle_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (!_isResizing) return;
 

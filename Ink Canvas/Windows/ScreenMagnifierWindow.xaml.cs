@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -16,8 +18,7 @@ namespace Ink_Canvas.Windows
         private readonly DispatcherTimer _refreshTimer;
         private System.Windows.Point _dragStartPoint;
         private bool _isDragging;
-        private bool _isCaptureInProgress;
-        private bool _excludeFromCaptureEnabled;
+        private readonly Dictionary<IntPtr, uint> _windowAffinityBackup = new Dictionary<IntPtr, uint>();
 
         public ScreenMagnifierWindow()
         {
@@ -42,7 +43,11 @@ namespace Ink_Canvas.Windows
 
             SourceInitialized += (_, __) => TryEnableExcludeFromCapture();
             Loaded += (_, __) => _refreshTimer.Start();
-            Closed += (_, __) => _refreshTimer.Stop();
+            Closed += (_, __) =>
+            {
+                _refreshTimer.Stop();
+                RestoreCaptureAffinity();
+            };
         }
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
@@ -52,8 +57,6 @@ namespace Ink_Canvas.Windows
 
         private void UpdateMagnifiedView()
         {
-            if (_isCaptureInProgress) return;
-
             int viewportWidth = Math.Max(1, (int)Math.Round(ActualWidth));
             int viewportHeight = Math.Max(1, (int)Math.Round(ActualHeight - 40));
             double zoom = ZoomSlider.Value;
@@ -67,9 +70,7 @@ namespace Ink_Canvas.Windows
             int sourceX = (int)Math.Round(centerX - captureWidth / 2.0);
             int sourceY = (int)Math.Round(centerY - captureHeight / 2.0);
 
-            using (Bitmap source = _excludeFromCaptureEnabled
-                ? CaptureScreen(sourceX, sourceY, captureWidth, captureHeight)
-                : CaptureScreenWithoutSelf(sourceX, sourceY, captureWidth, captureHeight))
+            using (Bitmap source = CaptureScreen(sourceX, sourceY, captureWidth, captureHeight))
             using (Bitmap scaled = new Bitmap(source, viewportWidth, viewportHeight))
             {
                 IntPtr hBitmap = scaled.GetHbitmap();
@@ -92,26 +93,33 @@ namespace Ink_Canvas.Windows
 
         private void TryEnableExcludeFromCapture()
         {
-            IntPtr handle = new WindowInteropHelper(this).Handle;
-            if (handle == IntPtr.Zero) return;
-            _excludeFromCaptureEnabled = SetWindowDisplayAffinity(handle, WDA_EXCLUDEFROMCAPTURE);
+            _windowAffinityBackup.Clear();
+
+            int currentProcessId = Process.GetCurrentProcess().Id;
+            EnumWindows((hWnd, lParam) =>
+            {
+                if (!IsWindowVisible(hWnd)) return true;
+                GetWindowThreadProcessId(hWnd, out uint processId);
+                if (processId != (uint)currentProcessId) return true;
+
+                uint existingAffinity = WDA_NONE;
+                _ = GetWindowDisplayAffinity(hWnd, out existingAffinity);
+                if (SetWindowDisplayAffinity(hWnd, WDA_EXCLUDEFROMCAPTURE))
+                {
+                    _windowAffinityBackup[hWnd] = existingAffinity;
+                }
+                return true;
+            }, IntPtr.Zero);
+
         }
 
-        private Bitmap CaptureScreenWithoutSelf(int sourceX, int sourceY, int width, int height)
+        private void RestoreCaptureAffinity()
         {
-            _isCaptureInProgress = true;
-            double originalOpacity = Opacity;
-            try
+            foreach (KeyValuePair<IntPtr, uint> item in _windowAffinityBackup)
             {
-                Opacity = 0;
-                Dispatcher.Invoke(DispatcherPriority.Render, new Action(() => { }));
-                return CaptureScreen(sourceX, sourceY, width, height);
+                _ = SetWindowDisplayAffinity(item.Key, item.Value);
             }
-            finally
-            {
-                Opacity = originalOpacity;
-                _isCaptureInProgress = false;
-            }
+            _windowAffinityBackup.Clear();
         }
 
         private static Bitmap CaptureScreen(int sourceX, int sourceY, int width, int height)
@@ -228,10 +236,27 @@ namespace Ink_Canvas.Windows
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetWindowDisplayAffinity(IntPtr hWnd, out uint pdwAffinity);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
         [DllImport("gdi32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DeleteObject(IntPtr hObject);
 
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+        private const uint WDA_NONE = 0x00000000;
         private const uint WDA_EXCLUDEFROMCAPTURE = 0x00000011;
     }
 }

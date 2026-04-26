@@ -562,9 +562,34 @@ namespace Ink_Canvas
             }
             else
             {
+                UpdateFloatingToolsPanelMargin();
                 AnimationsHelper.ShowWithSlideFromBottomAndFade(BorderTools);
                 AnimationsHelper.ShowWithSlideFromBottomAndFade(BoardBorderTools);
             }
+        }
+
+        private void BorderTools_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateFloatingToolsPanelMargin();
+        }
+
+        private void UpdateFloatingToolsPanelMargin()
+        {
+            const double horizontalOffset = -120;
+            const double bottomGap = 40;
+
+            BorderTools.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            double panelHeight = BorderTools.DesiredSize.Height;
+            if (panelHeight <= 0)
+            {
+                panelHeight = BorderTools.ActualHeight;
+            }
+            if (panelHeight <= 0)
+            {
+                return;
+            }
+
+            BorderTools.Margin = new Thickness(horizontalOffset, -(panelHeight + bottomGap), 0, 0);
         }
 
         bool isViewboxFloatingBarMarginAnimationRunning = false;

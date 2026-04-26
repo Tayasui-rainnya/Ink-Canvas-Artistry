@@ -7038,6 +7038,7 @@
                                     Margin="-120,-180,0,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
+                                    SizeChanged="BorderTools_SizeChanged"
                                     Background="{DynamicResource FloatBarBackground}"
                                     BorderBrush="{DynamicResource FloatBarBorderBrush}"
                                     BorderThickness="1"

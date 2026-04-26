@@ -49,11 +49,29 @@ namespace Ink_Canvas
         /// </summary>
         private bool IsInkStraightenAvailable()
         {
+            bool canInkByCurrentMode = inkCanvas.EditingMode == InkCanvasEditingMode.Ink
+                                       || (isInMultiTouchMode && inkCanvas.EditingMode == InkCanvasEditingMode.None);
             return Settings?.InkStraighten != null
                    && Settings.InkStraighten.IsInkStraightenEnabled
-                   && inkCanvas.EditingMode == InkCanvasEditingMode.Ink
+                   && canInkByCurrentMode
                    && drawingShapeMode == 0
                    && !forceEraser;
+        }
+
+        /// <summary>
+        /// 取消所有正在进行中的拉直会话（不提交拉直结果）。
+        /// </summary>
+        private void CancelAllInkStraightenSessions()
+        {
+            foreach (var session in _inkStraightenSessions.Values.ToList())
+            {
+                if (session.PreviewLine != null && Main_Grid.Children.Contains(session.PreviewLine))
+                {
+                    Main_Grid.Children.Remove(session.PreviewLine);
+                }
+            }
+
+            _inkStraightenSessions.Clear();
         }
 
         private static double Distance(Point a, Point b)

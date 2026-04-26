@@ -330,6 +330,8 @@ namespace Ink_Canvas
             if (dec.Count > 1 || isSingleFingerDragMode || !Settings.Gesture.IsEnableTwoFingerGesture)
             {
                 if (isInMultiTouchMode || !Settings.Gesture.IsEnableTwoFingerGesture) return;
+                // 双指移动/缩放开始时取消拉直会话，避免停顿误触发直线。
+                CancelAllInkStraightenSessions();
                 if (inkCanvas.EditingMode != InkCanvasEditingMode.None && inkCanvas.EditingMode != InkCanvasEditingMode.Select)
                 {
                     lastInkCanvasEditingMode = inkCanvas.EditingMode;

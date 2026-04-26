@@ -45,6 +45,14 @@ namespace Ink_Canvas
         }
 
         /// <summary>
+        /// 判断当前触笔事件是否来自手指触摸提升（而非主动笔）。
+        /// </summary>
+        private static bool IsTouchPromotedStylus(StylusEventArgs e)
+        {
+            return e?.StylusDevice?.TabletDevice?.Type == TabletDeviceType.Touch;
+        }
+
+        /// <summary>
         /// 判断当前是否满足墨迹拉直可用条件。
         /// </summary>
         private bool IsInkStraightenAvailable()
@@ -307,16 +315,19 @@ namespace Ink_Canvas
 
         private void inkCanvas_StylusDownForStraighten(object sender, StylusDownEventArgs e)
         {
+            if (IsTouchPromotedStylus(e)) return;
             StartInkStraightenSession(e.StylusDevice.Id, e.GetPosition(inkCanvas));
         }
 
         private void inkCanvas_StylusMoveForStraighten(object sender, StylusEventArgs e)
         {
+            if (IsTouchPromotedStylus(e)) return;
             UpdateInkStraightenSession(e.StylusDevice.Id, e.GetPosition(inkCanvas));
         }
 
         private void inkCanvas_StylusUpForStraighten(object sender, StylusEventArgs e)
         {
+            if (IsTouchPromotedStylus(e)) return;
             EndInkStraightenSession(e.StylusDevice.Id);
         }
 
@@ -362,6 +373,7 @@ namespace Ink_Canvas
 
         private void Window_PreviewStylusUpForStraighten(object sender, StylusEventArgs e)
         {
+            if (IsTouchPromotedStylus(e)) return;
             EndInkStraightenSession(e.StylusDevice.Id);
         }
     }

@@ -35,6 +35,10 @@ namespace Ink_Canvas
         /// 当前活动的墨迹拉直会话集合（按指针 id 管理）。
         /// </summary>
         private readonly Dictionary<int, InkStraightenSession> _inkStraightenSessions = new Dictionary<int, InkStraightenSession>();
+        /// <summary>
+        /// 已经提交拉直结果、应跳过原始自由线落笔的指针 id。
+        /// </summary>
+        private readonly HashSet<int> _skipRawStrokePointerIds = new HashSet<int>();
 
         /// <summary>
         /// 判断输入事件是否由触控笔提升而来。
@@ -72,6 +76,14 @@ namespace Ink_Canvas
             }
 
             _inkStraightenSessions.Clear();
+        }
+
+        /// <summary>
+        /// 尝试消费“跳过原始自由线”标记。
+        /// </summary>
+        private bool TryConsumeSkipRawStrokePointerId(int pointerId)
+        {
+            return _skipRawStrokePointerIds.Remove(pointerId);
         }
 
         private static double Distance(Point a, Point b)
@@ -249,6 +261,7 @@ namespace Ink_Canvas
                 _currentCommitType = CommitReason.UserInput;
                 inkCanvas.Strokes.Add(straightStroke);
                 session.IsCommitted = true;
+                _skipRawStrokePointerIds.Add(pointerId);
             }
 
             if (session.IsInputSuppressed && inkCanvas.EditingMode == InkCanvasEditingMode.None)

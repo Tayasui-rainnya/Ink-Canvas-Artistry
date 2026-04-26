@@ -126,6 +126,11 @@ namespace Ink_Canvas
                             inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
                             return;
                         }
+                        if (TryConsumeSkipRawStrokePointerId(e.StylusDevice.Id))
+                        {
+                            inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
+                            return;
+                        }
                         inkCanvas.Strokes.Add(strokeVisual.Stroke);
                         await Task.Delay(5); // 避免渲染墨迹完成前预览墨迹被删除导致墨迹闪烁
                         inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));

@@ -150,6 +150,12 @@ namespace Ink_Canvas
                     StrokeVisualList.Clear();
                     VisualCanvasList.Clear();
                     TouchDownPointsList.Clear();
+
+                    // 触摸擦除抬手后恢复为书写，避免橡皮光标残留在屏幕上。
+                    if (!forceEraser)
+                    {
+                        inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                    }
                 }
             }
             catch { }

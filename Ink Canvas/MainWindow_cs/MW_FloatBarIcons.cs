@@ -586,16 +586,18 @@ namespace Ink_Canvas
             }
 
             int columnsPerRow = 3;
-            if (visibleButtonCount > 16 && visibleButtonCount <= 25)
+            if (visibleButtonCount > 16)
             {
                 columnsPerRow = 5;
             }
-            else if (visibleButtonCount > 9 && visibleButtonCount <= 16)
+            else if (visibleButtonCount > 9)
             {
                 columnsPerRow = 4;
             }
 
+            int rows = visibleButtonCount <= 0 ? 1 : (int)Math.Ceiling((double)visibleButtonCount / columnsPerRow);
             FloatBarMoreSettingsWrapPanel.Width = columnsPerRow * FloatBarMoreSettingsWrapPanel.ItemWidth;
+            FloatBarMoreSettingsWrapPanel.Height = rows * FloatBarMoreSettingsWrapPanel.ItemHeight;
         }
 
         bool isViewboxFloatingBarMarginAnimationRunning = false;

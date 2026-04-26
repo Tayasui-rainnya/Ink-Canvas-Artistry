@@ -599,6 +599,15 @@ namespace Ink_Canvas
             double popupHorizontalPadding = 16d + Math.Max(0, columnsPerRow - 3) * 8d;
             FloatBarMoreSettingsWrapPanel.Width = columnsPerRow * FloatBarMoreSettingsWrapPanel.ItemWidth + popupHorizontalPadding;
             FloatBarMoreSettingsWrapPanel.Height = rows * FloatBarMoreSettingsWrapPanel.ItemHeight;
+
+            if (BorderTools != null)
+            {
+                double basePopupWidth = 3 * FloatBarMoreSettingsWrapPanel.ItemWidth + 16d;
+                double extraWidth = Math.Max(0d, FloatBarMoreSettingsWrapPanel.Width - basePopupWidth);
+                Thickness margin = BorderTools.Margin;
+                margin.Left = -120 + extraWidth;
+                BorderTools.Margin = margin;
+            }
         }
 
         bool isViewboxFloatingBarMarginAnimationRunning = false;

@@ -7060,16 +7060,16 @@
                                                 Margin="0,4,0,0"
                                                 HorizontalAlignment="Center"
                                                 ItemHeight="45"
-                                                ItemWidth="52"
+                                                ItemWidth="45"
                                                 Orientation="Horizontal">
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="ImageCountdownTimer_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7088,13 +7088,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconRand_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7113,13 +7113,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconRandOne_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7155,13 +7155,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconSaveStrokes_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7180,13 +7180,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconOpenInkCanvasFile_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7205,13 +7205,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="GridInkReplayButton_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7231,13 +7231,13 @@
                                                 </Button>
                                                 <Button
                                                     x:Name="BtnToolsMagnifier"
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconMagnifier_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7256,13 +7256,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconScreenshot_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7281,13 +7281,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="OperatingGuideWindowIcon_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7306,13 +7306,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="52"
+                                                    Width="45"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconSettings_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="50"
+                                                        Width="40"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon

@@ -7055,6 +7055,7 @@
                                         </Border>
                                         <ikw:SimpleStackPanel HorizontalAlignment="Center">
                                             <WrapPanel
+                                                x:Name="FloatBarMoreSettingsWrapPanel"
                                                 Width="135"
                                                 Margin="0,4,0,0"
                                                 HorizontalAlignment="Center"

@@ -562,9 +562,40 @@ namespace Ink_Canvas
             }
             else
             {
+                UpdateFloatBarMoreSettingsPopupLayout();
                 AnimationsHelper.ShowWithSlideFromBottomAndFade(BorderTools);
                 AnimationsHelper.ShowWithSlideFromBottomAndFade(BoardBorderTools);
             }
+        }
+
+        /// <summary>
+        /// 根据“更多设置”中可见按钮数量动态调整每行显示数量与面板宽度。
+        /// 默认每行 3 个；按钮数 10-16 时每行 4 个；按钮数 17-25 时每行 5 个。
+        /// </summary>
+        private void UpdateFloatBarMoreSettingsPopupLayout()
+        {
+            if (FloatBarMoreSettingsWrapPanel == null) return;
+
+            int visibleButtonCount = 0;
+            foreach (UIElement child in FloatBarMoreSettingsWrapPanel.Children)
+            {
+                if (child.Visibility == Visibility.Visible)
+                {
+                    visibleButtonCount++;
+                }
+            }
+
+            int columnsPerRow = 3;
+            if (visibleButtonCount > 16 && visibleButtonCount <= 25)
+            {
+                columnsPerRow = 5;
+            }
+            else if (visibleButtonCount > 9 && visibleButtonCount <= 16)
+            {
+                columnsPerRow = 4;
+            }
+
+            FloatBarMoreSettingsWrapPanel.Width = columnsPerRow * FloatBarMoreSettingsWrapPanel.ItemWidth;
         }
 
         bool isViewboxFloatingBarMarginAnimationRunning = false;

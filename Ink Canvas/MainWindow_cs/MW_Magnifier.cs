@@ -91,6 +91,7 @@ namespace Ink_Canvas
         {
             if (BtnToolsMagnifier == null) return;
             BtnToolsMagnifier.Visibility = currentMode == 0 ? Visibility.Visible : Visibility.Collapsed;
+            UpdateFloatBarMoreSettingsPopupLayout();
         }
     }
 }

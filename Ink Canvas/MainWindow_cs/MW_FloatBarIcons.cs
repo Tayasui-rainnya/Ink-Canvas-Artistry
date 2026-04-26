@@ -595,8 +595,8 @@ namespace Ink_Canvas
                 columnsPerRow = 4;
             }
 
-            const double popupHorizontalPadding = 16d;
             int rows = visibleButtonCount <= 0 ? 1 : (int)Math.Ceiling((double)visibleButtonCount / columnsPerRow);
+            double popupHorizontalPadding = 16d + Math.Max(0, columnsPerRow - 3) * 8d;
             FloatBarMoreSettingsWrapPanel.Width = columnsPerRow * FloatBarMoreSettingsWrapPanel.ItemWidth + popupHorizontalPadding;
             FloatBarMoreSettingsWrapPanel.Height = rows * FloatBarMoreSettingsWrapPanel.ItemHeight;
         }

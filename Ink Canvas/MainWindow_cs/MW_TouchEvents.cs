@@ -120,16 +120,29 @@ namespace Ink_Canvas
                     try
                     {
                         // 触摸屏 TabletDeviceType.Touch 
+                        bool isStraightenTriggered = _inkStraightenSessions.TryGetValue(e.StylusDevice.Id, out var straightenSession)
+                                                    && straightenSession.IsTriggered;
                         var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
                         if (strokeVisual?.Stroke == null || strokeVisual.Stroke.StylusPoints.Count == 0)
                         {
                             inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
+                            EndInkStraightenSession(e.StylusDevice.Id);
                             return;
                         }
-                        inkCanvas.Strokes.Add(strokeVisual.Stroke);
+                        if (isStraightenTriggered)
+                        {
+                            EndInkStraightenSession(e.StylusDevice.Id);
+                        }
+                        else
+                        {
+                            inkCanvas.Strokes.Add(strokeVisual.Stroke);
+                        }
                         await Task.Delay(5); // 避免渲染墨迹完成前预览墨迹被删除导致墨迹闪烁
                         inkCanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
-                        inkCanvas_StrokeCollected(inkCanvas, new InkCanvasStrokeCollectedEventArgs(strokeVisual.Stroke));
+                        if (!isStraightenTriggered)
+                        {
+                            inkCanvas_StrokeCollected(inkCanvas, new InkCanvasStrokeCollectedEventArgs(strokeVisual.Stroke));
+                        }
                     }
                     catch(Exception ex) {
                         LogHelper.WriteLogToFile(ex.ToString(), LogHelper.LogType.Error);
@@ -169,11 +182,20 @@ namespace Ink_Canvas
                 }
                 catch { }
                 var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
-                var stylusPointCollection = e.GetStylusPoints(this);
+                var stylusPointCollection = e.GetStylusPoints(inkCanvas);
                 foreach (var stylusPoint in stylusPointCollection)
                 {
                     strokeVisual.Add(new StylusPoint(stylusPoint.X, stylusPoint.Y, stylusPoint.PressureFactor));
                 }
+
+                if (_inkStraightenSessions.TryGetValue(e.StylusDevice.Id, out var session) && session.IsTriggered)
+                {
+                    float pressure = stylusPointCollection.Count > 0 ? stylusPointCollection[stylusPointCollection.Count - 1].PressureFactor : 0.5f;
+                    strokeVisual.Stroke.StylusPoints.Clear();
+                    strokeVisual.Stroke.StylusPoints.Add(new StylusPoint(session.StartPoint.X, session.StartPoint.Y, pressure));
+                    strokeVisual.Stroke.StylusPoints.Add(new StylusPoint(session.LatestPoint.X, session.LatestPoint.Y, pressure));
+                }
+
                 strokeVisual.Redraw();
             }
             catch { }

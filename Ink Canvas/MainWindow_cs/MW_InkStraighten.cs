@@ -317,6 +317,10 @@ namespace Ink_Canvas
 
         private void inkCanvas_StylusUpForStraighten(object sender, StylusEventArgs e)
         {
+            if (ShouldDeferInkStraightenStylusUp(e))
+            {
+                return;
+            }
             EndInkStraightenSession(e.StylusDevice.Id);
         }
 
@@ -362,7 +366,20 @@ namespace Ink_Canvas
 
         private void Window_PreviewStylusUpForStraighten(object sender, StylusEventArgs e)
         {
+            if (ShouldDeferInkStraightenStylusUp(e))
+            {
+                return;
+            }
             EndInkStraightenSession(e.StylusDevice.Id);
+        }
+
+        /// <summary>
+        /// 多指书写模式下触摸抬起时，由多指逻辑统一完成拉直提交，避免重复提交。
+        /// </summary>
+        private bool ShouldDeferInkStraightenStylusUp(StylusEventArgs e)
+        {
+            return isInMultiTouchMode
+                   && e?.StylusDevice?.TabletDevice.Type == TabletDeviceType.Touch;
         }
     }
 }

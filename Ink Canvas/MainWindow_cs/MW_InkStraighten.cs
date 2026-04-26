@@ -49,9 +49,11 @@ namespace Ink_Canvas
         /// </summary>
         private bool IsInkStraightenAvailable()
         {
+            bool isInMultiTouchInkWriteMode = isInMultiTouchMode
+                                              && inkCanvas.EditingMode == InkCanvasEditingMode.None;
             return Settings?.InkStraighten != null
                    && Settings.InkStraighten.IsInkStraightenEnabled
-                   && inkCanvas.EditingMode == InkCanvasEditingMode.Ink
+                   && (inkCanvas.EditingMode == InkCanvasEditingMode.Ink || isInMultiTouchInkWriteMode)
                    && drawingShapeMode == 0
                    && !forceEraser;
         }
@@ -307,6 +309,12 @@ namespace Ink_Canvas
 
         private void inkCanvas_StylusDownForStraighten(object sender, StylusDownEventArgs e)
         {
+            if (isInMultiTouchMode
+                && e?.StylusDevice?.TabletDevice?.Type == TabletDeviceType.Touch
+                && GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None)
+            {
+                return;
+            }
             StartInkStraightenSession(e.StylusDevice.Id, e.GetPosition(inkCanvas));
         }
 

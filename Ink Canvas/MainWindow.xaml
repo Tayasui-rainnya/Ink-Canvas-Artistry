@@ -7060,16 +7060,16 @@
                                                 Margin="0,4,0,0"
                                                 HorizontalAlignment="Center"
                                                 ItemHeight="45"
-                                                ItemWidth="45"
+                                                ItemWidth="52"
                                                 Orientation="Horizontal">
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="ImageCountdownTimer_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7080,6 +7080,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xea8f;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="倒计时"
                                                             FontSize="10"
@@ -7087,13 +7088,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconRand_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7104,6 +7105,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xe8b1;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="随机抽选"
                                                             FontSize="10"
@@ -7111,13 +7113,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconRandOne_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7145,6 +7147,7 @@
                                                                 Text="1" />
                                                         </Border>
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="单次抽选"
                                                             FontSize="10"
@@ -7152,13 +7155,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconSaveStrokes_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7169,6 +7172,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xe74e;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="保存墨迹"
                                                             FontSize="10"
@@ -7176,13 +7180,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconOpenInkCanvasFile_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7193,6 +7197,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xed25;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="打开墨迹"
                                                             FontSize="10"
@@ -7200,13 +7205,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="GridInkReplayButton_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7217,6 +7222,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xec57;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="播放墨迹"
                                                             FontSize="10"
@@ -7225,13 +7231,13 @@
                                                 </Button>
                                                 <Button
                                                     x:Name="BtnToolsMagnifier"
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconMagnifier_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7242,6 +7248,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xe721;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="放大镜"
                                                             FontSize="10"
@@ -7249,13 +7256,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconScreenshot_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7266,6 +7273,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xe722;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="截屏"
                                                             FontSize="10"
@@ -7273,13 +7281,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="OperatingGuideWindowIcon_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7290,6 +7298,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xe82d;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="指南"
                                                             FontSize="10"
@@ -7297,13 +7306,13 @@
                                                     </ikw:SimpleStackPanel>
                                                 </Button>
                                                 <Button
-                                                    Width="45"
+                                                    Width="52"
                                                     Height="45"
                                                     Padding="0"
                                                     BorderThickness="0"
                                                     Click="SymbolIconSettings_Click">
                                                     <ikw:SimpleStackPanel
-                                                        Width="40"
+                                                        Width="50"
                                                         Height="40"
                                                         Orientation="Vertical">
                                                         <ui:FontIcon
@@ -7314,6 +7323,7 @@
                                                             Foreground="{DynamicResource FloatBarForeground}"
                                                             Glyph="&#xe713;" />
                                                         <Label
+                                                            Padding="0"
                                                             HorizontalAlignment="Center"
                                                             Content="设置"
                                                             FontSize="10"

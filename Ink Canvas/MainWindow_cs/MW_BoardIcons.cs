@@ -1,4 +1,5 @@
 ﻿using Ink_Canvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -116,8 +117,49 @@ namespace Ink_Canvas
         /// </summary>
         private void BoardSymbolIconDelete_Click(object sender, RoutedEventArgs e)
         {
+            BoardClearAllElements_Click(sender, e);
+        }
+
+        /// <summary>
+        /// 仅清除当前白板页墨迹（不移除图片等元素）。
+        /// </summary>
+        private void BoardClearInkOnly_Click(object sender, RoutedEventArgs e)
+        {
             PenIcon_Click(null, null);
-            SymbolIconDelete_MouseUp(sender, e);
+            CancelSingleFingerDragMode();
+            _currentCommitType = CommitReason.ClearingCanvas;
+            inkCanvas.Strokes.Clear();
+            _currentCommitType = CommitReason.UserInput;
+            HideSubPanels("pen");
+        }
+
+        /// <summary>
+        /// 清空当前白板页全部元素（含图片等 UI 元素）。
+        /// </summary>
+        private void BoardClearAllElements_Click(object sender, RoutedEventArgs e)
+        {
+            PenIcon_Click(null, null);
+            BtnClear_Click(sender, e);
+            HideSubPanels("pen");
+        }
+
+        /// <summary>
+        /// 清空当前白板页全部元素并清除当前页 TimeMachine 历史。
+        /// </summary>
+        private void BoardClearAllElementsAndHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                "确定要清除全屏与历史吗？此操作不可撤销。",
+                "清除确认",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.OK)
+            {
+                BoardClearAllElements_Click(sender, e);
+                timeMachine.ClearStrokeHistory();
+                TimeMachineHistories[CurrentWhiteboardIndex] = Array.Empty<TimeMachineHistory>();
+            }
         }
 
         /// <summary>

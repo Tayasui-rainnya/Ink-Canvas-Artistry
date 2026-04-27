@@ -148,9 +148,18 @@ namespace Ink_Canvas
         /// </summary>
         private void BoardClearAllElementsAndHistory_Click(object sender, RoutedEventArgs e)
         {
-            BoardClearAllElements_Click(sender, e);
-            timeMachine.ClearStrokeHistory();
-            TimeMachineHistories[CurrentWhiteboardIndex] = Array.Empty<TimeMachineHistory>();
+            var result = MessageBox.Show(
+                "确定要清除全屏与历史吗？此操作不可撤销。",
+                "清除确认",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.OK)
+            {
+                BoardClearAllElements_Click(sender, e);
+                timeMachine.ClearStrokeHistory();
+                TimeMachineHistories[CurrentWhiteboardIndex] = Array.Empty<TimeMachineHistory>();
+            }
         }
 
         /// <summary>

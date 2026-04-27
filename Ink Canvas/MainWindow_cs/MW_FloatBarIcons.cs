@@ -17,6 +17,7 @@ using Point = System.Windows.Point;
 using System.Diagnostics;
 using iNKORE.UI.WPF.Modern.Controls;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ink_Canvas
 {
@@ -1010,8 +1011,13 @@ namespace Ink_Canvas
 
             }
 
+            var existingElements = inkCanvas.Children.Cast<UIElement>().ToList();
+            foreach (UIElement element in existingElements)
+            {
+                timeMachine.CommitElementInsertHistory(element, true);
+            }
+
             ClearStrokes(false);
-            inkCanvas.Children.Clear();
 
             CancelSingleFingerDragMode();
         }

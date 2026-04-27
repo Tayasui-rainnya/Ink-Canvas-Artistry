@@ -981,6 +981,37 @@ namespace Ink_Canvas
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
+            PrepareForClearingCanvas();
+            foreach (UIElement element in new List<UIElement>(inkCanvas.Children))
+            {
+                timeMachine.CommitElementInsertHistory(element, true);
+            }
+            ClearStrokes(false);
+            CancelSingleFingerDragMode();
+        }
+
+        private void BtnClearInkOnly_Click(object sender, RoutedEventArgs e)
+        {
+            PrepareForClearingCanvas();
+            _currentCommitType = CommitReason.ClearingCanvas;
+            inkCanvas.Strokes.Clear();
+            _currentCommitType = CommitReason.UserInput;
+            CancelSingleFingerDragMode();
+        }
+
+        private void BtnClearAndHistory_Click(object sender, RoutedEventArgs e)
+        {
+            PrepareForClearingCanvas();
+            ClearStrokes(true);
+            timeMachine.ClearStrokeHistory();
+            int whiteboardIndex = currentMode == 0 ? 0 : CurrentWhiteboardIndex;
+            TimeMachineHistories[whiteboardIndex] = null;
+            strokeCollections[whiteboardIndex] = new StrokeCollection();
+            CancelSingleFingerDragMode();
+        }
+
+        private void PrepareForClearingCanvas()
+        {
             forceEraser = false;
             //BorderClearInDelete.Visibility = Visibility.Collapsed;
 
@@ -1007,13 +1038,7 @@ namespace Ink_Canvas
                     whiteboardIndex = 0;
                 }
                 strokeCollections[whiteboardIndex] = inkCanvas.Strokes.Clone();
-
             }
-
-            ClearStrokes(false);
-            inkCanvas.Children.Clear();
-
-            CancelSingleFingerDragMode();
         }
 
         bool lastIsInMultiTouchMode = false;

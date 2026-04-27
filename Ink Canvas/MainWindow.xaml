@@ -5838,7 +5838,7 @@
                             Padding="0"
                             BorderThickness="0"
                             x:Name="BtnFloatBarClear"
-                                Click="SymbolIconDelete_MouseUp">
+                            Click="BtnClearInkOnly_Click">
                             <ikw:SimpleStackPanel
                                 Width="30"
                                 HorizontalAlignment="Center"
@@ -5855,7 +5855,61 @@
                                     Margin="1,-1,0,0"
                                     FontSize="8"
                                     Foreground="{DynamicResource FloatBarForeground}"
-                                    Text="清空"
+                                    Text="清墨"
+                                    TextAlignment="Center"
+                                    Visibility="{Binding ElementName=FloatBarSelectIconTextBlock, Path=Visibility}" />
+                            </ikw:SimpleStackPanel>
+                        </Button>
+                        <Button
+                            Width="30"
+                            Height="32"
+                            Padding="0"
+                            BorderThickness="0"
+                            Click="BtnClear_Click">
+                            <ikw:SimpleStackPanel
+                                Width="30"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                Orientation="Vertical">
+                                <ui:FontIcon
+                                    Width="30"
+                                    Height="22"
+                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource FloatBarForeground}"
+                                    Glyph="&#xe74d;" />
+                                <TextBlock
+                                    Margin="1,-1,0,0"
+                                    FontSize="8"
+                                    Foreground="{DynamicResource FloatBarForeground}"
+                                    Text="清屏"
+                                    TextAlignment="Center"
+                                    Visibility="{Binding ElementName=FloatBarSelectIconTextBlock, Path=Visibility}" />
+                            </ikw:SimpleStackPanel>
+                        </Button>
+                        <Button
+                            Width="30"
+                            Height="32"
+                            Padding="0"
+                            BorderThickness="0"
+                            Click="BtnClearAndHistory_Click">
+                            <ikw:SimpleStackPanel
+                                Width="30"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                Orientation="Vertical">
+                                <ui:FontIcon
+                                    Width="30"
+                                    Height="22"
+                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource FloatBarForeground}"
+                                    Glyph="&#xea3f;" />
+                                <TextBlock
+                                    Margin="1,-1,0,0"
+                                    FontSize="8"
+                                    Foreground="{DynamicResource FloatBarForeground}"
+                                    Text="清历"
                                     TextAlignment="Center"
                                     Visibility="{Binding ElementName=FloatBarSelectIconTextBlock, Path=Visibility}" />
                             </ikw:SimpleStackPanel>

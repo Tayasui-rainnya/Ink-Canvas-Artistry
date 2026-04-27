@@ -2708,7 +2708,7 @@
                                                                 Margin="0,4,0,1"
                                                                 FontFamily="{StaticResource FluentIconFontFamily}"
                                                                 Foreground="{DynamicResource BoardBarForeground}"
-                                                                Glyph="&#xe8b7;" />
+                                                                Glyph="&#xe931;" />
                                                             <Label
                                                                 HorizontalAlignment="Center"
                                                                 Content="选区"
@@ -7314,7 +7314,7 @@
                                                             Margin="0,4,0,1"
                                                             FontFamily="{StaticResource FluentIconFontFamily}"
                                                             Foreground="{DynamicResource FloatBarForeground}"
-                                                            Glyph="&#xe8b7;" />
+                                                            Glyph="&#xe931;" />
                                                         <Label
                                                             HorizontalAlignment="Center"
                                                             Content="选区"

@@ -126,10 +126,10 @@ namespace Ink_Canvas
         private void BoardClearInkOnly_Click(object sender, RoutedEventArgs e)
         {
             PenIcon_Click(null, null);
+            CancelSingleFingerDragMode();
             _currentCommitType = CommitReason.ClearingCanvas;
             inkCanvas.Strokes.Clear();
             _currentCommitType = CommitReason.UserInput;
-            CancelSingleFingerDragMode();
             HideSubPanels("pen");
         }
 

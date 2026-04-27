@@ -982,7 +982,7 @@ namespace Ink_Canvas
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
             PrepareForClearingCanvas();
-            foreach (UIElement element in new List<UIElement>(inkCanvas.Children))
+            foreach (UIElement element in inkCanvas.Children)
             {
                 timeMachine.CommitElementInsertHistory(element, true);
             }
@@ -992,25 +992,31 @@ namespace Ink_Canvas
 
         private void BtnClearInkOnly_Click(object sender, RoutedEventArgs e)
         {
-            PrepareForClearingCanvas();
+            PrepareForClearingCanvas(false);
             _currentCommitType = CommitReason.ClearingCanvas;
             inkCanvas.Strokes.Clear();
             _currentCommitType = CommitReason.UserInput;
+            strokeCollections[GetCurrentCanvasIndex()] = new StrokeCollection();
             CancelSingleFingerDragMode();
         }
 
         private void BtnClearAndHistory_Click(object sender, RoutedEventArgs e)
         {
-            PrepareForClearingCanvas();
+            PrepareForClearingCanvas(false);
             ClearStrokes(true);
             timeMachine.ClearStrokeHistory();
-            int whiteboardIndex = currentMode == 0 ? 0 : CurrentWhiteboardIndex;
+            int whiteboardIndex = GetCurrentCanvasIndex();
             TimeMachineHistories[whiteboardIndex] = null;
             strokeCollections[whiteboardIndex] = new StrokeCollection();
             CancelSingleFingerDragMode();
         }
 
-        private void PrepareForClearingCanvas()
+        private int GetCurrentCanvasIndex()
+        {
+            return currentMode == 0 ? 0 : CurrentWhiteboardIndex;
+        }
+
+        private void PrepareForClearingCanvas(bool backupStrokeCache = true)
         {
             forceEraser = false;
             //BorderClearInDelete.Visibility = Visibility.Collapsed;
@@ -1030,14 +1036,9 @@ namespace Ink_Canvas
                 }
             }
 
-            if (inkCanvas.Strokes.Count != 0)
+            if (backupStrokeCache && inkCanvas.Strokes.Count != 0)
             {
-                int whiteboardIndex = CurrentWhiteboardIndex;
-                if (currentMode == 0)
-                {
-                    whiteboardIndex = 0;
-                }
-                strokeCollections[whiteboardIndex] = inkCanvas.Strokes.Clone();
+                strokeCollections[GetCurrentCanvasIndex()] = inkCanvas.Strokes.Clone();
             }
         }
 

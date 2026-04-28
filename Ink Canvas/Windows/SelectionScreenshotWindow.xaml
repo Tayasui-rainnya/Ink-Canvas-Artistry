@@ -40,7 +40,7 @@
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnRectMode" Content="矩形选择" Width="86" Margin="0,0,8,0" Click="BtnRectMode_Click" />
                 <Button x:Name="BtnFreeMode" Content="自由图形" Width="86" Margin="0,0,8,0" Click="BtnFreeMode_Click" />
-                <Button x:Name="BtnCamera" Content="摄像头截图" Width="92" Margin="0,0,8,0" Click="BtnCamera_Click" />
+                <Button x:Name="BtnCamera" Content="摄像头截图（即将推出）" Width="128" Margin="0,0,8,0" Click="BtnCamera_Click" IsEnabled="False" />
                 <ToggleButton x:Name="ToggleHideInk" Content="隐藏墨迹" Width="88" Margin="0,0,12,0" Checked="ToggleHideInk_Checked" Unchecked="ToggleHideInk_Unchecked" />
 
                 <Button x:Name="BtnSaveDesktop" Content="保存到桌面" Width="96" Margin="0,0,8,0" Click="BtnSaveDesktop_Click" />

@@ -340,7 +340,9 @@ namespace Ink_Canvas
 
             Visibility floatingBarVisibility = ViewboxFloatingBar.Visibility;
             ViewboxFloatingBar.Visibility = Visibility.Collapsed;
-            Dispatcher.Invoke(() => { }, DispatcherPriority.Render);
+            await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+            await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+            await Task.Delay(50);
 
             try
             {
@@ -368,9 +370,11 @@ namespace Ink_Canvas
                         {
                             using (var boardBitmap = (System.Drawing.Bitmap)result.Clone())
                             {
-                                AddBitmapToBoard(boardBitmap);
+                                if (await AddBitmapToBoardAsync(boardBitmap))
+                                {
+                                    ShowNotificationAsync("选区截图已添加到白板");
+                                }
                             }
-                            ShowNotificationAsync("选区截图已添加到白板");
                         }
                     }
                 }

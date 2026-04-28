@@ -98,14 +98,15 @@ namespace Ink_Canvas
         /// <summary>
         /// 将位图作为图片元素插入白板。
         /// </summary>
-        private void AddBitmapToBoard(System.Drawing.Bitmap bitmap)
+        private async Task<bool> AddBitmapToBoardAsync(System.Drawing.Bitmap bitmap)
         {
-            if (bitmap == null) return;
+            if (bitmap == null) return false;
 
             // 若当前处于屏幕批注模式，先切换到黑板模式再插入图片
-            if (currentMode == 0)
+            if (!await EnsureBlackboardModeForBitmapInsertAsync())
             {
-                ImageBlackboard_Click(null, null);
+                ShowNotificationAsync("当前正处于模式切换中，请稍后重试");
+                return false;
             }
 
             var image = new Image();
@@ -133,6 +134,25 @@ namespace Ink_Canvas
             InkCanvas.SetTop(image, 0);
             inkCanvas.Children.Add(image);
             timeMachine.CommitElementInsertHistory(image);
+            return true;
+        }
+
+        /// <summary>
+        /// 在插入截图前确保已进入白板模式。
+        /// </summary>
+        private async Task<bool> EnsureBlackboardModeForBitmapInsertAsync()
+        {
+            if (currentMode == 1) return true;
+
+            const int maxAttempts = 4;
+            for (int attempt = 0; attempt < maxAttempts; attempt++)
+            {
+                if (currentMode == 1) return true;
+                ImageBlackboard_Click(null, null);
+                await Task.Delay(80);
+            }
+
+            return currentMode == 1;
         }
 
         #endregion

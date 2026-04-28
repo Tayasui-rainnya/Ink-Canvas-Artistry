@@ -96,8 +96,13 @@ namespace Ink_Canvas
 
 
         /// <summary>
-        /// 将位图作为图片元素插入白板。
+        /// 将传入位图插入白板层并记录历史。
         /// </summary>
+        /// <param name="bitmap">要插入的截图位图，调用方保持其生命周期直到方法返回。</param>
+        /// <returns>
+        /// 当位图成功插入白板并提交历史时返回 <c>true</c>；
+        /// 当位图为空或白板模式在重试后仍不可用时返回 <c>false</c>。
+        /// </returns>
         private async Task<bool> AddBitmapToBoardAsync(System.Drawing.Bitmap bitmap)
         {
             if (bitmap == null) return false;
@@ -138,8 +143,13 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 在插入截图前确保已进入白板模式。
+        /// 在截图插入前确保当前处于白板模式。
         /// </summary>
+        /// <remarks>
+        /// 该方法会在当前为屏幕批注模式时触发模式切换，并进行有限次延迟重试，
+        /// 以覆盖 <c>ImageBlackboard_Click</c> 可能因切换防抖守卫被短暂拒绝的场景。
+        /// </remarks>
+        /// <returns>若最终检测到 <c>currentMode == 1</c> 则返回 <c>true</c>，否则返回 <c>false</c>。</returns>
         private async Task<bool> EnsureBlackboardModeForBitmapInsertAsync()
         {
             if (currentMode == 1) return true;

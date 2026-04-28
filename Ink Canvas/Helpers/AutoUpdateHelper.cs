@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
@@ -19,7 +21,7 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 更新服务基础地址。
         /// </summary>
-        private const string UpdateServerBaseUrl = "http://8.134.100.248:8080";
+        private const string UpdateServerBaseUrl = "https://8.134.100.248:8080";
 
         /// <summary>
         /// 检查服务器版本是否高于当前本地版本。
@@ -106,9 +108,9 @@ namespace Ink_Canvas.Helpers
         private static string updatesFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Ink Canvas Artistry", "AutoUpdate");
 
         /// <summary>
-        /// 下载状态记录文件路径（按版本生成）。
+        /// 下载状态写入锁，避免并发写同一状态文件时出现竞争。
         /// </summary>
-        private static string statusFilePath = null;
+        private static readonly object downloadStatusWriteLock = new object();
 
         /// <summary>
         /// 下载指定版本安装包，并写入下载状态标记文件。
@@ -119,23 +121,25 @@ namespace Ink_Canvas.Helpers
         {
             try
             {
-                statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{version}Status.txt");
+                string statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{version}Status.txt");
+                string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
+                string destinationPath = Path.Combine(updatesFolderPath, setupFileName);
 
-                if (File.Exists(statusFilePath) && File.ReadAllText(statusFilePath).Trim().ToLower() == "true")
+                if (File.Exists(statusFilePath)
+                    && File.Exists(destinationPath)
+                    && string.Equals(File.ReadAllText(statusFilePath).Trim(), "true", StringComparison.OrdinalIgnoreCase))
                 {
                     LogHelper.WriteLogToFile("AutoUpdate | Setup file already downloaded.");
                     return true;
                 }
 
-                string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
                 string downloadUrl = $"{UpdateServerBaseUrl}/download/{setupFileName}";
-                string destinationPath = Path.Combine(updatesFolderPath, setupFileName);
 
                 LogHelper.WriteLogToFile($"AutoUpdate | Attempting download from: {downloadUrl} to {destinationPath}");
 
-                SaveDownloadStatus(false);
+                SaveDownloadStatus(statusFilePath, false);
                 await DownloadFile(downloadUrl, destinationPath);
-                SaveDownloadStatus(true);
+                SaveDownloadStatus(statusFilePath, true);
 
                 LogHelper.WriteLogToFile("AutoUpdate | Setup file successfully downloaded.");
                 return true;
@@ -143,7 +147,8 @@ namespace Ink_Canvas.Helpers
             catch (Exception ex)
             {
                 LogHelper.WriteLogToFile($"AutoUpdate | Error downloading setup file for version {version}: {ex.Message}", LogHelper.LogType.Error);
-                SaveDownloadStatus(false);
+                string statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{version}Status.txt");
+                SaveDownloadStatus(statusFilePath, false);
                 try
                 {
                     string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
@@ -215,12 +220,13 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 将安装包下载状态写入状态文件。
         /// </summary>
+        /// <param name="statusFilePath">状态文件路径。</param>
         /// <param name="isSuccess">是否下载成功。</param>
-        private static void SaveDownloadStatus(bool isSuccess)
+        private static void SaveDownloadStatus(string statusFilePath, bool isSuccess)
         {
             try
             {
-                if (statusFilePath == null)
+                if (string.IsNullOrWhiteSpace(statusFilePath))
                 {
                     LogHelper.WriteLogToFile("AutoUpdate | statusFilePath is null, cannot save download status.", LogHelper.LogType.Error);
                     return;
@@ -232,7 +238,10 @@ namespace Ink_Canvas.Helpers
                     Directory.CreateDirectory(directory);
                 }
 
-                File.WriteAllText(statusFilePath, isSuccess.ToString());
+                lock (downloadStatusWriteLock)
+                {
+                    File.WriteAllText(statusFilePath, isSuccess.ToString());
+                }
                 LogHelper.WriteLogToFile($"AutoUpdate | Saved download status ({isSuccess}) to {statusFilePath}");
             }
             catch (Exception ex)
@@ -258,6 +267,11 @@ namespace Ink_Canvas.Helpers
                     LogHelper.WriteLogToFile($"AutoUpdate | Setup file not found: {setupFilePath}", LogHelper.LogType.Error);
                     return;
                 }
+                if (!VerifyInstallerIntegrity(version, setupFilePath).GetAwaiter().GetResult())
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | Setup integrity verification failed for version {version}.", LogHelper.LogType.Error);
+                    return;
+                }
 
                 string InstallCommand = $"\"{setupFilePath}\" /SILENT";
                 if (isInSilence) InstallCommand += " /VERYSILENT";
@@ -268,6 +282,75 @@ namespace Ink_Canvas.Helpers
             catch (Exception ex)
             {
                 LogHelper.WriteLogToFile($"AutoUpdate | Error installing update: {ex.Message}", LogHelper.LogType.Error);
+            }
+        }
+
+        /// <summary>
+        /// 校验安装包完整性：对比本地文件 SHA-256 与服务端发布值。
+        /// </summary>
+        /// <param name="version">待安装版本号。</param>
+        /// <param name="setupFilePath">本地安装包路径。</param>
+        /// <returns>校验通过返回 <c>true</c>，否则返回 <c>false</c>。</returns>
+        private static async Task<bool> VerifyInstallerIntegrity(string version, string setupFilePath)
+        {
+            try
+            {
+                string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
+                string shaFileUrl = $"{UpdateServerBaseUrl}/download/{setupFileName}.sha256";
+                string expectedHash = await GetRemoteVersion(shaFileUrl);
+                if (string.IsNullOrWhiteSpace(expectedHash))
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | Missing remote hash file: {shaFileUrl}", LogHelper.LogType.Error);
+                    return false;
+                }
+
+                string normalizedExpectedHash = NormalizeSha256Value(expectedHash);
+                string localHash = ComputeSha256(setupFilePath);
+                bool isMatch = string.Equals(localHash, normalizedExpectedHash, StringComparison.OrdinalIgnoreCase);
+
+                if (!isMatch)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | SHA256 mismatch. Local: {localHash}, Expected: {normalizedExpectedHash}", LogHelper.LogType.Error);
+                }
+
+                return isMatch;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteLogToFile($"AutoUpdate | Error verifying installer integrity: {ex}", LogHelper.LogType.Error);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 将 SHA-256 文本规范化为仅包含 64 位十六进制摘要。
+        /// </summary>
+        /// <param name="shaText">服务端返回的 SHA 文本。</param>
+        /// <returns>规范化后的 SHA-256 十六进制字符串。</returns>
+        private static string NormalizeSha256Value(string shaText)
+        {
+            if (string.IsNullOrWhiteSpace(shaText)) return string.Empty;
+            string firstToken = shaText.Trim().Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
+            return firstToken.Trim().ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// 计算指定文件的 SHA-256 值。
+        /// </summary>
+        /// <param name="filePath">目标文件路径。</param>
+        /// <returns>64 位十六进制摘要。</returns>
+        private static string ComputeSha256(string filePath)
+        {
+            using (FileStream stream = File.OpenRead(filePath))
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(stream);
+                StringBuilder sb = new StringBuilder(hashBytes.Length * 2);
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("x2"));
+                }
+                return sb.ToString();
             }
         }
 

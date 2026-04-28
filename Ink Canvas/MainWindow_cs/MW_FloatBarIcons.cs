@@ -339,13 +339,13 @@ namespace Ink_Canvas
             await Task.Delay(50);
 
             Visibility floatingBarVisibility = ViewboxFloatingBar.Visibility;
-            ViewboxFloatingBar.Visibility = Visibility.Collapsed;
-            await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
-            await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
-            await Task.Delay(50);
-
             try
             {
+                ViewboxFloatingBar.Visibility = Visibility.Collapsed;
+                await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+                await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+                await Task.Delay(50);
+
                 using (var screenshot = GetScreenshotBitmap())
                 {
                     var virtualScreenBounds = System.Windows.Forms.SystemInformation.VirtualScreen;

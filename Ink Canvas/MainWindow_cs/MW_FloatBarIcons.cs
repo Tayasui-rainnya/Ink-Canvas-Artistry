@@ -333,17 +333,26 @@ namespace Ink_Canvas
             SaveScreenShotToDesktop();
         }
 
+        /// <summary>
+        /// 打开选区截图窗口，并根据用户动作将结果保存到桌面或插入白板。
+        /// </summary>
+        /// <remarks>
+        /// 进入截图前会暂时隐藏浮动栏并等待渲染空闲，以降低浮动栏被截入结果的概率；
+        /// 无论流程是否异常退出，都会在 <c>finally</c> 中恢复浮动栏可见性。
+        /// </remarks>
         private async void SymbolIconSelectionScreenshot_Click(object sender, RoutedEventArgs e)
         {
             HideSubPanelsImmediately();
             await Task.Delay(50);
 
             Visibility floatingBarVisibility = ViewboxFloatingBar.Visibility;
-            ViewboxFloatingBar.Visibility = Visibility.Collapsed;
-            Dispatcher.Invoke(() => { }, DispatcherPriority.Render);
-
             try
             {
+                ViewboxFloatingBar.Visibility = Visibility.Collapsed;
+                await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+                await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+                await Task.Delay(50);
+
                 using (var screenshot = GetScreenshotBitmap())
                 {
                     var virtualScreenBounds = System.Windows.Forms.SystemInformation.VirtualScreen;
@@ -368,9 +377,11 @@ namespace Ink_Canvas
                         {
                             using (var boardBitmap = (System.Drawing.Bitmap)result.Clone())
                             {
-                                AddBitmapToBoard(boardBitmap);
+                                if (await AddBitmapToBoardAsync(boardBitmap))
+                                {
+                                    ShowNotificationAsync("选区截图已添加到白板");
+                                }
                             }
-                            ShowNotificationAsync("选区截图已添加到白板");
                         }
                     }
                 }

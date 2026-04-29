@@ -75,6 +75,7 @@ namespace Ink_Canvas
                 WindowStyle = WindowStyle.None;
                 ResizeMode = ResizeMode.NoResize;
                 WindowState = WindowState.Maximized;
+                Topmost = true;
                 isFullscreen = true;
                 RootBorder.Margin = new Thickness(0);
                 RootBorder.Background = Brushes.Black;
@@ -87,6 +88,7 @@ namespace Ink_Canvas
                 WindowState = WindowState.Normal;
                 WindowStyle = WindowStyle.SingleBorderWindow;
                 ResizeMode = ResizeMode.CanResize;
+                Topmost = true;
 
                 Left = restoreLeft;
                 Top = restoreTop;

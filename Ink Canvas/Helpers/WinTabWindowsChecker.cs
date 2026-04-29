@@ -55,11 +55,11 @@ namespace Ink_Canvas.Helpers
         /// <exception cref="ArgumentNullException">当 <paramref name="windowName"/> 为 <c>null</c> 时抛出。</exception>
         public static bool IsWindowExisted(string windowName, bool matchFullName = true)
         {
-            ArgumentNullException.ThrowIfNull(windowName);
+            if (windowName == null) throw new ArgumentNullException(nameof(windowName));
 
             // 获取Win+Tab预览中的窗口
             AutomationElementCollection windows = AutomationElement.RootElement.FindAll(
-                TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+
 
             foreach (AutomationElement window in windows)
             {

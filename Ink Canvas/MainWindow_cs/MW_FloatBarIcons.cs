@@ -479,7 +479,9 @@ namespace Ink_Canvas
 
         private void ImageCountdownTimer_Click(object sender, RoutedEventArgs e)
         {
-            ShowFullscreenClock();
+            AnimationsHelper.HideWithSlideAndFade(BorderTools);
+            AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
+            new CountdownTimerWindow().Show();
         }
 
         private void SymbolIconClock_Click(object sender, RoutedEventArgs e)

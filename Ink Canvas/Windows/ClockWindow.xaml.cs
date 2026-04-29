@@ -74,10 +74,15 @@ namespace Ink_Canvas
 
                 WindowStyle = WindowStyle.None;
                 ResizeMode = ResizeMode.NoResize;
-                WindowState = WindowState.Maximized;
                 Topmost = true;
                 isFullscreen = true;
+                WindowState = WindowState.Normal;
+                Left = 0;
+                Top = 0;
+                Width = SystemParameters.PrimaryScreenWidth;
+                Height = SystemParameters.PrimaryScreenHeight;
                 RootBorder.Margin = new Thickness(0);
+                RootBorder.CornerRadius = new CornerRadius(0);
                 RootBorder.Background = Brushes.Black;
                 RootBorder.BorderBrush = Brushes.Black;
                 RootBorder.BorderThickness = new Thickness(0);
@@ -96,6 +101,7 @@ namespace Ink_Canvas
                 Height = restoreHeight;
                 isFullscreen = false;
                 RootBorder.Margin = new Thickness(20);
+                RootBorder.CornerRadius = new CornerRadius(10);
                 RootBorder.Background = (Brush)FindResource("PopupWindowBackground");
                 RootBorder.BorderBrush = (Brush)FindResource("PopupWindowBorderBrush");
                 RootBorder.BorderThickness = new Thickness(1);

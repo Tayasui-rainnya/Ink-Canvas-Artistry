@@ -39,16 +39,16 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <Border
+                <Button
                     x:Name="BtnFullscreen"
                     Width="44"
                     Height="44"
                     Margin="0,0,10,0"
+                    Padding="0"
                     Background="{DynamicResource PopupWindowBackground}"
                     BorderBrush="{DynamicResource PopupWindowBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="22"
-                    MouseUp="BtnFullscreen_MouseUp"
+                    Click="BtnFullscreen_Click"
                     ToolTipService.ToolTip="全屏">
                     <Viewbox Margin="10">
                         <ui:FontIcon
@@ -57,14 +57,16 @@
                             Foreground="{DynamicResource PopupWindowForeground}"
                             Glyph="&#xE92D;" />
                     </Viewbox>
-                </Border>
+                </Button>
 
-                <Border
+                <Button
+                    x:Name="BtnClose"
                     Width="44"
                     Height="44"
+                    Padding="0"
                     Background="#E32A34"
-                    CornerRadius="22"
-                    MouseUp="BtnClose_MouseUp"
+                    BorderThickness="0"
+                    Click="BtnClose_Click"
                     ToolTipService.ToolTip="关闭">
                     <Viewbox Margin="10">
                         <ui:FontIcon
@@ -72,7 +74,7 @@
                             Foreground="White"
                             Glyph="&#xE711;" />
                     </Viewbox>
-                </Border>
+                </Button>
             </StackPanel>
         </Grid>
     </Border>

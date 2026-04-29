@@ -504,6 +504,10 @@ namespace Ink_Canvas
 
             // 使用 Show() 打开时钟，允许主界面继续交互；同时避免自动收纳流程影响时钟窗口可见性。
             clockWindow.Show();
+            if (clockWindow.WindowState == WindowState.Minimized)
+            {
+                clockWindow.WindowState = WindowState.Normal;
+            }
             clockWindow.Activate();
         }
 

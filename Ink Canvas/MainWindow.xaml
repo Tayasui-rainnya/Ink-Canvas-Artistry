@@ -2519,7 +2519,7 @@
                                                                 Margin="0,4,0,1"
                                                                 FontFamily="{StaticResource FluentIconFontFamily}"
                                                                 Foreground="{DynamicResource BoardBarForeground}"
-                                                                Glyph="&#xe121;" />
+                                                                Glyph="&#xea8f;" />
                                                             <Label
                                                                 HorizontalAlignment="Center"
                                                                 Content="倒计时"
@@ -2543,7 +2543,7 @@
                                                                 Margin="0,4,0,1"
                                                                 FontFamily="{StaticResource FluentIconFontFamily}"
                                                                 Foreground="{DynamicResource BoardBarForeground}"
-                                                                Glyph="&#xea8f;" />
+                                                                Glyph="&#xe121;" />
                                                             <Label
                                                                 HorizontalAlignment="Center"
                                                                 Content="时钟"
@@ -7128,7 +7128,7 @@
                                                             Margin="0,4,0,1"
                                                             FontFamily="{StaticResource FluentIconFontFamily}"
                                                             Foreground="{DynamicResource FloatBarForeground}"
-                                                            Glyph="&#xe121;" />
+                                                            Glyph="&#xea8f;" />
                                                         <Label
                                                             HorizontalAlignment="Center"
                                                             Content="倒计时"
@@ -7152,7 +7152,7 @@
                                                             Margin="0,4,0,1"
                                                             FontFamily="{StaticResource FluentIconFontFamily}"
                                                             Foreground="{DynamicResource FloatBarForeground}"
-                                                            Glyph="&#xea8f;" />
+                                                            Glyph="&#xe121;" />
                                                         <Label
                                                             HorizontalAlignment="Center"
                                                             Content="时钟"

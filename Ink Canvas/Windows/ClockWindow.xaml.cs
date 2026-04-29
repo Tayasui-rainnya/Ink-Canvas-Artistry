@@ -30,18 +30,19 @@ namespace Ink_Canvas
                 {
                     ThemeManager.SetRequestedTheme(this, ElementTheme.Light);
                     ResourceDictionary rd = new ResourceDictionary() { Source = new Uri("Resources/Styles/Light-PopupWindow.xaml", UriKind.Relative) };
-                    Application.Current.Resources.MergedDictionaries.Add(rd);
+                    this.Resources.MergedDictionaries.Add(rd);
                 }
                 else
                 {
                     ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
                     ResourceDictionary rd = new ResourceDictionary() { Source = new Uri("Resources/Styles/Dark-PopupWindow.xaml", UriKind.Relative) };
-                    Application.Current.Resources.MergedDictionaries.Add(rd);
+                    this.Resources.MergedDictionaries.Add(rd);
                 }
             }
 
             timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += Timer_Tick;
+            Closed += ClockWindow_Closed;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -61,7 +62,7 @@ namespace Ink_Canvas
             TextBlockCurrentTime.Text = DateTime.Now.ToString("HH:mm:ss");
         }
 
-        private void BtnFullscreen_MouseUp(object sender, MouseButtonEventArgs e)
+        private void BtnFullscreen_Click(object sender, RoutedEventArgs e)
         {
             if (!isFullscreen)
             {
@@ -106,7 +107,7 @@ namespace Ink_Canvas
             }
         }
 
-        private void BtnClose_MouseUp(object sender, MouseButtonEventArgs e)
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             CloseClockWindow();
         }
@@ -123,6 +124,13 @@ namespace Ink_Canvas
             // 统一关闭入口，避免未来多入口关闭时出现资源释放不一致。
             timer.Stop();
             Close();
+        }
+
+        private void ClockWindow_Closed(object sender, EventArgs e)
+        {
+            timer.Stop();
+            timer.Tick -= Timer_Tick;
+            Closed -= ClockWindow_Closed;
         }
     }
 }

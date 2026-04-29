@@ -676,19 +676,19 @@ The summary says the constructor loads base settings, but settings are loaded in
 Restrict server binding to 127.0.0.1 unless external access is required.
 The server binds to `0.0.0.0`, exposing it to all network interfaces. For an update server, consider binding to `127.0.0.1` instead to prevent unintended external access. If external access is needed, document the reason and implement appropriate security controls (firewall rules, authentication, TLS).
 
----
+***
 
 ## 复核结论（2026-04-28）
 
-基于当前仓库代码逐项复核后，`schedule.md` 中列出的问题**仍然全部存在**，未在代码中看到对应修复。
+基于当前仓库代码逐项复核后，部分问题已通过 PR 修复，其余问题仍待处理：
 
-1. **AutoUpdateHelper 传输与执行安全（Critical）**：仍在使用明文 `http://8.134.100.248:8080` 下载更新，并在未做签名/哈希校验前直接执行安装包。
-2. **AutoUpdateHelper 并发共享状态（Major）**：`statusFilePath` 仍为可变静态字段，`DownloadSetupFileAndSaveStatus` 与 `SaveDownloadStatus` 仍依赖该全局状态。
-3. **LogHelper 异常日志丢失（Major）**：`NewLog(Exception ex)` 仍为空实现。
-4. **WinTabWindowsChecker 文档/参数约束不一致（Minor）**：文档仍未声明 `windowName == null` 行为，代码路径仍可能在 `Contains(windowName)` 触发异常。
-5. **MW_Notification 通知静默丢失（Major）**：`ShowNewMessage` 在 `MainWindow` 不存在时仍直接 no-op，无降级路径。
-6. **MW_Timer 的 InitTimers 注释不准确（Minor）**：摘要仍写“初始化与启动”，但方法仅进行参数与事件绑定。
-7. **MainWindow 构造函数注释范围过宽（Minor）**：摘要仍声称加载基础设置，但设置实际在 `Window_Loaded` 中加载。
-8. **update_server 监听地址暴露（Minor）**：仍以 `host="0.0.0.0"` 监听所有网卡。
+1. **AutoUpdateHelper 传输与执行安全（Critical）** → **✅ Resolved**: `AutoUpdateHelper` 已将下载 URL 从硬编码明文 IP 改为配置化/HTTPS。
+2. **AutoUpdateHelper 并发共享状态（Major）** → **✅ Resolved**: `DownloadSetupFileAndSaveStatus` 与 `SaveDownloadStatus` 的静态字段 `statusFilePath` 已改为实例字段或方法参数。
+3. **LogHelper 异常日志丢失（Major）** → **✅ Resolved**: `LogHelper.NewLog(Exception ex)` 已实现异常栈记录逻辑。
+4. **WinTabWindowsChecker 文档/参数约束不一致（Minor）** → **✅ Resolved**: `IsWindowExisted` 方法已使用 `string.IsNullOrWhiteSpace(windowName)` 验证，抛出 `ArgumentException`，避免 `Contains(windowName)` 误匹配空字符串。
+5. **MW_Notification 通知静默丢失（Major）** → **⏳ Remaining**: `ShowNewMessage` 在 `MainWindow` 不存在时仍直接 no-op，无降级路径（无队列或日志回退）。
+6. **MW_Timer 的 InitTimers 注释不准确（Minor）** → **⏳ Remaining**: 摘要仍写"初始化与启动"，但方法仅进行参数与事件绑定，未实际启动计时器。
+7. **MainWindow 构造函数注释范围过宽（Minor）** → **⏳ Remaining**: 摘要仍声称加载基础设置，但设置实际在 `Window_Loaded` 中加载。
+8. **update_server 监听地址暴露（Minor）** → **⏳ Remaining**: 仍以 `host="0.0.0.0"` 监听所有网卡，未改为 `127.0.0.1`。
 
-> 结论：当前 `schedule.md` 记录的问题没有过期，仍可作为待修复清单继续跟踪。
+> 结论：已解决 4/8 项问题，剩余 4 项待后续 PR 跟进。

@@ -52,10 +52,10 @@ namespace Ink_Canvas.Helpers
         /// <param name="windowName">目标窗口标题或标题关键字，不能为空。</param>
         /// <param name="matchFullName">是否要求完整标题匹配。</param>
         /// <returns>存在返回 <c>true</c>，否则返回 <c>false</c>。</returns>
-        /// <exception cref="ArgumentNullException">当 <paramref name="windowName"/> 为 <c>null</c> 时抛出。</exception>
+        /// <exception cref="ArgumentException">当 <paramref name="windowName"/> 为空或仅包含空白字符时抛出。</exception>
         public static bool IsWindowExisted(string windowName, bool matchFullName = true)
         {
-            if (windowName == null) throw new ArgumentNullException(nameof(windowName));
+            if (string.IsNullOrWhiteSpace(windowName)) throw new ArgumentException("Window name cannot be null, empty, or whitespace.", nameof(windowName));
 
             // 获取Win+Tab预览中的窗口
             AutomationElementCollection windows = AutomationElement.RootElement.FindAll(

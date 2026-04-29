@@ -479,9 +479,20 @@ namespace Ink_Canvas
 
         private void ImageCountdownTimer_Click(object sender, RoutedEventArgs e)
         {
+            ShowFullscreenClock();
+        }
+
+        private void SymbolIconClock_Click(object sender, RoutedEventArgs e)
+        {
+            // “更多设置”和“更多功能”两个入口共用同一逻辑，防止行为不一致。
+            ShowFullscreenClock();
+        }
+
+        private void ShowFullscreenClock()
+        {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);
             AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
-            new CountdownTimerWindow().Show();
+            new ClockWindow().Show();
         }
 
         private void OperatingGuideWindowIcon_Click(object sender, RoutedEventArgs e)

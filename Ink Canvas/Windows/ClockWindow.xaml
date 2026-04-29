@@ -13,6 +13,7 @@
     ui:ThemeManager.RequestedTheme="Light"
     ui:WindowHelper.UseModernWindowStyle="True"
     ui:WindowHelper.SystemBackdropType="Mica"
+    KeyDown="Window_KeyDown"
     Loaded="Window_Loaded"
     Topmost="True"
     WindowStartupLocation="CenterScreen"

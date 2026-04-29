@@ -108,6 +108,19 @@ namespace Ink_Canvas
 
         private void BtnClose_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            CloseClockWindow();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Escape) return;
+            // Esc 与右下角“×”共用同一关闭路径，确保计时器释放与关闭行为一致。
+            CloseClockWindow();
+        }
+
+        private void CloseClockWindow()
+        {
+            // 统一关闭入口，避免未来多入口关闭时出现资源释放不一致。
             timer.Stop();
             Close();
         }

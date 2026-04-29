@@ -19,20 +19,27 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Border
+        x:Name="RootBorder"
         Margin="20"
         Background="{DynamicResource PopupWindowBackground}"
         BorderBrush="{DynamicResource PopupWindowBorderBrush}"
         BorderThickness="1"
         CornerRadius="10">
         <Grid>
-            <TextBlock
-                x:Name="TextBlockCurrentTime"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="120"
-                FontWeight="Bold"
-                Foreground="{DynamicResource PopupWindowForeground}"
-                Text="00:00:00" />
+            <Viewbox
+                Margin="80,60,80,120"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Stretch="Uniform">
+                <TextBlock
+                    x:Name="TextBlockCurrentTime"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="120"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource PopupWindowForeground}"
+                    Text="00:00:00" />
+            </Viewbox>
 
             <StackPanel
                 Margin="0,0,20,20"
@@ -41,8 +48,8 @@
                 Orientation="Horizontal">
                 <Button
                     x:Name="BtnFullscreen"
-                    Width="44"
-                    Height="44"
+                    Width="50"
+                    Height="50"
                     Margin="0,0,10,0"
                     Padding="0"
                     Background="{DynamicResource PopupWindowBackground}"
@@ -50,30 +57,34 @@
                     BorderThickness="1"
                     Click="BtnFullscreen_Click"
                     ToolTipService.ToolTip="全屏">
-                    <Viewbox Margin="10">
-                        <ui:FontIcon
-                            x:Name="SymbolIconFullscreen"
-                            FontFamily="{StaticResource FluentIconFontFamily}"
-                            Foreground="{DynamicResource PopupWindowForeground}"
-                            Glyph="&#xE92D;" />
-                    </Viewbox>
+                    <Border CornerRadius="25">
+                        <Viewbox Margin="11">
+                            <ui:FontIcon
+                                x:Name="SymbolIconFullscreen"
+                                FontFamily="{StaticResource FluentIconFontFamily}"
+                                Foreground="{DynamicResource PopupWindowForeground}"
+                                Glyph="&#xE92D;" />
+                        </Viewbox>
+                    </Border>
                 </Button>
 
                 <Button
                     x:Name="BtnClose"
-                    Width="44"
-                    Height="44"
+                    Width="50"
+                    Height="50"
                     Padding="0"
                     Background="#E32A34"
                     BorderThickness="0"
                     Click="BtnClose_Click"
                     ToolTipService.ToolTip="关闭">
-                    <Viewbox Margin="10">
-                        <ui:FontIcon
-                            FontFamily="{StaticResource FluentIconFontFamily}"
-                            Foreground="White"
-                            Glyph="&#xE711;" />
-                    </Viewbox>
+                    <Border CornerRadius="25">
+                        <Viewbox Margin="11">
+                            <ui:FontIcon
+                                FontFamily="{StaticResource FluentIconFontFamily}"
+                                Foreground="White"
+                                Glyph="&#xE711;" />
+                        </Viewbox>
+                    </Border>
                 </Button>
             </StackPanel>
         </Grid>

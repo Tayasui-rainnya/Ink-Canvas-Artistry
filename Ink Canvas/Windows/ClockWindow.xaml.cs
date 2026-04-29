@@ -1,5 +1,6 @@
 using iNKORE.UI.WPF.Modern;
 using System;
+using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -75,6 +76,11 @@ namespace Ink_Canvas
                 ResizeMode = ResizeMode.NoResize;
                 WindowState = WindowState.Maximized;
                 isFullscreen = true;
+                RootBorder.Margin = new Thickness(0);
+                RootBorder.Background = Brushes.Black;
+                RootBorder.BorderBrush = Brushes.Black;
+                RootBorder.BorderThickness = new Thickness(0);
+                TextBlockCurrentTime.Foreground = Brushes.White;
             }
             else
             {
@@ -87,6 +93,11 @@ namespace Ink_Canvas
                 Width = restoreWidth;
                 Height = restoreHeight;
                 isFullscreen = false;
+                RootBorder.Margin = new Thickness(20);
+                RootBorder.Background = (Brush)FindResource("PopupWindowBackground");
+                RootBorder.BorderBrush = (Brush)FindResource("PopupWindowBorderBrush");
+                RootBorder.BorderThickness = new Thickness(1);
+                TextBlockCurrentTime.Foreground = (Brush)FindResource("PopupWindowForeground");
             }
 
             // 同步全屏按钮图标与提示文本

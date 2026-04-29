@@ -151,7 +151,7 @@ namespace Ink_Canvas.Windows
 
         private void BtnCamera_Click(object sender, RoutedEventArgs e)
         {
-            HintTextBlock.Text = "摄像头截图（占位）";
+            HintTextBlock.Text = "摄像头截图功能即将推出";
         }
 
         private void ToggleHideInk_Checked(object sender, RoutedEventArgs e)

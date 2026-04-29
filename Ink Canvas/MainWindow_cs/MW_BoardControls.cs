@@ -52,6 +52,7 @@ namespace Ink_Canvas
         /// </summary>
         private void ClearStrokes(bool isErasedByCode)
         {
+            CancelSingleFingerDragMode();
             _currentCommitType = CommitReason.ClearingCanvas;
             if (isErasedByCode) _currentCommitType = CommitReason.CodeInput;
             inkCanvas.Strokes.Clear();

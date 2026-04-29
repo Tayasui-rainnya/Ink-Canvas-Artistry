@@ -1979,36 +1979,88 @@
                         <Border Width="0">
                             <Border
                                 x:Name="BoardDeleteIcon"
-                                Margin="-61,-50,-61,55"
+                                Margin="-61,-138,-61,55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="1,1,1,0"
                                 CornerRadius="5,5,0,0">
-                                <Button
-                                    Padding="0"
-                                    BorderThickness="0"
-                                    Click="BoardSymbolIconDelete_Click">
-                                    <Grid>
-                                        <ikw:SimpleStackPanel
-                                            Margin="5"
-                                            HorizontalAlignment="Center"
-                                            Orientation="Horizontal">
-                                            <ui:FontIcon
-                                                Width="28"
-                                                Height="22"
-                                                FontFamily="{StaticResource FluentIconFontFamily}"
-                                                FontSize="22"
-                                                Foreground="{DynamicResource BoardBarForeground}"
-                                                Glyph="&#xe74d;" />
-                                            <TextBlock
-                                                Margin="5,0,0,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="14"
-                                                Foreground="{DynamicResource BoardBarForeground}"
-                                                Text="点击清屏" />
-                                        </ikw:SimpleStackPanel>
-                                    </Grid>
-                                </Button>
+                                <ikw:SimpleStackPanel Orientation="Vertical">
+                                    <Button
+                                        Padding="0"
+                                        BorderThickness="0"
+                                        Click="BoardClearInkOnly_Click">
+                                        <Grid>
+                                            <ikw:SimpleStackPanel
+                                                Margin="5"
+                                                HorizontalAlignment="Center"
+                                                Orientation="Horizontal">
+                                                <ui:FontIcon
+                                                    Width="28"
+                                                    Height="22"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="22"
+                                                    Foreground="{DynamicResource BoardBarForeground}"
+                                                    Glyph="&#xe74d;" />
+                                                <TextBlock
+                                                    Margin="5,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource BoardBarForeground}"
+                                                    Text="清除墨迹" />
+                                            </ikw:SimpleStackPanel>
+                                        </Grid>
+                                    </Button>
+                                    <Button
+                                        Padding="0"
+                                        BorderThickness="0"
+                                        Click="BoardClearAllElements_Click">
+                                        <Grid>
+                                            <ikw:SimpleStackPanel
+                                                Margin="5"
+                                                HorizontalAlignment="Center"
+                                                Orientation="Horizontal">
+                                                <ui:FontIcon
+                                                    Width="28"
+                                                    Height="22"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="22"
+                                                    Foreground="{DynamicResource BoardBarForeground}"
+                                                    Glyph="&#xe74d;" />
+                                                <TextBlock
+                                                    Margin="5,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource BoardBarForeground}"
+                                                    Text="清屏" />
+                                            </ikw:SimpleStackPanel>
+                                        </Grid>
+                                    </Button>
+                                    <Button
+                                        Padding="0"
+                                        BorderThickness="0"
+                                        Click="BoardClearAllElementsAndHistory_Click">
+                                        <Grid>
+                                            <ikw:SimpleStackPanel
+                                                Margin="5"
+                                                HorizontalAlignment="Center"
+                                                Orientation="Horizontal">
+                                                <ui:FontIcon
+                                                    Width="28"
+                                                    Height="22"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="22"
+                                                    Foreground="{DynamicResource BoardBarForeground}"
+                                                    Glyph="&#xe74d;" />
+                                                <TextBlock
+                                                    Margin="5,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource BoardBarForeground}"
+                                                    Text="清除全屏与历史" />
+                                            </ikw:SimpleStackPanel>
+                                        </Grid>
+                                    </Button>
+                                </ikw:SimpleStackPanel>
                             </Border>
                         </Border>
                         <Button

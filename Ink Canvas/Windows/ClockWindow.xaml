@@ -1,0 +1,92 @@
+<Window
+    x:Class="Ink_Canvas.ClockWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    Title="时钟 - Ink Canvas Artistry"
+    Width="1100"
+    Height="700"
+    MinWidth="300"
+    MinHeight="200"
+    ui:ThemeManager.RequestedTheme="Light"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    KeyDown="Window_KeyDown"
+    Loaded="Window_Loaded"
+    Topmost="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Border
+        x:Name="RootBorder"
+        Margin="20"
+        Background="{DynamicResource PopupWindowBackground}"
+        BorderBrush="{DynamicResource PopupWindowBorderBrush}"
+        BorderThickness="1"
+        CornerRadius="10">
+        <Grid>
+            <Viewbox
+                Margin="80,60,80,120"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Stretch="Uniform">
+                <TextBlock
+                    x:Name="TextBlockCurrentTime"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="120"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource PopupWindowForeground}"
+                    Text="00:00:00" />
+            </Viewbox>
+
+            <StackPanel
+                Margin="0,0,20,20"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="BtnFullscreen"
+                    Width="50"
+                    Height="50"
+                    Margin="0,0,10,0"
+                    Padding="0"
+                    Background="{DynamicResource PopupWindowBackground}"
+                    BorderBrush="{DynamicResource PopupWindowBorderBrush}"
+                    BorderThickness="1"
+                    Click="BtnFullscreen_Click"
+                    ToolTipService.ToolTip="全屏">
+                    <Border CornerRadius="25">
+                        <Viewbox Margin="11">
+                            <ui:FontIcon
+                                x:Name="SymbolIconFullscreen"
+                                FontFamily="{StaticResource FluentIconFontFamily}"
+                                Foreground="{DynamicResource PopupWindowForeground}"
+                                Glyph="&#xE92D;" />
+                        </Viewbox>
+                    </Border>
+                </Button>
+
+                <Button
+                    x:Name="BtnClose"
+                    Width="50"
+                    Height="50"
+                    Padding="0"
+                    Background="#E32A34"
+                    BorderThickness="0"
+                    Click="BtnClose_Click"
+                    ToolTipService.ToolTip="关闭">
+                    <Border CornerRadius="25">
+                        <Viewbox Margin="11">
+                            <ui:FontIcon
+                                FontFamily="{StaticResource FluentIconFontFamily}"
+                                Foreground="White"
+                                Glyph="&#xE711;" />
+                        </Viewbox>
+                    </Border>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

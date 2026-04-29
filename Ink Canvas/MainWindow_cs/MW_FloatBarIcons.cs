@@ -484,6 +484,43 @@ namespace Ink_Canvas
             new CountdownTimerWindow().Show();
         }
 
+        private void SymbolIconClock_Click(object sender, RoutedEventArgs e)
+        {
+            // “更多设置”和“更多功能”两个入口共用同一逻辑，防止行为不一致。
+            ShowFullscreenClock();
+        }
+
+        private ClockWindow clockWindow;
+
+        private void ShowFullscreenClock()
+        {
+            HideMoreToolsPanelsForClock();
+
+            if (clockWindow == null || !clockWindow.IsLoaded)
+            {
+                clockWindow = new ClockWindow();
+                clockWindow.Closed += (_, __) => clockWindow = null;
+            }
+
+            // 使用 Show() 打开时钟，允许主界面继续交互；同时避免自动收纳流程影响时钟窗口可见性。
+            clockWindow.Show();
+            if (clockWindow.WindowState == WindowState.Minimized)
+            {
+                clockWindow.WindowState = WindowState.Normal;
+            }
+            clockWindow.Activate();
+        }
+
+        private void HideMoreToolsPanelsForClock()
+        {
+            // 与 SymbolIconTools_Click 的层显隐策略一致：打开时钟前统一收起“更多设置/更多功能”弹层。
+            if (BorderTools.Visibility == Visibility.Visible || BoardBorderTools.Visibility == Visibility.Visible)
+            {
+                AnimationsHelper.HideWithSlideAndFade(BorderTools);
+                AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
+            }
+        }
+
         private void OperatingGuideWindowIcon_Click(object sender, RoutedEventArgs e)
         {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);

@@ -59,11 +59,11 @@ namespace Ink_Canvas.Helpers
 
             // 获取Win+Tab预览中的窗口
             AutomationElementCollection windows = AutomationElement.RootElement.FindAll(
-
+                TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
 
             foreach (AutomationElement window in windows)
             {
-                //LogHelper.WriteLogToFile("" + window.Current.Name);
+
 
                 string windowTitle = window.Current.Name;
 

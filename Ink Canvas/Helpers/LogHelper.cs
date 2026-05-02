@@ -24,12 +24,13 @@ namespace Ink_Canvas.Helpers
         }
 
         /// <summary>
-        /// 异常日志入口（当前保留空实现）。
+        /// 以 Error 级别写入异常日志。
         /// </summary>
         /// <param name="ex">异常对象。</param>
         public static void NewLog(Exception ex)
         {
-
+            if (ex == null) return;
+            WriteLogToFile(ex.ToString(), LogType.Error);
         }
 
         /// <summary>

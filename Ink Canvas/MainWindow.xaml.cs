@@ -18,7 +18,7 @@ namespace Ink_Canvas
         #region Window Initialization
 
         /// <summary>
-        /// 主窗口构造函数：初始化界面状态、事件绑定与基础设置加载。
+        /// 主窗口构造函数：初始化界面状态并完成基础事件绑定。
         /// </summary>
         public MainWindow()
         {

@@ -22,7 +22,7 @@ namespace Ink_Canvas
         bool isHidingSubPanelsWhenInking = false; // 避免书写时触发二次关闭二级菜单导致动画不连续
 
         /// <summary>
-        /// 初始化与启动主定时器参数及事件绑定。
+        /// 初始化主定时器参数并完成事件绑定（不在此处启动）。
         /// </summary>
         private void InitTimers()
         {

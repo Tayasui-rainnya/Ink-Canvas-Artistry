@@ -298,6 +298,11 @@ namespace Ink_Canvas
                 {
                     inkCanvas.Children.Remove(element);
                     timeMachine.CommitElementInsertHistory(element, true);
+                    // Clean up scan-enhanced image references when deleting images
+                    if (element is Image img)
+                    {
+                        _scanEnhanceOriginalImageSources.Remove(img);
+                    }
                 }
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
             }

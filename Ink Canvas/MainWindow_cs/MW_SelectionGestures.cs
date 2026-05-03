@@ -3,7 +3,6 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -519,72 +518,9 @@ namespace Ink_Canvas
                 IconStrokeSelectionClone.SetResourceReference(TextBlock.ForegroundProperty, "FloatBarForeground");
                 ToggleButtonStrokeSelectionClone.IsChecked = false;
                 isStrokeSelectionCloneOn = false;
-
-                bool hasSelectedStrokes = inkCanvas.GetSelectedStrokes().Count > 0;
-                bool hasSelectedImages = inkCanvas.GetSelectedElements().OfType<Image>().Any();
-                // 同时选中墨迹和图片时，优先显示墨迹控件，保留现有墨迹编辑体验。
-                bool showInkOnlyControls = hasSelectedStrokes || !hasSelectedImages;
-                PanelSelectionInkOnlyControls.Visibility = showInkOnlyControls
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
-                PanelSelectionImageOnlyControls.Visibility = !hasSelectedStrokes && hasSelectedImages
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
-
                 updateBorderStrokeSelectionControlLocation();
             }
         }
-
-        /// <summary>
-        /// 对当前选中的图片元素执行反色处理。
-        /// 仅处理 <see cref="Image.Source"/> 为 <see cref="BitmapSource"/> 的图片，
-        /// 并将每个像素的 RGB 通道映射为 <c>255 - channel</c>，Alpha 保持不变。
-        /// </summary>
-        private void BtnImageSelectionInvertColor_Click(object sender, RoutedEventArgs e)
-        {
-            foreach (Image selectedImage in inkCanvas.GetSelectedElements().OfType<Image>())
-            {
-                if (selectedImage.Source is BitmapSource bitmapSource)
-                {
-                    selectedImage.Source = CreateInvertedBitmapSource(bitmapSource);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 创建输入位图的反色副本：RGB 三通道反转，透明度通道保留。
-        /// 该方法统一转换为 BGRA32 后处理，确保像素布局稳定可写。
-        /// </summary>
-        private BitmapSource CreateInvertedBitmapSource(BitmapSource source)
-        {
-            FormatConvertedBitmap convertedBitmap = new FormatConvertedBitmap();
-            convertedBitmap.BeginInit();
-            convertedBitmap.Source = source;
-            convertedBitmap.DestinationFormat = PixelFormats.Bgra32;
-            convertedBitmap.EndInit();
-
-            int stride = convertedBitmap.PixelWidth * 4;
-            byte[] pixels = new byte[stride * convertedBitmap.PixelHeight];
-            convertedBitmap.CopyPixels(pixels, stride, 0);
-
-            for (int i = 0; i < pixels.Length; i += 4)
-            {
-                pixels[i] = (byte)(255 - pixels[i]);
-                pixels[i + 1] = (byte)(255 - pixels[i + 1]);
-                pixels[i + 2] = (byte)(255 - pixels[i + 2]);
-            }
-
-            return BitmapSource.Create(
-                convertedBitmap.PixelWidth,
-                convertedBitmap.PixelHeight,
-                convertedBitmap.DpiX,
-                convertedBitmap.DpiY,
-                PixelFormats.Bgra32,
-                null,
-                pixels,
-                stride);
-        }
-
         double BorderStrokeSelectionControlWidth = 695;
         double BorderStrokeSelectionControlHeight = 104;
 

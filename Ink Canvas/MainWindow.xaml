@@ -491,6 +491,41 @@
                                 </Button>
                             </ikw:SimpleStackPanel>
                             <ikw:SimpleStackPanel
+                                x:Name="PanelSelectionImageOnlyControls"
+                                Margin="0,0,4,0"
+                                VerticalAlignment="Center"
+                                Spacing="4"
+                                Visibility="Collapsed">
+                                <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="4">
+                                    <Button
+                                        Width="90"
+                                        Height="35"
+                                        Padding="0"
+                                        Background="{DynamicResource FloatBarBackground}"
+                                        Click="BtnImageSelectionInvertColor_Click">
+                                        <ikw:SimpleStackPanel
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Orientation="Horizontal"
+                                            Spacing="2">
+                                            <ui:FontIcon
+                                                Width="18"
+                                                Height="18"
+                                                FontFamily="{StaticResource FluentIconFontFamily}"
+                                                FontSize="16"
+                                                Foreground="{DynamicResource FloatBarForeground}"
+                                                Glyph="&#xe706;" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="{DynamicResource FloatBarForeground}"
+                                                Text="反色" />
+                                        </ikw:SimpleStackPanel>
+                                    </Button>
+                                </ikw:SimpleStackPanel>
+                            </ikw:SimpleStackPanel>
+                            <ikw:SimpleStackPanel
+                                x:Name="PanelSelectionInkOnlyControls"
                                 Margin="0,0,4,0"
                                 VerticalAlignment="Center"
                                 Spacing="4">

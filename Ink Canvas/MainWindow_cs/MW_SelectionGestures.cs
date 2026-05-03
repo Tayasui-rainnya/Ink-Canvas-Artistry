@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -518,6 +519,14 @@ namespace Ink_Canvas
                 IconStrokeSelectionClone.SetResourceReference(TextBlock.ForegroundProperty, "FloatBarForeground");
                 ToggleButtonStrokeSelectionClone.IsChecked = false;
                 isStrokeSelectionCloneOn = false;
+
+                bool hasSelectedStrokes = inkCanvas.GetSelectedStrokes().Count > 0;
+                bool hasSelectedImages = inkCanvas.GetSelectedElements().OfType<Image>().Any();
+                // 同时选中墨迹和图片时，优先显示墨迹控件，保留现有墨迹编辑体验。
+                PanelSelectionInkOnlyControls.Visibility = hasSelectedStrokes || !hasSelectedImages
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+
                 updateBorderStrokeSelectionControlLocation();
             }
         }

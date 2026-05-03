@@ -491,6 +491,7 @@
                                 </Button>
                             </ikw:SimpleStackPanel>
                             <ikw:SimpleStackPanel
+                                x:Name="PanelSelectionInkOnlyControls"
                                 Margin="0,0,4,0"
                                 VerticalAlignment="Center"
                                 Spacing="4">

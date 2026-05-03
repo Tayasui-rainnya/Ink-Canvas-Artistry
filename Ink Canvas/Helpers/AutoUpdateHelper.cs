@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
@@ -21,7 +22,12 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 更新服务基础地址。
         /// </summary>
-        private const string UpdateServerBaseUrl = "https://8.134.100.248:8080";
+        private const string UpdateServerBaseUrl = "https://github.com/Tayasui-rainnya/Ink-Canvas-Artistry/releases";
+
+        /// <summary>
+        /// 临时更新信息接口：通过 GitHub Releases API 自动获取最新的非预发布版本。
+        /// </summary>
+        private const string GitHubReleasesApiUrl = "https://api.github.com/repos/Tayasui-rainnya/Ink-Canvas-Artistry/releases?per_page=10";
 
         /// <summary>
         /// 检查服务器版本是否高于当前本地版本。
@@ -32,8 +38,7 @@ namespace Ink_Canvas.Helpers
             try
             {
                 string localVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                string remoteAddress = $"{UpdateServerBaseUrl}/version";
-                string remoteVersion = await GetRemoteVersion(remoteAddress);
+                string remoteVersion = await GetRemoteVersion(GitHubReleasesApiUrl);
 
                 if (remoteVersion != null)
                 {
@@ -69,10 +74,10 @@ namespace Ink_Canvas.Helpers
         }
 
         /// <summary>
-        /// 从指定地址读取远程版本号文本。
+        /// （临时方案）从 GitHub Releases API 获取最新的非预发布版本号。
         /// </summary>
-        /// <param name="fileUrl">版本文件 URL。</param>
-        /// <returns>去除空白后的版本字符串；失败时返回 <c>null</c>。</returns>
+        /// <param name="fileUrl">GitHub Releases API URL。</param>
+        /// <returns>解析后的版本字符串（去除可选的 <c>v</c> 前缀）；失败时返回 <c>null</c>。</returns>
         public static async Task<string> GetRemoteVersion(string fileUrl)
         {
             using (HttpClient client = new HttpClient())
@@ -80,11 +85,32 @@ namespace Ink_Canvas.Helpers
                 try
                 {
                     client.Timeout = TimeSpan.FromSeconds(15);
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("InkCanvasArtistry-AutoUpdater/1.0");
                     HttpResponseMessage response = await client.GetAsync(fileUrl);
                     response.EnsureSuccessStatusCode();
 
-                    string versionString = await response.Content.ReadAsStringAsync();
-                    return versionString?.Trim();
+                    string releasesJson = await response.Content.ReadAsStringAsync();
+                    using (JsonDocument doc = JsonDocument.Parse(releasesJson))
+                    {
+                        foreach (JsonElement release in doc.RootElement.EnumerateArray())
+                        {
+                            bool isPrerelease = release.TryGetProperty("prerelease", out JsonElement prereleaseElement) && prereleaseElement.GetBoolean();
+                            bool isDraft = release.TryGetProperty("draft", out JsonElement draftElement) && draftElement.GetBoolean();
+                            if (isPrerelease || isDraft)
+                            {
+                                continue;
+                            }
+
+                            if (release.TryGetProperty("tag_name", out JsonElement tagNameElement))
+                            {
+                                string tagName = tagNameElement.GetString()?.Trim();
+                                if (!string.IsNullOrWhiteSpace(tagName))
+                                {
+                                    return tagName.TrimStart('v', 'V');
+                                }
+                            }
+                        }
+                    }
                 }
                 catch (HttpRequestException ex)
                 {
@@ -93,6 +119,10 @@ namespace Ink_Canvas.Helpers
                 catch (TaskCanceledException ex)
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | Timeout getting version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                }
+                catch (JsonException ex)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | JSON parse error getting version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
                 catch (Exception ex)
                 {
@@ -133,12 +163,33 @@ namespace Ink_Canvas.Helpers
                     return true;
                 }
 
-                string downloadUrl = $"{UpdateServerBaseUrl}/download/{setupFileName}";
-
-                LogHelper.WriteLogToFile($"AutoUpdate | Attempting download from: {downloadUrl} to {destinationPath}");
+                string[] downloadUrls =
+                {
+                    $"{UpdateServerBaseUrl}/download/v{version}/{setupFileName}",
+                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}"
+                };
 
                 SaveDownloadStatus(statusFilePath, false);
-                await DownloadFile(downloadUrl, destinationPath);
+                bool downloadSucceeded = false;
+                foreach (string downloadUrl in downloadUrls)
+                {
+                    try
+                    {
+                        LogHelper.WriteLogToFile($"AutoUpdate | Attempting download from: {downloadUrl} to {destinationPath}");
+                        await DownloadFile(downloadUrl, destinationPath);
+                        downloadSucceeded = true;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogHelper.WriteLogToFile($"AutoUpdate | Download attempt failed from {downloadUrl}: {ex.Message}", LogHelper.LogType.Error);
+                    }
+                }
+
+                if (!downloadSucceeded)
+                {
+                    throw new InvalidOperationException($"AutoUpdate | Could not download setup file for version {version} from GitHub Releases.");
+                }
                 SaveDownloadStatus(statusFilePath, true);
 
                 LogHelper.WriteLogToFile("AutoUpdate | Setup file successfully downloaded.");

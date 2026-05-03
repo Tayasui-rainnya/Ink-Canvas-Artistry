@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -32,10 +33,10 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 是否启用“选区克隆”模式。
+        /// 是否启用"选区克隆"模式。
         /// </summary>
         bool isStrokeSelectionCloneOn = false;
-        private readonly Dictionary<Image, BitmapSource> _scanEnhanceOriginalImageSources = new Dictionary<Image, BitmapSource>();
+        private readonly ConditionalWeakTable<Image, StrongBox<BitmapSource>> _scanEnhanceOriginalImageSources = new ConditionalWeakTable<Image, StrongBox<BitmapSource>>();
 
         /// <summary>
         /// 切换选区克隆模式并更新图标高亮状态。
@@ -587,9 +588,9 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 对当前选区内可处理的图片立即执行“扫描增强”。
+        /// 对当前选区内可处理的图片立即执行"扫描增强"。
         /// 混合选中时仅处理 <see cref="Image"/> 且 <see cref="Image.Source"/> 为 <see cref="BitmapSource"/> 的元素，
-        /// 其它元素自动跳过；点击后直接回写结果，不弹窗、无二次调整，并缓存原图用于“恢复原图”兜底。
+        /// 其它元素自动跳过；点击后直接回写结果，不弹窗、无二次调整，并缓存原图用于"恢复原图"兜底。
         /// </summary>
         private void BtnImageSelectionScanEnhance_Click(object sender, RoutedEventArgs e)
         {
@@ -597,7 +598,11 @@ namespace Ink_Canvas
             {
                 if (selectedImage.Source is BitmapSource bitmapSource)
                 {
-                    _scanEnhanceOriginalImageSources[selectedImage] = bitmapSource;
+                    // Only save the original if it doesn't already exist, to preserve the truly original image
+                    if (!_scanEnhanceOriginalImageSources.TryGetValue(selectedImage, out _))
+                    {
+                        _scanEnhanceOriginalImageSources.Add(selectedImage, new StrongBox<BitmapSource>(bitmapSource));
+                    }
                     selectedImage.Source = CreateScanEnhancedBitmapSource(bitmapSource);
                 }
             }
@@ -611,9 +616,9 @@ namespace Ink_Canvas
         {
             foreach (Image selectedImage in inkCanvas.GetSelectedElements().OfType<Image>())
             {
-                if (_scanEnhanceOriginalImageSources.TryGetValue(selectedImage, out BitmapSource originalSource))
+                if (_scanEnhanceOriginalImageSources.TryGetValue(selectedImage, out StrongBox<BitmapSource> originalSourceBox))
                 {
-                    selectedImage.Source = originalSource;
+                    selectedImage.Source = originalSourceBox.Value;
                     _scanEnhanceOriginalImageSources.Remove(selectedImage);
                 }
             }

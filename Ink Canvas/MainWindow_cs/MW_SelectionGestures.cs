@@ -3,6 +3,8 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -31,9 +33,10 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 是否启用“选区克隆”模式。
+        /// 是否启用"选区克隆"模式。
         /// </summary>
         bool isStrokeSelectionCloneOn = false;
+        private readonly ConditionalWeakTable<Image, StrongBox<BitmapSource>> _scanEnhanceOriginalImageSources = new ConditionalWeakTable<Image, StrongBox<BitmapSource>>();
 
         /// <summary>
         /// 切换选区克隆模式并更新图标高亮状态。
@@ -518,10 +521,235 @@ namespace Ink_Canvas
                 IconStrokeSelectionClone.SetResourceReference(TextBlock.ForegroundProperty, "FloatBarForeground");
                 ToggleButtonStrokeSelectionClone.IsChecked = false;
                 isStrokeSelectionCloneOn = false;
+
+                bool hasSelectedStrokes = inkCanvas.GetSelectedStrokes().Count > 0;
+                bool hasSelectedImages = inkCanvas.GetSelectedElements().OfType<Image>().Any();
+                // 同时选中墨迹和图片时，优先显示墨迹控件，保留现有墨迹编辑体验。
+                bool showInkOnlyControls = hasSelectedStrokes || !hasSelectedImages;
+                PanelSelectionInkOnlyControls.Visibility = showInkOnlyControls
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+                PanelSelectionImageOnlyControls.Visibility = !hasSelectedStrokes && hasSelectedImages
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+
                 updateBorderStrokeSelectionControlLocation();
             }
         }
-        double BorderStrokeSelectionControlWidth = 695;
+
+        /// <summary>
+        /// 对当前选中的图片元素执行反色处理。
+        /// 仅处理 <see cref="Image.Source"/> 为 <see cref="BitmapSource"/> 的图片，
+        /// 并将每个像素的 RGB 通道映射为 <c>255 - channel</c>，Alpha 保持不变。
+        /// </summary>
+        private void BtnImageSelectionInvertColor_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Image selectedImage in inkCanvas.GetSelectedElements().OfType<Image>())
+            {
+                if (selectedImage.Source is BitmapSource bitmapSource)
+                {
+                    selectedImage.Source = CreateInvertedBitmapSource(bitmapSource);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 创建输入位图的反色副本：RGB 三通道反转，透明度通道保留。
+        /// 该方法统一转换为 BGRA32 后处理，确保像素布局稳定可写。
+        /// </summary>
+        private BitmapSource CreateInvertedBitmapSource(BitmapSource source)
+        {
+            FormatConvertedBitmap convertedBitmap = new FormatConvertedBitmap();
+            convertedBitmap.BeginInit();
+            convertedBitmap.Source = source;
+            convertedBitmap.DestinationFormat = PixelFormats.Bgra32;
+            convertedBitmap.EndInit();
+
+            int stride = convertedBitmap.PixelWidth * 4;
+            byte[] pixels = new byte[stride * convertedBitmap.PixelHeight];
+            convertedBitmap.CopyPixels(pixels, stride, 0);
+
+            for (int i = 0; i < pixels.Length; i += 4)
+            {
+                pixels[i] = (byte)(255 - pixels[i]);
+                pixels[i + 1] = (byte)(255 - pixels[i + 1]);
+                pixels[i + 2] = (byte)(255 - pixels[i + 2]);
+            }
+
+            return BitmapSource.Create(
+                convertedBitmap.PixelWidth,
+                convertedBitmap.PixelHeight,
+                convertedBitmap.DpiX,
+                convertedBitmap.DpiY,
+                PixelFormats.Bgra32,
+                null,
+                pixels,
+                stride);
+        }
+
+        /// <summary>
+        /// 对当前选区内可处理的图片立即执行"扫描增强"。
+        /// 混合选中时仅处理 <see cref="Image"/> 且 <see cref="Image.Source"/> 为 <see cref="BitmapSource"/> 的元素，
+        /// 其它元素自动跳过；点击后直接回写结果，不弹窗、无二次调整，并缓存原图用于"恢复原图"兜底。
+        /// </summary>
+        private void BtnImageSelectionScanEnhance_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Image selectedImage in inkCanvas.GetSelectedElements().OfType<Image>())
+            {
+                if (selectedImage.Source is BitmapSource bitmapSource)
+                {
+                    // Only save the original if it doesn't already exist, to preserve the truly original image
+                    if (!_scanEnhanceOriginalImageSources.TryGetValue(selectedImage, out _))
+                    {
+                        _scanEnhanceOriginalImageSources.Add(selectedImage, new StrongBox<BitmapSource>(bitmapSource));
+                    }
+                    selectedImage.Source = CreateScanEnhancedBitmapSource(bitmapSource);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 恢复当前选中图片最近一次扫描增强前的原图。
+        /// 仅对存在缓存原图的 <see cref="Image"/> 生效，恢复后清除对应缓存项。
+        /// </summary>
+        private void BtnImageSelectionRestoreOriginal_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Image selectedImage in inkCanvas.GetSelectedElements().OfType<Image>())
+            {
+                if (_scanEnhanceOriginalImageSources.TryGetValue(selectedImage, out StrongBox<BitmapSource> originalSourceBox))
+                {
+                    selectedImage.Source = originalSourceBox.Value;
+                    _scanEnhanceOriginalImageSources.Remove(selectedImage);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 生成扫描增强后的位图：保留 Alpha 通道，不做二值化，执行轻度亮度/对比度与去饱和增强。
+        /// 处理流程为 BGRA32 统一格式、亮度统计、自适应参数、白底压灰与轻降饱和度。
+        /// </summary>
+        private BitmapSource CreateScanEnhancedBitmapSource(BitmapSource source)
+        {
+            FormatConvertedBitmap convertedBitmap = new FormatConvertedBitmap();
+            convertedBitmap.BeginInit();
+            convertedBitmap.Source = source;
+            convertedBitmap.DestinationFormat = PixelFormats.Bgra32;
+            convertedBitmap.EndInit();
+
+            int width = convertedBitmap.PixelWidth;
+            int height = convertedBitmap.PixelHeight;
+            int stride = width * 4;
+            byte[] pixels = new byte[stride * height];
+            convertedBitmap.CopyPixels(pixels, stride, 0);
+
+            int sampleStep = (width * height) > 1_000_000 ? 3 : 1;
+            double lumaSum = 0;
+            double lumaSquareSum = 0;
+            int sampleCount = 0;
+
+            for (int y = 0; y < height; y += sampleStep)
+            {
+                int rowOffset = y * stride;
+                for (int x = 0; x < width; x += sampleStep)
+                {
+                    int pixelOffset = rowOffset + x * 4;
+                    double b = pixels[pixelOffset];
+                    double g = pixels[pixelOffset + 1];
+                    double r = pixels[pixelOffset + 2];
+                    double luma = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                    lumaSum += luma;
+                    lumaSquareSum += luma * luma;
+                    sampleCount++;
+                }
+            }
+
+            double meanL = sampleCount > 0 ? lumaSum / sampleCount : 128.0;
+            double variance = sampleCount > 0 ? (lumaSquareSum / sampleCount) - (meanL * meanL) : 0;
+            double stdL = Math.Sqrt(Math.Max(0, variance));
+
+            double brightnessOffset = 12;
+            double contrast = 1.10;
+
+            if (meanL < 105)
+            {
+                brightnessOffset = 24;
+                contrast = 1.20;
+            }
+            else if (meanL < 150)
+            {
+                brightnessOffset = 16;
+                contrast = 1.14;
+            }
+            else if (meanL > 195)
+            {
+                brightnessOffset = 8;
+                contrast = 1.06;
+            }
+
+            if (width < 64 || height < 64)
+            {
+                brightnessOffset = 4;
+                contrast = 1.02;
+            }
+
+            if (meanL > 210 && stdL > 55)
+            {
+                brightnessOffset = 3;
+                contrast = 1.01;
+            }
+
+            const double saturationScale = 0.95;
+
+            for (int i = 0; i < pixels.Length; i += 4)
+            {
+                double b = pixels[i];
+                double g = pixels[i + 1];
+                double r = pixels[i + 2];
+                byte alpha = pixels[i + 3];
+
+                double y = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                r = Math.Max(0, Math.Min(255, (r - 128) * contrast + 128 + brightnessOffset));
+                g = Math.Max(0, Math.Min(255, (g - 128) * contrast + 128 + brightnessOffset));
+                b = Math.Max(0, Math.Min(255, (b - 128) * contrast + 128 + brightnessOffset));
+
+                if (y > 180)
+                {
+                    r = Math.Min(255, r + 6);
+                    g = Math.Min(255, g + 6);
+                    b = Math.Min(255, b + 6);
+                }
+                if (y > 210)
+                {
+                    r = Math.Min(255, r + 4);
+                    g = Math.Min(255, g + 4);
+                    b = Math.Min(255, b + 4);
+                }
+
+                double neutral = (r + g + b) / 3.0;
+                r = neutral + (r - neutral) * saturationScale;
+                g = neutral + (g - neutral) * saturationScale;
+                b = neutral + (b - neutral) * saturationScale;
+
+                pixels[i] = (byte)Math.Round(Math.Max(0, Math.Min(255, b)));
+                pixels[i + 1] = (byte)Math.Round(Math.Max(0, Math.Min(255, g)));
+                pixels[i + 2] = (byte)Math.Round(Math.Max(0, Math.Min(255, r)));
+                pixels[i + 3] = alpha;
+            }
+
+            return BitmapSource.Create(
+                width,
+                height,
+                convertedBitmap.DpiX,
+                convertedBitmap.DpiY,
+                PixelFormats.Bgra32,
+                null,
+                pixels,
+                stride);
+        }
+
+        double BorderStrokeSelectionControlWidth = 725;
         double BorderStrokeSelectionControlHeight = 104;
 
         private void updateBorderStrokeSelectionControlLocation()

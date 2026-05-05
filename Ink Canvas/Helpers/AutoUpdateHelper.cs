@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -142,9 +142,41 @@ namespace Ink_Canvas.Helpers
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | JSON parse error getting version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 从 URL 获取纯文本内容（用于获取 SHA256 文件等）。
+        /// </summary>
+        /// <param name="fileUrl">文件的 URL。</param>
+        /// <returns>文件的纯文本内容；失败时返回 <c>null</c>。</returns>
+        private static async Task<string> GetPlainTextFromUrl(string fileUrl)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    client.Timeout = TimeSpan.FromSeconds(15);
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("InkCanvasArtistry-AutoUpdater/1.0");
+                    HttpResponseMessage response = await client.GetAsync(fileUrl);
+                    response.EnsureSuccessStatusCode();
+
+                    string content = await response.Content.ReadAsStringAsync();
+                    return content;
+                }
+                catch (HttpRequestException ex)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | HTTP request error getting plain text from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | Timeout getting plain text from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                }
                 catch (Exception ex)
                 {
-                    LogHelper.WriteLogToFile($"AutoUpdate | Error getting remote version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                    LogHelper.WriteLogToFile($"AutoUpdate | Error getting plain text from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
                 return null;
             }
@@ -217,13 +249,11 @@ namespace Ink_Canvas.Helpers
                     return true;
                 }
 
-                string prefixVersion = version.StartsWith("v", StringComparison.OrdinalIgnoreCase) ? version : "v" + versionWithoutPrefix;
-                string noPrefixVersion = versionWithoutPrefix;
-                string[] downloadUrls = new[]
+                string[] downloadUrls =
                 {
-                    $"{UpdateServerBaseUrl}/download/{prefixVersion}/{setupFileName}",
-                    $"{UpdateServerBaseUrl}/download/{noPrefixVersion}/{setupFileName}"
-                }.Distinct().ToArray();
+                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}",
+                    $"{UpdateServerBaseUrl}/download/v{versionWithoutPrefix}/{setupFileName}"
+                };
 
                 SaveDownloadStatus(statusFilePath, false);
                 bool downloadSucceeded = false;
@@ -407,13 +437,11 @@ namespace Ink_Canvas.Helpers
                 string versionWithoutPrefix = version.TrimStart('v', 'V');
                 string setupFileName = $"Ink.Canvas.Artistry.V{versionWithoutPrefix}.Setup.exe";
 
-                string prefixVersion = version.StartsWith("v", StringComparison.OrdinalIgnoreCase) ? version : "v" + versionWithoutPrefix;
-                string noPrefixVersion = versionWithoutPrefix;
-                string[] shaFileUrls = new[]
+                string[] shaFileUrls =
                 {
-                    $"{UpdateServerBaseUrl}/download/{prefixVersion}/{setupFileName}.sha256",
-                    $"{UpdateServerBaseUrl}/download/{noPrefixVersion}/{setupFileName}.sha256"
-                }.Distinct().ToArray();
+                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}.sha256",
+                    $"{UpdateServerBaseUrl}/download/v{versionWithoutPrefix}/{setupFileName}.sha256"
+                };
 
                 string expectedHash = null;
                 foreach (string shaFileUrl in shaFileUrls)

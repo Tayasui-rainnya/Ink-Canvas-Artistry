@@ -491,6 +491,134 @@
                                 </Button>
                             </ikw:SimpleStackPanel>
                             <ikw:SimpleStackPanel
+                                x:Name="PanelSelectionImageOnlyControls"
+                                Margin="0,0,4,0"
+                                VerticalAlignment="Center"
+                                Spacing="4"
+                                Visibility="Collapsed">
+                                <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="4">
+                                    <Button
+                                        Width="90"
+                                        Height="35"
+                                        Padding="0"
+                                        Background="{DynamicResource FloatBarBackground}"
+                                        Click="BtnImageSelectionInvertColor_Click">
+                                        <Border Background="Transparent">
+                                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ui:FontIcon
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="0,0,2,0"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="16"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Glyph="&#xe706;" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Text="反色" />
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                    <Button
+                                        Width="108"
+                                        Height="35"
+                                        Padding="0"
+                                        Background="{DynamicResource FloatBarBackground}"
+                                        Click="BtnImageSelectionScanEnhance_Click"
+                                        ToolTipService.ToolTip="自动提亮纸面并增强文字对比，保留彩色信息">
+                                        <Border Background="Transparent">
+                                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ui:FontIcon
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="0,0,2,0"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="16"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Glyph="&#xe8a5;" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Text="扫描增强" />
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                    <Button
+                                        Width="96"
+                                        Height="35"
+                                        Padding="0"
+                                        Background="{DynamicResource FloatBarBackground}"
+                                        Click="BtnImageSelectionRestoreOriginal_Click"
+                                        ToolTipService.ToolTip="恢复最近一次扫描增强前的原图">
+                                        <Border Background="Transparent">
+                                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ui:FontIcon
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="0,0,2,0"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="16"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Glyph="&#xe7a7;" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Text="恢复原图" />
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                    <Button
+                                        Width="90"
+                                        Height="35"
+                                        Padding="0"
+                                        Background="{DynamicResource FloatBarBackground}"
+                                        Click="BorderStrokeSelectionDelete_Click">
+                                        <Border Background="Transparent">
+                                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ui:FontIcon
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="0,0,2,0"
+                                                    FontFamily="{StaticResource FluentIconFontFamily}"
+                                                    FontSize="16"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Glyph="&#xe74d;" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource FloatBarForeground}"
+                                                    Text="删除" />
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                </ikw:SimpleStackPanel>
+                            </ikw:SimpleStackPanel>
+                            <ikw:SimpleStackPanel
+                                x:Name="PanelSelectionInkOnlyControls"
                                 Margin="0,0,4,0"
                                 VerticalAlignment="Center"
                                 Spacing="4">

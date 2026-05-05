@@ -37,6 +37,7 @@
                 <ResourceDictionary Source="/Resources/IconImageDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="BoardToolbarGroupBorderStyle" TargetType="Border">
+                <Setter Property="Height" Value="55" />
                 <Setter Property="CornerRadius" Value="5" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="BorderBrush" Value="{DynamicResource BoardBarBorderBrush}" />
@@ -51,11 +52,13 @@
                 <Setter Property="Margin" Value="5" />
             </Style>
             <Style x:Key="BoardToolbarGroupButtonStyle" TargetType="Button">
+                <Setter Property="MinWidth" Value="55" />
                 <Setter Property="Width" Value="60" />
                 <Setter Property="Height" Value="55" />
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Background" Value="{StaticResource {x:Static ui:ThemeKeys.ButtonBackgroundKey}}" />
                 <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -70,10 +73,10 @@
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="InteractionOverlay" Property="Background" Value="#12000000" />
+                                    <Setter TargetName="InteractionOverlay" Property="Background" Value="{StaticResource {x:Static ui:ThemeKeys.ButtonBackgroundPointerOverKey}}" />
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="InteractionOverlay" Property="Background" Value="#22000000" />
+                                    <Setter TargetName="InteractionOverlay" Property="Background" Value="{StaticResource {x:Static ui:ThemeKeys.ButtonBackgroundPressedKey}}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -83,8 +86,9 @@
             <Style x:Key="BoardToolbarIconStyle" TargetType="ui:FontIcon">
                 <Setter Property="Width" Value="26" />
                 <Setter Property="Height" Value="26" />
-                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="FontFamily" Value="{StaticResource FluentIconFontFamily}" />
+                <Setter Property="VerticalAlignment" Value="Top" />
                 <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
             </Style>
             <Style x:Key="BoardToolbarTextStyle" TargetType="TextBlock">

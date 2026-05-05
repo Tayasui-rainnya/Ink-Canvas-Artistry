@@ -36,6 +36,61 @@
                 <ResourceDictionary Source="/Resources/DrawShapeImageDictionary.xaml" />
                 <ResourceDictionary Source="/Resources/IconImageDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="BoardToolbarGroupBorderStyle" TargetType="Border">
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BoardBarBorderBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BoardBarBackground}" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style x:Key="BoardToolbarGroupPanelStyle" TargetType="ikw:SimpleStackPanel">
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style x:Key="BoardToolbarIconTextContentStyle" TargetType="Grid">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            <Style x:Key="BoardToolbarGroupButtonStyle" TargetType="Button">
+                <Setter Property="Width" Value="60" />
+                <Setter Property="Height" Value="55" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border
+                                x:Name="ButtonBackground"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ButtonBackground" Property="Background" Value="#12000000" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="ButtonBackground" Property="Background" Value="#22000000" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="BoardToolbarIconStyle" TargetType="ui:FontIcon">
+                <Setter Property="Width" Value="26" />
+                <Setter Property="Height" Value="26" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontFamily" Value="{StaticResource FluentIconFontFamily}" />
+                <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
+            </Style>
+            <Style x:Key="BoardToolbarTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
+            </Style>
             <RoutedUICommand x:Key="HotKey_Command_Undo" Text=" " />
             <RoutedUICommand x:Key="HotKey_Command_Redo" Text=" " />
             <RoutedUICommand x:Key="HotKey_ChangeToSelect" Text=" " />
@@ -1170,13 +1225,11 @@
                     <ikw:SimpleStackPanel Orientation="Horizontal">
                         <Border
                             x:Name="BoardGestureCanvasContainer"
-                            Background="{DynamicResource BoardBarBackground}"
-                            BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="5">
-                            <ikw:SimpleStackPanel Orientation="Horizontal">
+                            Style="{StaticResource BoardToolbarGroupBorderStyle}">
+                            <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button
                             x:Name="BtnBoardGesture"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Width="60"
                             Height="55"
                             Padding="0"
@@ -1190,21 +1243,15 @@
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
-                                <Grid Margin="5">
+                                <Grid Style="{StaticResource BoardToolbarIconTextContentStyle}">
                                     <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
+                                        Style="{StaticResource BoardToolbarIconStyle}"
                                         VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
                                         FontSize="28"
-                                        Foreground="{DynamicResource BoardBarForeground}"
                                         Glyph="&#xf271;"
                                         Opacity="{Binding ElementName=EnableTwoFingerGestureBtn, Path=Opacity}" />
                                     <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BoardBarForeground}"
+                                        Style="{StaticResource BoardToolbarTextStyle}"
                                         Text="手势" />
                                 </Grid>
                             </Border>
@@ -1369,11 +1416,7 @@
                         </Grid>
                                 <Button
                             x:Name="BtnBoardCanvas"
-                            Width="60"
-                            Height="55"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderThickness="0"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Click="BoardChangeBackgroundColorBtn_Click">
                             <Border
                                 x:Name="BoardCanvasBorder"
@@ -1382,20 +1425,17 @@
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
-                                <Grid Margin="5">
+                                <Grid Style="{StaticResource BoardToolbarIconTextContentStyle}">
                                     <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
+                                        Style="{StaticResource BoardToolbarIconStyle}"
                                         VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
-                                        FontSize="22"
-                                        Foreground="{DynamicResource BoardBarForeground}"
                                         Glyph="&#xef1f;" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Bottom"
                                         FontSize="12"
                                         Foreground="{DynamicResource BoardBarForeground}"
+                                        Style="{StaticResource BoardToolbarTextStyle}"
                                         Text="画布" />
                                 </Grid>
                             </Border>
@@ -1409,13 +1449,11 @@
                             Background="Transparent" />
                         <Border
                             x:Name="BoardMainButtonsContainer"
-                            Background="{DynamicResource BoardBarBackground}"
-                            BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="5">
-                            <ikw:SimpleStackPanel Orientation="Horizontal">
+                            Style="{StaticResource BoardToolbarGroupBorderStyle}">
+                            <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button
                             x:Name="BtnBoardSelect"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Width="60"
                             Height="55"
                             Padding="0"
@@ -1464,11 +1502,7 @@
                                 </Button>
                                 <Button
                             x:Name="BtnBoardPen"
-                            Width="60"
-                            Height="55"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderThickness="0"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Click="PenIcon_Click">
                             <Border
                                 x:Name="BoardPen"

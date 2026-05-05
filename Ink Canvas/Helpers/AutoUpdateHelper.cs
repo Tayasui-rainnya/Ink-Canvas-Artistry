@@ -142,7 +142,7 @@ namespace Ink_Canvas.Helpers
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | JSON parse error getting version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
-
+                catch (Exception ex)
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | Error getting remote version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
@@ -217,11 +217,13 @@ namespace Ink_Canvas.Helpers
                     return true;
                 }
 
-                string[] downloadUrls =
+                string prefixVersion = version.StartsWith("v", StringComparison.OrdinalIgnoreCase) ? version : "v" + versionWithoutPrefix;
+                string noPrefixVersion = versionWithoutPrefix;
+                string[] downloadUrls = new[]
                 {
-                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}",
-                    $"{UpdateServerBaseUrl}/download/v{versionWithoutPrefix}/{setupFileName}"
-                };
+                    $"{UpdateServerBaseUrl}/download/{prefixVersion}/{setupFileName}",
+                    $"{UpdateServerBaseUrl}/download/{noPrefixVersion}/{setupFileName}"
+                }.Distinct().ToArray();
 
                 SaveDownloadStatus(statusFilePath, false);
                 bool downloadSucceeded = false;
@@ -405,11 +407,13 @@ namespace Ink_Canvas.Helpers
                 string versionWithoutPrefix = version.TrimStart('v', 'V');
                 string setupFileName = $"Ink.Canvas.Artistry.V{versionWithoutPrefix}.Setup.exe";
 
-                string[] shaFileUrls =
+                string prefixVersion = version.StartsWith("v", StringComparison.OrdinalIgnoreCase) ? version : "v" + versionWithoutPrefix;
+                string noPrefixVersion = versionWithoutPrefix;
+                string[] shaFileUrls = new[]
                 {
-                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}.sha256",
-                    $"{UpdateServerBaseUrl}/download/v{versionWithoutPrefix}/{setupFileName}.sha256"
-                };
+                    $"{UpdateServerBaseUrl}/download/{prefixVersion}/{setupFileName}.sha256",
+                    $"{UpdateServerBaseUrl}/download/{noPrefixVersion}/{setupFileName}.sha256"
+                }.Distinct().ToArray();
 
                 string expectedHash = null;
                 foreach (string shaFileUrl in shaFileUrls)

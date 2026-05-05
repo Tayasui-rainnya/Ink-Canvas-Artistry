@@ -2639,8 +2639,7 @@
                                         Background="{DynamicResource BoardBarBackground}"
                                         BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                         BorderThickness="0"
-                                        MouseDown="Border_MouseDown"
-                                        MouseUp="SymbolIconTools_Click">
+                                        MouseDown="Border_MouseDown">
                                         <Grid Margin="5">
                                             <ui:FontIcon
                                                 Width="26"
@@ -3083,37 +3082,6 @@
                                 </Border>
                             </Grid>
                         </Border>
-                        <Button
-                            Width="60"
-                            Height="55"
-                            Padding="0"
-                            BorderThickness="0"
-                            Click="ImageBlackboard_Click">
-                            <Border
-                                Width="60"
-                                Height="55"
-                                Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
-                                CornerRadius="0,5,5,0">
-                                <Grid Margin="5">
-                                    <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
-                                        VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
-                                        FontSize="24"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Glyph="&#xe944;" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Text="退出" />
-                                </Grid>
-                            </Border>
-                        </Button>
                     </ikw:SimpleStackPanel>
                 </Grid>
             </Viewbox>

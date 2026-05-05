@@ -2622,10 +2622,13 @@
                             </ikw:SimpleStackPanel>
                         </Border>
                         <Border
+                            x:Name="BoardMainToMoreSpacing"
                             Width="5"
                             Height="1"
                             Background="Transparent" />
-                        <Border Style="{StaticResource BoardToolbarGroupBorderStyle}">
+                        <Border
+                            x:Name="BoardMoreExitContainer"
+                            Style="{StaticResource BoardToolbarGroupBorderStyle}">
                             <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button
                                     Style="{StaticResource BoardToolbarGroupButtonStyle}"
@@ -2657,6 +2660,7 @@
                                     </Border>
                                 </Button>
                                 <Button
+                                    x:Name="BtnBoardExitBlackboard"
                                     Width="55"
                                     Height="55"
                                     Padding="0"

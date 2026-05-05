@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
@@ -98,38 +98,34 @@ namespace Ink_Canvas.Helpers
                     response.EnsureSuccessStatusCode();
 
                     string releasesJson = await response.Content.ReadAsStringAsync();
-                    using (JsonDocument doc = JsonDocument.Parse(releasesJson))
+                    JArray releases = JArray.Parse(releasesJson);
+                    foreach (JToken release in releases)
                     {
-                        foreach (JsonElement release in doc.RootElement.EnumerateArray())
+                        bool isPrerelease = (bool?)release["prerelease"] == true;
+                        bool isDraft = (bool?)release["draft"] == true;
+                        if (isPrerelease || isDraft)
                         {
-                            bool isPrerelease = release.TryGetProperty("prerelease", out JsonElement prereleaseElement) && prereleaseElement.GetBoolean();
-                            bool isDraft = release.TryGetProperty("draft", out JsonElement draftElement) && draftElement.GetBoolean();
-                            if (isPrerelease || isDraft)
-                            {
-                                continue;
-                            }
+                            continue;
+                        }
 
-                            if (release.TryGetProperty("tag_name", out JsonElement tagNameElement))
+                        string rawTag = (string)release["tag_name"];
+                        rawTag = rawTag?.Trim();
+                        if (!string.IsNullOrWhiteSpace(rawTag))
+                        {
+                            string versionString = rawTag.TrimStart('v', 'V');
+                            try
                             {
-                                string rawTag = tagNameElement.GetString()?.Trim();
-                                if (!string.IsNullOrWhiteSpace(rawTag))
+                                Version parsedVersion = new Version(versionString);
+                                return new VersionInfo
                                 {
-                                    string versionString = rawTag.TrimStart('v', 'V');
-                                    try
-                                    {
-                                        Version parsedVersion = new Version(versionString);
-                                        return new VersionInfo
-                                        {
-                                            RawTag = rawTag,
-                                            ParsedVersion = parsedVersion
-                                        };
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        LogHelper.WriteLogToFile($"AutoUpdate | Failed to parse version from tag '{rawTag}': {ex.Message}", LogHelper.LogType.Error);
-                                        continue;
-                                    }
-                                }
+                                    RawTag = rawTag,
+                                    ParsedVersion = parsedVersion
+                                };
+                            }
+                            catch (Exception ex)
+                            {
+                                LogHelper.WriteLogToFile($"AutoUpdate | Failed to parse version from tag '{rawTag}': {ex.Message}", LogHelper.LogType.Error);
+                                continue;
                             }
                         }
                     }
@@ -142,11 +138,11 @@ namespace Ink_Canvas.Helpers
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | Timeout getting version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
-                catch (JsonException ex)
+                catch (Newtonsoft.Json.JsonException ex)
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | JSON parse error getting version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }
-                catch (Exception ex)
+
                 {
                     LogHelper.WriteLogToFile($"AutoUpdate | Error getting remote version from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
                 }

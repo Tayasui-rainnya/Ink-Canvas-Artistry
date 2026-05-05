@@ -32,22 +32,21 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 检查服务器版本是否高于当前本地版本。
         /// </summary>
-        /// <returns>若有更新返回远端版本号；否则返回 <c>null</c>。</returns>
+        /// <returns>若有更新返回远端版本号（原始 tag 格式）；否则返回 <c>null</c>。</returns>
         public static async Task<string> CheckForUpdates()
         {
             try
             {
                 string localVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                string remoteVersion = await GetRemoteVersion(GitHubReleasesApiUrl);
+                var remoteVersionInfo = await GetRemoteVersion(GitHubReleasesApiUrl);
 
-                if (remoteVersion != null)
+                if (remoteVersionInfo.HasValue)
                 {
                     Version local = new Version(localVersion);
-                    Version remote = new Version(remoteVersion.Trim());
-                    if (remote > local)
+                    if (remoteVersionInfo.Value.ParsedVersion > local)
                     {
-                        LogHelper.WriteLogToFile("AutoUpdate | New version Available: " + remoteVersion);
-                        return remoteVersion.Trim();
+                        LogHelper.WriteLogToFile("AutoUpdate | New version Available: " + remoteVersionInfo.Value.RawTag);
+                        return remoteVersionInfo.Value.RawTag;
                     }
                     else
                     {
@@ -74,11 +73,20 @@ namespace Ink_Canvas.Helpers
         }
 
         /// <summary>
+        /// 版本信息结构，包含原始 tag 和解析后的 Version 对象。
+        /// </summary>
+        public struct VersionInfo
+        {
+            public string RawTag { get; set; }
+            public Version ParsedVersion { get; set; }
+        }
+
+        /// <summary>
         /// （临时方案）从 GitHub Releases API 获取最新的非预发布版本号。
         /// </summary>
         /// <param name="fileUrl">GitHub Releases API URL。</param>
-        /// <returns>解析后的版本字符串（去除可选的 <c>v</c> 前缀）；失败时返回 <c>null</c>。</returns>
-        public static async Task<string> GetRemoteVersion(string fileUrl)
+        /// <returns>包含原始 tag 和解析后的 Version 的结构体；失败时返回 <c>null</c>。</returns>
+        public static async Task<VersionInfo?> GetRemoteVersion(string fileUrl)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -103,10 +111,24 @@ namespace Ink_Canvas.Helpers
 
                             if (release.TryGetProperty("tag_name", out JsonElement tagNameElement))
                             {
-                                string tagName = tagNameElement.GetString()?.Trim();
-                                if (!string.IsNullOrWhiteSpace(tagName))
+                                string rawTag = tagNameElement.GetString()?.Trim();
+                                if (!string.IsNullOrWhiteSpace(rawTag))
                                 {
-                                    return tagName.TrimStart('v', 'V');
+                                    string versionString = rawTag.TrimStart('v', 'V');
+                                    try
+                                    {
+                                        Version parsedVersion = new Version(versionString);
+                                        return new VersionInfo
+                                        {
+                                            RawTag = rawTag,
+                                            ParsedVersion = parsedVersion
+                                        };
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LogHelper.WriteLogToFile($"AutoUpdate | Failed to parse version from tag '{rawTag}': {ex.Message}", LogHelper.LogType.Error);
+                                        continue;
+                                    }
                                 }
                             }
                         }
@@ -133,6 +155,41 @@ namespace Ink_Canvas.Helpers
         }
 
         /// <summary>
+        /// 从 URL 获取纯文本内容（用于获取 SHA256 文件等）。
+        /// </summary>
+        /// <param name="fileUrl">文件的 URL。</param>
+        /// <returns>文件的纯文本内容；失败时返回 <c>null</c>。</returns>
+        private static async Task<string> GetPlainTextFromUrl(string fileUrl)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    client.Timeout = TimeSpan.FromSeconds(15);
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("InkCanvasArtistry-AutoUpdater/1.0");
+                    HttpResponseMessage response = await client.GetAsync(fileUrl);
+                    response.EnsureSuccessStatusCode();
+
+                    string content = await response.Content.ReadAsStringAsync();
+                    return content;
+                }
+                catch (HttpRequestException ex)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | HTTP request error getting plain text from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | Timeout getting plain text from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                }
+                catch (Exception ex)
+                {
+                    LogHelper.WriteLogToFile($"AutoUpdate | Error getting plain text from {fileUrl}: {ex.Message}", LogHelper.LogType.Error);
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 本地更新缓存目录路径。
         /// </summary>
         private static string updatesFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Ink Canvas Artistry", "AutoUpdate");
@@ -145,14 +202,15 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 下载指定版本安装包，并写入下载状态标记文件。
         /// </summary>
-        /// <param name="version">目标版本号。</param>
+        /// <param name="version">目标版本号（原始 tag 格式，如 "v1.2.3" 或 "1.2.3"）。</param>
         /// <returns>下载成功返回 <c>true</c>，否则返回 <c>false</c>。</returns>
         public static async Task<bool> DownloadSetupFileAndSaveStatus(string version)
         {
             try
             {
-                string statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{version}Status.txt");
-                string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
+                string versionWithoutPrefix = version.TrimStart('v', 'V');
+                string statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{versionWithoutPrefix}Status.txt");
+                string setupFileName = $"Ink.Canvas.Artistry.V{versionWithoutPrefix}.Setup.exe";
                 string destinationPath = Path.Combine(updatesFolderPath, setupFileName);
 
                 if (File.Exists(statusFilePath)
@@ -165,8 +223,8 @@ namespace Ink_Canvas.Helpers
 
                 string[] downloadUrls =
                 {
-                    $"{UpdateServerBaseUrl}/download/v{version}/{setupFileName}",
-                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}"
+                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}",
+                    $"{UpdateServerBaseUrl}/download/v{versionWithoutPrefix}/{setupFileName}"
                 };
 
                 SaveDownloadStatus(statusFilePath, false);
@@ -198,11 +256,12 @@ namespace Ink_Canvas.Helpers
             catch (Exception ex)
             {
                 LogHelper.WriteLogToFile($"AutoUpdate | Error downloading setup file for version {version}: {ex.Message}", LogHelper.LogType.Error);
-                string statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{version}Status.txt");
+                string versionWithoutPrefix = version.TrimStart('v', 'V');
+                string statusFilePath = Path.Combine(updatesFolderPath, $"DownloadV{versionWithoutPrefix}Status.txt");
                 SaveDownloadStatus(statusFilePath, false);
                 try
                 {
-                    string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
+                    string setupFileName = $"Ink.Canvas.Artistry.V{versionWithoutPrefix}.Setup.exe";
                     string destinationPath = Path.Combine(updatesFolderPath, setupFileName);
                     if (File.Exists(destinationPath))
                     {
@@ -304,13 +363,14 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 启动指定版本安装程序并退出当前应用。
         /// </summary>
-        /// <param name="version">待安装版本号。</param>
+        /// <param name="version">待安装版本号（原始 tag 格式，如 "v1.2.3" 或 "1.2.3"）。</param>
         /// <param name="isInSilence">是否使用更静默的安装参数。</param>
         public static void InstallNewVersionApp(string version, bool isInSilence)
         {
             try
             {
-                string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
+                string versionWithoutPrefix = version.TrimStart('v', 'V');
+                string setupFileName = $"Ink.Canvas.Artistry.V{versionWithoutPrefix}.Setup.exe";
                 string setupFilePath = Path.Combine(updatesFolderPath, setupFileName);
 
                 if (!File.Exists(setupFilePath))
@@ -339,19 +399,36 @@ namespace Ink_Canvas.Helpers
         /// <summary>
         /// 校验安装包完整性：对比本地文件 SHA-256 与服务端发布值。
         /// </summary>
-        /// <param name="version">待安装版本号。</param>
+        /// <param name="version">待安装版本号（原始 tag 格式，如 "v1.2.3" 或 "1.2.3"）。</param>
         /// <param name="setupFilePath">本地安装包路径。</param>
         /// <returns>校验通过返回 <c>true</c>，否则返回 <c>false</c>。</returns>
         private static async Task<bool> VerifyInstallerIntegrity(string version, string setupFilePath)
         {
             try
             {
-                string setupFileName = $"Ink.Canvas.Artistry.V{version}.Setup.exe";
-                string shaFileUrl = $"{UpdateServerBaseUrl}/download/{setupFileName}.sha256";
-                string expectedHash = await GetRemoteVersion(shaFileUrl);
+                string versionWithoutPrefix = version.TrimStart('v', 'V');
+                string setupFileName = $"Ink.Canvas.Artistry.V{versionWithoutPrefix}.Setup.exe";
+
+                string[] shaFileUrls =
+                {
+                    $"{UpdateServerBaseUrl}/download/{version}/{setupFileName}.sha256",
+                    $"{UpdateServerBaseUrl}/download/v{versionWithoutPrefix}/{setupFileName}.sha256"
+                };
+
+                string expectedHash = null;
+                foreach (string shaFileUrl in shaFileUrls)
+                {
+                    expectedHash = await GetPlainTextFromUrl(shaFileUrl);
+                    if (!string.IsNullOrWhiteSpace(expectedHash))
+                    {
+                        LogHelper.WriteLogToFile($"AutoUpdate | Retrieved hash from: {shaFileUrl}");
+                        break;
+                    }
+                }
+
                 if (string.IsNullOrWhiteSpace(expectedHash))
                 {
-                    LogHelper.WriteLogToFile($"AutoUpdate | Missing remote hash file: {shaFileUrl}", LogHelper.LogType.Error);
+                    LogHelper.WriteLogToFile($"AutoUpdate | Missing remote hash file for version {version}", LogHelper.LogType.Error);
                     return false;
                 }
 

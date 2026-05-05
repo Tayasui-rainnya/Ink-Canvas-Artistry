@@ -85,13 +85,13 @@
                 <Setter Property="Height" Value="26" />
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="FontFamily" Value="{StaticResource FluentIconFontFamily}" />
-                <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
+                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
             </Style>
             <Style x:Key="BoardToolbarTextStyle" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Bottom" />
-                <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
+                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
             </Style>
             <RoutedUICommand x:Key="HotKey_Command_Undo" Text=" " />
             <RoutedUICommand x:Key="HotKey_Command_Redo" Text=" " />
@@ -2642,18 +2642,12 @@
                                         MouseDown="Border_MouseDown">
                                         <Grid Margin="5">
                                             <ui:FontIcon
-                                                Width="26"
-                                                Height="26"
+                                                Style="{StaticResource BoardToolbarIconStyle}"
                                                 VerticalAlignment="Top"
-                                                FontFamily="{StaticResource FluentIconFontFamily}"
                                                 FontSize="24"
-                                                Foreground="{DynamicResource BoardBarForeground}"
                                                 Glyph="&#xe8a9;" />
                                             <TextBlock
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Bottom"
-                                                FontSize="12"
-                                                Foreground="{DynamicResource BoardBarForeground}"
+                                                Style="{StaticResource BoardToolbarTextStyle}"
                                                 Text="更多" />
                                         </Grid>
                                     </Border>
@@ -2674,18 +2668,12 @@
                                         BorderThickness="0">
                                         <Grid Margin="5">
                                             <ui:FontIcon
-                                                Width="26"
-                                                Height="26"
+                                                Style="{StaticResource BoardToolbarIconStyle}"
                                                 VerticalAlignment="Top"
-                                                FontFamily="{StaticResource FluentIconFontFamily}"
                                                 FontSize="24"
-                                                Foreground="{DynamicResource BoardBarForeground}"
                                                 Glyph="&#xe944;" />
                                             <TextBlock
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Bottom"
-                                                FontSize="12"
-                                                Foreground="{DynamicResource BoardBarForeground}"
+                                                Style="{StaticResource BoardToolbarTextStyle}"
                                                 Text="退出" />
                                         </Grid>
                                     </Border>

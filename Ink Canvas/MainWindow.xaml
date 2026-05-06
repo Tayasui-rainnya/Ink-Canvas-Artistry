@@ -1164,6 +1164,7 @@
                     Height="55"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
+                    Opacity="0.75"
                     Visibility="Visible">
                     <Grid.Resources>
                         <!--  定义 SolidColorBrush 资源  -->

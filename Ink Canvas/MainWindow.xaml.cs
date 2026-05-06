@@ -191,6 +191,7 @@ namespace Ink_Canvas
             loadPenCanvas();
             //加载设置
             LoadSettings(true);
+            UpdateBoardToolbarGroupVisibility();
             if (Environment.Is64BitProcess)
             {
                 GroupBoxInkRecognition.Visibility = Visibility.Collapsed;

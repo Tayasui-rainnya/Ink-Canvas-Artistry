@@ -36,6 +36,67 @@
                 <ResourceDictionary Source="/Resources/DrawShapeImageDictionary.xaml" />
                 <ResourceDictionary Source="/Resources/IconImageDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="BoardToolbarGroupBorderStyle" TargetType="Border">
+                <Setter Property="Height" Value="55" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BoardBarBorderBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BoardBarBackground}" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style x:Key="BoardToolbarGroupPanelStyle" TargetType="ikw:SimpleStackPanel">
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style x:Key="BoardToolbarIconTextContentStyle" TargetType="Grid">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            <Style x:Key="BoardToolbarGroupButtonStyle" TargetType="Button">
+                <Setter Property="MinWidth" Value="55" />
+                <Setter Property="Width" Value="60" />
+                <Setter Property="Height" Value="55" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Background" Value="{StaticResource {x:Static ui:ThemeKeys.ButtonBackgroundKey}}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="{DynamicResource BoardBarForeground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Border
+                                    x:Name="InteractionOverlay"
+                                    Background="Transparent"
+                                    CornerRadius="4"
+                                    IsHitTestVisible="False" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="InteractionOverlay" Property="Background" Value="{StaticResource {x:Static ui:ThemeKeys.ButtonBackgroundPointerOverKey}}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="InteractionOverlay" Property="Background" Value="{StaticResource {x:Static ui:ThemeKeys.ButtonBackgroundPressedKey}}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="BoardToolbarIconStyle" TargetType="ui:FontIcon">
+                <Setter Property="Width" Value="26" />
+                <Setter Property="Height" Value="26" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontFamily" Value="{StaticResource FluentIconFontFamily}" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+            </Style>
+            <Style x:Key="BoardToolbarTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+            </Style>
             <RoutedUICommand x:Key="HotKey_Command_Undo" Text=" " />
             <RoutedUICommand x:Key="HotKey_Command_Redo" Text=" " />
             <RoutedUICommand x:Key="HotKey_ChangeToSelect" Text=" " />
@@ -1085,38 +1146,6 @@
                                 </Grid>
                             </Border>
                         </Button>
-                        <Button
-                            Width="55"
-                            Height="55"
-                            Margin="5,0,0,0"
-                            Padding="0"
-                            BorderThickness="0"
-                            Click="ImageBlackboard_Click">
-                            <Border
-                                Width="55"
-                                Height="55"
-                                Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="5">
-                                <Grid Margin="5">
-                                    <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
-                                        VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
-                                        FontSize="24"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Glyph="&#xe944;" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Text="退出" />
-                                </Grid>
-                            </Border>
-                        </Button>
                     </ikw:SimpleStackPanel>
                 </Grid>
             </Viewbox>
@@ -1135,6 +1164,7 @@
                     Height="55"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
+                    Opacity="0.75"
                     Visibility="Visible">
                     <Grid.Resources>
                         <!--  定义 SolidColorBrush 资源  -->
@@ -1170,13 +1200,11 @@
                     <ikw:SimpleStackPanel Orientation="Horizontal">
                         <Border
                             x:Name="BoardGestureCanvasContainer"
-                            Background="{DynamicResource BoardBarBackground}"
-                            BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="5">
-                            <ikw:SimpleStackPanel Orientation="Horizontal">
+                            Style="{StaticResource BoardToolbarGroupBorderStyle}">
+                            <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button
                             x:Name="BtnBoardGesture"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Width="60"
                             Height="55"
                             Padding="0"
@@ -1190,21 +1218,15 @@
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
-                                <Grid Margin="5">
+                                <Grid Style="{StaticResource BoardToolbarIconTextContentStyle}">
                                     <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
+                                        Style="{StaticResource BoardToolbarIconStyle}"
                                         VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
                                         FontSize="28"
-                                        Foreground="{DynamicResource BoardBarForeground}"
                                         Glyph="&#xf271;"
                                         Opacity="{Binding ElementName=EnableTwoFingerGestureBtn, Path=Opacity}" />
                                     <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BoardBarForeground}"
+                                        Style="{StaticResource BoardToolbarTextStyle}"
                                         Text="手势" />
                                 </Grid>
                             </Border>
@@ -1369,11 +1391,7 @@
                         </Grid>
                                 <Button
                             x:Name="BtnBoardCanvas"
-                            Width="60"
-                            Height="55"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderThickness="0"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Click="BoardChangeBackgroundColorBtn_Click">
                             <Border
                                 x:Name="BoardCanvasBorder"
@@ -1382,20 +1400,17 @@
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="0">
-                                <Grid Margin="5">
+                                <Grid Style="{StaticResource BoardToolbarIconTextContentStyle}">
                                     <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
+                                        Style="{StaticResource BoardToolbarIconStyle}"
                                         VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
-                                        FontSize="22"
-                                        Foreground="{DynamicResource BoardBarForeground}"
                                         Glyph="&#xef1f;" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Bottom"
                                         FontSize="12"
                                         Foreground="{DynamicResource BoardBarForeground}"
+                                        Style="{StaticResource BoardToolbarTextStyle}"
                                         Text="画布" />
                                 </Grid>
                             </Border>
@@ -1409,13 +1424,11 @@
                             Background="Transparent" />
                         <Border
                             x:Name="BoardMainButtonsContainer"
-                            Background="{DynamicResource BoardBarBackground}"
-                            BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="5">
-                            <ikw:SimpleStackPanel Orientation="Horizontal">
+                            Style="{StaticResource BoardToolbarGroupBorderStyle}">
+                            <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button
                             x:Name="BtnBoardSelect"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Width="60"
                             Height="55"
                             Padding="0"
@@ -1464,11 +1477,7 @@
                                 </Button>
                                 <Button
                             x:Name="BtnBoardPen"
-                            Width="60"
-                            Height="55"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderThickness="0"
+                            Style="{StaticResource BoardToolbarGroupButtonStyle}"
                             Click="PenIcon_Click">
                             <Border
                                 x:Name="BoardPen"
@@ -2617,40 +2626,64 @@
                                 </Button>
                             </ikw:SimpleStackPanel>
                         </Border>
-                        <Button
-                            Width="60"
-                            Height="55"
-                            Margin="5,0,0,0"
-                            Padding="0"
-                            BorderThickness="0"
-                            Click="SymbolIconTools_Click">
-                            <Border
-                                Width="60"
-                                Height="55"
-                                Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
-                                CornerRadius="5,0,0,5"
-                                MouseDown="Border_MouseDown"
-                                MouseUp="SymbolIconTools_Click">
-                                <Grid Margin="5">
-                                    <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
-                                        VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
-                                        FontSize="24"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Glyph="&#xe8a9;" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Text="更多" />
-                                </Grid>
-                            </Border>
-                        </Button>
+                        <Border
+                            x:Name="BoardMainToMoreSpacing"
+                            Width="5"
+                            Height="1"
+                            Background="Transparent" />
+                        <Border
+                            x:Name="BoardMoreExitContainer"
+                            Style="{StaticResource BoardToolbarGroupBorderStyle}">
+                            <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
+                                <Button
+                                    Style="{StaticResource BoardToolbarGroupButtonStyle}"
+                                    Click="SymbolIconTools_Click">
+                                    <Border
+                                        Width="60"
+                                        Height="55"
+                                        Background="{DynamicResource BoardBarBackground}"
+                                        BorderBrush="{DynamicResource BoardBarBorderBrush}"
+                                        BorderThickness="0"
+                                        MouseDown="Border_MouseDown">
+                                        <Grid Margin="5">
+                                            <ui:FontIcon
+                                                Style="{StaticResource BoardToolbarIconStyle}"
+                                                VerticalAlignment="Top"
+                                                FontSize="24"
+                                                Glyph="&#xe8a9;" />
+                                            <TextBlock
+                                                Style="{StaticResource BoardToolbarTextStyle}"
+                                                Text="更多" />
+                                        </Grid>
+                                    </Border>
+                                </Button>
+                                <Button
+                                    x:Name="BtnBoardExitBlackboard"
+                                    Style="{StaticResource BoardToolbarGroupButtonStyle}"
+                                    Width="55"
+                                    Height="55"
+                                    Padding="0"
+                                    Click="ImageBlackboard_Click">
+                                    <Border
+                                        Width="55"
+                                        Height="55"
+                                        Background="{DynamicResource BoardBarBackground}"
+                                        BorderBrush="{DynamicResource BoardBarBorderBrush}"
+                                        BorderThickness="0">
+                                        <Grid Margin="5">
+                                            <ui:FontIcon
+                                                Style="{StaticResource BoardToolbarIconStyle}"
+                                                VerticalAlignment="Top"
+                                                FontSize="24"
+                                                Glyph="&#xe944;" />
+                                            <TextBlock
+                                                Style="{StaticResource BoardToolbarTextStyle}"
+                                                Text="退出" />
+                                        </Grid>
+                                    </Border>
+                                </Button>
+                            </ikw:SimpleStackPanel>
+                        </Border>
                         <Border>
                             <Grid Width="0" Margin="0,0,0,5">
                                 <Border
@@ -3041,37 +3074,6 @@
                                 </Border>
                             </Grid>
                         </Border>
-                        <Button
-                            Width="60"
-                            Height="55"
-                            Padding="0"
-                            BorderThickness="0"
-                            Click="ImageBlackboard_Click">
-                            <Border
-                                Width="60"
-                                Height="55"
-                                Background="{DynamicResource BoardBarBackground}"
-                                BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
-                                CornerRadius="0,5,5,0">
-                                <Grid Margin="5">
-                                    <ui:FontIcon
-                                        Width="26"
-                                        Height="26"
-                                        VerticalAlignment="Top"
-                                        FontFamily="{StaticResource FluentIconFontFamily}"
-                                        FontSize="24"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Glyph="&#xe944;" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BoardBarForeground}"
-                                        Text="退出" />
-                                </Grid>
-                            </Border>
-                        </Button>
                     </ikw:SimpleStackPanel>
                 </Grid>
             </Viewbox>

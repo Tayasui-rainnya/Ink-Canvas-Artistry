@@ -2659,11 +2659,10 @@
                                 </Button>
                                 <Button
                                     x:Name="BtnBoardExitBlackboard"
+                                    Style="{StaticResource BoardToolbarGroupButtonStyle}"
                                     Width="55"
                                     Height="55"
                                     Padding="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
                                     Click="ImageBlackboard_Click">
                                     <Border
                                         Width="55"

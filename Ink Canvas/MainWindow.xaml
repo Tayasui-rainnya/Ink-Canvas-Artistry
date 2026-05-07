@@ -2664,6 +2664,7 @@
                                     Padding="0"
                                     Background="Transparent"
                                     BorderThickness="0"
+                                    Foreground="{DynamicResource BoardBarForeground}"
                                     Click="ImageBlackboard_Click">
                                     <Border
                                         Width="55"

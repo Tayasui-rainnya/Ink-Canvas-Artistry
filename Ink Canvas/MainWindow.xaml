@@ -42,7 +42,7 @@
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="BorderBrush" Value="{DynamicResource BoardBarBorderBrush}" />
                 <Setter Property="Background" Value="{DynamicResource BoardBarBackground}" />
-                <Setter Property="Padding" Value="1" />
+                <Setter Property="Padding" Value="0" />
             </Style>
             <Style x:Key="BoardToolbarGroupPanelStyle" TargetType="ikw:SimpleStackPanel">
                 <Setter Property="Orientation" Value="Horizontal" />
@@ -1052,7 +1052,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
+                                BorderThickness="2,2,0.25,2"
                                 CornerRadius="5,0,0,5">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -1077,7 +1077,7 @@
                             Height="55"
                             Background="{DynamicResource BoardBarBackground}"
                             BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="0,1,0.25,1">
+                            BorderThickness="0,2,0.25,2">
                             <Grid Margin="0,5">
                                 <ikw:SimpleStackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock
@@ -1111,7 +1111,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
+                                BorderThickness="0,2,2,2"
                                 CornerRadius="0,5,5,0">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -2514,7 +2514,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0">
+                                BorderThickness="2">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2554,7 +2554,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0">
+                                BorderThickness="2">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2596,7 +2596,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0">
+                                BorderThickness="2">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2664,6 +2664,7 @@
                                     Padding="0"
                                     Background="Transparent"
                                     BorderThickness="0"
+                                    Foreground="{DynamicResource BoardBarForeground}"
                                     Click="ImageBlackboard_Click">
                                     <Border
                                         Width="55"
@@ -3140,7 +3141,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1"
+                                BorderThickness="2"
                                 CornerRadius="3">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -3178,7 +3179,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
+                                BorderThickness="2,2,0.25,2"
                                 CornerRadius="3,0,0,3">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -3203,7 +3204,7 @@
                             Height="55"
                             Background="{DynamicResource BoardBarBackground}"
                             BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="0,1,0.25,1">
+                            BorderThickness="0,2,0.25,2">
                             <Grid Margin="0,5">
                                 <ikw:SimpleStackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock
@@ -3235,7 +3236,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
+                                BorderThickness="0,2,2,2"
                                 CornerRadius="0,5,5,0">
                                 <Grid Margin="5">
                                     <ui:FontIcon

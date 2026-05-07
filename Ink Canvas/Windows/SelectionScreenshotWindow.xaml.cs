@@ -149,14 +149,16 @@ namespace Ink_Canvas.Windows
         {
             if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id) return;
 
-            // 触摸捕获被系统或其他控件转移时，及时解锁活动触点
-            _isSelecting = false;
-            _activeTouchDevice = null;
+            // 触摸捕获被系统或其他控件转移时，及时解锁活动触点并清理残留选区视觉
+            ClearActiveTouchCapture();
+            ClearSelectionVisuals();
             e.Handled = true;
         }
 
         private void ClearActiveTouchCapture()
         {
+            _isSelecting = false;
+
             if (_activeTouchDevice == null) return;
 
             if (RootGrid.AreAnyTouchesCaptured)
@@ -164,6 +166,16 @@ namespace Ink_Canvas.Windows
                 RootGrid.ReleaseTouchCapture(_activeTouchDevice);
             }
             _activeTouchDevice = null;
+        }
+
+        private void ClearSelectionVisuals()
+        {
+            SelectionRect.Visibility = Visibility.Collapsed;
+            SelectionPath.Visibility = Visibility.Collapsed;
+            SelectionRect.Width = 0;
+            SelectionRect.Height = 0;
+            SelectionPath.Data = null;
+            _freehandPoints.Clear();
         }
 
         private bool IsTouchOnToolbar(Point rootGridPoint)

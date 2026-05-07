@@ -3141,7 +3141,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1"
+                                BorderThickness="2"
                                 CornerRadius="3">
                                 <Grid Margin="5">
                                     <ui:FontIcon

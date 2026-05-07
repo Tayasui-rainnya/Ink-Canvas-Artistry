@@ -12,13 +12,13 @@
         Topmost="True"
         ShowInTaskbar="False"
         WindowState="Maximized">
-    <Grid x:Name="RootGrid" Background="#66000000" MouseLeftButtonDown="RootGrid_MouseLeftButtonDown" MouseMove="RootGrid_MouseMove" MouseLeftButtonUp="RootGrid_MouseLeftButtonUp" TouchDown="RootGrid_TouchDown" TouchMove="RootGrid_TouchMove" TouchUp="RootGrid_TouchUp">
+    <Grid x:Name="RootGrid" Background="#66000000" MouseLeftButtonDown="RootGrid_MouseLeftButtonDown" MouseMove="RootGrid_MouseMove" MouseLeftButtonUp="RootGrid_MouseLeftButtonUp" TouchDown="RootGrid_TouchDown" TouchMove="RootGrid_TouchMove" TouchUp="RootGrid_TouchUp" LostTouchCapture="RootGrid_LostTouchCapture">
         <Canvas x:Name="SelectionCanvas">
             <Path x:Name="SelectionPath" Stroke="#FF2D7DFF" StrokeThickness="2" Fill="#3D2D7DFF" Visibility="Collapsed" />
             <Rectangle x:Name="SelectionRect" Stroke="#FF2D7DFF" StrokeThickness="2" Fill="#3D2D7DFF" Visibility="Collapsed" />
         </Canvas>
 
-        <Border HorizontalAlignment="Center"
+        <Border x:Name="HintBorder" HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Margin="0,28,0,0"
                 Background="#88000000"
@@ -31,7 +31,7 @@
                        Opacity="0.95" />
         </Border>
 
-        <Border HorizontalAlignment="Center"
+        <Border x:Name="ToolbarBorder" HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Margin="0,0,0,24"
                 Background="#B3202020"

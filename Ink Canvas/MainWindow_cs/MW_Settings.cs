@@ -226,10 +226,6 @@ namespace Ink_Canvas
         {
             BtnBoardGesture.Visibility = Settings.Appearance.IsShowBoardGestureButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardCanvas.Visibility = Settings.Appearance.IsShowBoardCanvasButton ? Visibility.Visible : Visibility.Collapsed;
-            BoardGestureCanvasContainer.Visibility =
-                BtnBoardGesture.Visibility == Visibility.Visible || BtnBoardCanvas.Visibility == Visibility.Visible
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
             BtnBoardSelect.Visibility = Settings.Appearance.IsShowBoardSelectButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardAreaEraser.Visibility = Settings.Appearance.IsShowBoardAreaEraserButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardStrokeEraser.Visibility = Settings.Appearance.IsShowBoardStrokeEraserButton ? Visibility.Visible : Visibility.Collapsed;
@@ -237,12 +233,6 @@ namespace Ink_Canvas
             BtnBoardInsertImage.Visibility = Settings.Appearance.IsShowBoardInsertImageButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardUndo.Visibility = Settings.Appearance.IsShowBoardUndoButton ? Visibility.Visible : Visibility.Collapsed;
             BtnBoardRedo.Visibility = Settings.Appearance.IsShowBoardRedoButton ? Visibility.Visible : Visibility.Collapsed;
-            BoardMainButtonsContainer.Visibility = Visibility.Visible;
-
-            BoardGestureCanvasSpacing.Visibility =
-                BoardGestureCanvasContainer.Visibility == Visibility.Visible
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
 
             UpdateBoardButtonGroupSeparators(
                 true,
@@ -261,6 +251,58 @@ namespace Ink_Canvas
                 (BtnBoardUndo, BoardUndo),
                 (BtnBoardRedo, BoardRedo)
             );
+
+            UpdateBoardToolbarGroupVisibility();
+        }
+
+        /// <summary>
+        /// 按分组内可见按钮数量更新白板中间工具栏三组容器可见性。
+        /// </summary>
+        private void UpdateBoardToolbarGroupVisibility()
+        {
+            BoardGestureCanvasContainer.Visibility = CountVisibleButtons(BtnBoardGesture, BtnBoardCanvas) == 0
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+
+            BoardMainButtonsContainer.Visibility = CountVisibleButtons(
+                BtnBoardSelect,
+                BtnBoardPen,
+                BtnBoardAreaEraser,
+                BtnBoardStrokeEraser,
+                BtnBoardShape,
+                BtnBoardInsertImage,
+                BtnBoardUndo,
+                BtnBoardRedo
+            ) == 0
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+
+            BoardMoreExitContainer.Visibility = CountVisibleButtons(BtnBoardExitBlackboard) == 0
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+
+            BoardGestureCanvasSpacing.Visibility = BoardGestureCanvasContainer.Visibility == Visibility.Visible
+                && BoardMainButtonsContainer.Visibility == Visibility.Visible
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            BoardMainToMoreSpacing.Visibility = BoardMainButtonsContainer.Visibility == Visibility.Visible
+                && BoardMoreExitContainer.Visibility == Visibility.Visible
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        private static int CountVisibleButtons(params UIElement[] elements)
+        {
+            int count = 0;
+            foreach (var element in elements)
+            {
+                if (element != null && element.Visibility == Visibility.Visible)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
 
         /// <summary>

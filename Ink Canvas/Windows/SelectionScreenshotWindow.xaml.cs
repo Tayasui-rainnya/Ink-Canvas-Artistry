@@ -33,6 +33,7 @@ namespace Ink_Canvas.Windows
         private bool _isSelecting;
         private Point _startPoint;
         private readonly List<Point> _freehandPoints = new List<Point>();
+        private TouchDevice _activeTouchDevice;
 
         public SelectionScreenshotAction ActionResult { get; private set; } = SelectionScreenshotAction.Cancel;
         public Bitmap CapturedBitmap { get; private set; }
@@ -51,11 +52,19 @@ namespace Ink_Canvas.Windows
         }
 
 
+        protected override void OnDeactivated(EventArgs e)
+        {
+            // 窗口失焦时兜底清理触摸捕获，避免系统手势打断后触摸锁死
+            ClearActiveTouchCapture();
+            base.OnDeactivated(e);
+        }
+
         /// <summary>
         /// 窗口关闭时兜底恢复“隐藏墨迹”预览状态并释放资源。
         /// </summary>
         protected override void OnClosed(EventArgs e)
         {
+            ClearActiveTouchCapture();
             _hideInkPreviewChanged?.Invoke(false);
             _fullScreenshot?.Dispose();
             base.OnClosed(e);
@@ -63,41 +72,120 @@ namespace Ink_Canvas.Windows
 
         private void RootGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (IsMouseEventFromTouch(e)) return;
+
             BeginSelection(e.GetPosition(RootGrid));
             RootGrid.CaptureMouse();
         }
 
         private void RootGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isSelecting) return;
+            if (IsMouseEventFromTouch(e) || !_isSelecting) return;
             UpdateSelection(e.GetPosition(RootGrid));
         }
 
         private void RootGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (IsMouseEventFromTouch(e)) return;
+
             EndSelection();
             RootGrid.ReleaseMouseCapture();
         }
 
+
+        private static bool IsMouseEventFromTouch(MouseEventArgs e)
+        {
+            // 触摸会在 WPF 中提升为鼠标事件，过滤掉这类事件可避免同一次拖拽被重复处理导致闪烁
+            return e.StylusDevice?.TabletDevice?.Type == TabletDeviceType.Touch;
+        }
+
         private void RootGrid_TouchDown(object sender, TouchEventArgs e)
         {
-            BeginSelection(e.GetTouchPoint(RootGrid).Position);
+            // 仅跟踪第一个触点，避免多指同时触发导致选区状态错乱
+            if (_activeTouchDevice != null)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            var touchPoint = e.GetTouchPoint(RootGrid).Position;
+            // 工具栏区域交给按钮自己处理，避免触摸被选区逻辑抢占后按钮无法点击
+            if (IsTouchOnToolbar(touchPoint))
+            {
+                return;
+            }
+
+            // 先尝试捕获触点，捕获失败时不进入选择态，避免触摸状态卡死
+            var touchDevice = e.TouchDevice;
+            bool captured = RootGrid.CaptureTouch(touchDevice);
+            if (!captured)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            _activeTouchDevice = touchDevice;
+            BeginSelection(touchPoint);
             e.Handled = true;
         }
 
         private void RootGrid_TouchMove(object sender, TouchEventArgs e)
         {
-            if (!_isSelecting) return;
+            if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id || !_isSelecting) return;
             UpdateSelection(e.GetTouchPoint(RootGrid).Position);
             e.Handled = true;
         }
 
         private void RootGrid_TouchUp(object sender, TouchEventArgs e)
         {
+            if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id) return;
+
             EndSelection();
+            ClearActiveTouchCapture();
             e.Handled = true;
         }
 
+        private void RootGrid_LostTouchCapture(object sender, TouchEventArgs e)
+        {
+            if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id) return;
+
+            // 触摸捕获被系统或其他控件转移时，及时解锁活动触点并清理残留选区视觉
+            ClearActiveTouchCapture();
+            ClearSelectionVisuals();
+            e.Handled = true;
+        }
+
+        private void ClearActiveTouchCapture()
+        {
+            _isSelecting = false;
+
+            if (_activeTouchDevice == null) return;
+
+            if (RootGrid.AreAnyTouchesCaptured)
+            {
+                RootGrid.ReleaseTouchCapture(_activeTouchDevice);
+            }
+            _activeTouchDevice = null;
+        }
+
+        private void ClearSelectionVisuals()
+        {
+            SelectionRect.Visibility = Visibility.Collapsed;
+            SelectionPath.Visibility = Visibility.Collapsed;
+            SelectionRect.Width = 0;
+            SelectionRect.Height = 0;
+            SelectionPath.Data = null;
+            _freehandPoints.Clear();
+        }
+
+        private bool IsTouchOnToolbar(Point rootGridPoint)
+        {
+            if (ToolbarBorder == null || !ToolbarBorder.IsVisible) return false;
+
+            Point toolbarTopLeft = ToolbarBorder.TranslatePoint(new Point(0, 0), RootGrid);
+            var rect = new Rect(toolbarTopLeft, new System.Windows.Size(ToolbarBorder.ActualWidth, ToolbarBorder.ActualHeight));
+            return rect.Contains(rootGridPoint);
+        }
         private void BeginSelection(Point pos)
         {
             _isSelecting = true;

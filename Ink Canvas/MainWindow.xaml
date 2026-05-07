@@ -1052,7 +1052,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
+                                BorderThickness="2,2,0.25,2"
                                 CornerRadius="5,0,0,5">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -1111,7 +1111,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
+                                BorderThickness="0,2,2,2"
                                 CornerRadius="0,5,5,0">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -2643,7 +2643,7 @@
                                         Height="55"
                                         Background="{DynamicResource BoardBarBackground}"
                                         BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                        BorderThickness="2"
+                                        BorderThickness="0"
                                         MouseDown="Border_MouseDown">
                                         <Grid Margin="5">
                                             <ui:FontIcon
@@ -2671,7 +2671,7 @@
                                         Height="55"
                                         Background="{DynamicResource BoardBarBackground}"
                                         BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                        BorderThickness="2">
+                                        BorderThickness="0">
                                         <Grid Margin="5">
                                             <ui:FontIcon
                                                 Style="{StaticResource BoardToolbarIconStyle}"
@@ -3179,7 +3179,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="1,1,0.25,1"
+                                BorderThickness="2,2,0.25,2"
                                 CornerRadius="3,0,0,3">
                                 <Grid Margin="5">
                                     <ui:FontIcon
@@ -3236,7 +3236,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0,1,1,1"
+                                BorderThickness="0,2,2,2"
                                 CornerRadius="0,5,5,0">
                                 <Grid Margin="5">
                                     <ui:FontIcon

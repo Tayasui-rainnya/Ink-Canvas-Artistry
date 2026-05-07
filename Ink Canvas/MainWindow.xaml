@@ -42,7 +42,7 @@
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="BorderBrush" Value="{DynamicResource BoardBarBorderBrush}" />
                 <Setter Property="Background" Value="{DynamicResource BoardBarBackground}" />
-                <Setter Property="Padding" Value="1" />
+                <Setter Property="Padding" Value="0" />
             </Style>
             <Style x:Key="BoardToolbarGroupPanelStyle" TargetType="ikw:SimpleStackPanel">
                 <Setter Property="Orientation" Value="Horizontal" />
@@ -2514,7 +2514,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0">
+                                BorderThickness="2">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2554,7 +2554,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0">
+                                BorderThickness="2">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2596,7 +2596,7 @@
                                 Height="55"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                BorderThickness="0">
+                                BorderThickness="2">
                                 <Grid Margin="5">
                                     <ikw:SimpleStackPanel
                                         Width="28"
@@ -2643,7 +2643,7 @@
                                         Height="55"
                                         Background="{DynamicResource BoardBarBackground}"
                                         BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                        BorderThickness="0"
+                                        BorderThickness="2"
                                         MouseDown="Border_MouseDown">
                                         <Grid Margin="5">
                                             <ui:FontIcon
@@ -2671,7 +2671,7 @@
                                         Height="55"
                                         Background="{DynamicResource BoardBarBackground}"
                                         BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                                        BorderThickness="0">
+                                        BorderThickness="2">
                                         <Grid Margin="5">
                                             <ui:FontIcon
                                                 Style="{StaticResource BoardToolbarIconStyle}"

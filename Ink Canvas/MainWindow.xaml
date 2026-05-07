@@ -1077,7 +1077,7 @@
                             Height="55"
                             Background="{DynamicResource BoardBarBackground}"
                             BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="0,1,0.25,1">
+                            BorderThickness="0,2,0.25,2">
                             <Grid Margin="0,5">
                                 <ikw:SimpleStackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock
@@ -3204,7 +3204,7 @@
                             Height="55"
                             Background="{DynamicResource BoardBarBackground}"
                             BorderBrush="{DynamicResource BoardBarBorderBrush}"
-                            BorderThickness="0,1,0.25,1">
+                            BorderThickness="0,2,0.25,2">
                             <Grid Margin="0,5">
                                 <ikw:SimpleStackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock

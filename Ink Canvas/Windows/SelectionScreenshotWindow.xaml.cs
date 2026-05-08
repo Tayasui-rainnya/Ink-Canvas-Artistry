@@ -137,6 +137,11 @@ namespace Ink_Canvas.Windows
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Handles TouchUp on the root grid: if the touch belongs to the active touch device, ends the current selection, clears touch capture, and marks the event handled.
+        /// </summary>
+        /// <param name="sender">The element that raised the event (root grid).</param>
+        /// <param name="e">The touch event arguments identifying the touch device.</param>
         private void RootGrid_TouchUp(object sender, TouchEventArgs e)
         {
             if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id) return;
@@ -148,7 +153,11 @@ namespace Ink_Canvas.Windows
 
         /// <summary>
         /// 处理触摸捕获丢失：仅在非主动释放时清理选区视觉，避免触摸抬手后选区瞬间消失。
+        /// <summary>
+        /// Handles lost touch capture for the root grid by responding only when the lost capture belongs to the active touch device and, unless the loss was caused by an intentional release, clearing the active touch state and any selection visuals.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Touch event data for the lost capture; the event is marked handled by this method when processed.</param>
         private void RootGrid_LostTouchCapture(object sender, TouchEventArgs e)
         {
             if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id) return;
@@ -167,7 +176,12 @@ namespace Ink_Canvas.Windows
 
         /// <summary>
         /// 释放当前活动触点捕获并退出选择态。
+        /// <summary>
+        /// Stops any ongoing touch-based selection by releasing touch capture and clearing the active touch device.
         /// </summary>
+        /// <remarks>
+        /// Sets the internal selecting flag to false, releases the current touch capture if any (while temporarily setting a guard to indicate an intentional release so LostTouchCapture handling can ignore it), and clears the stored active touch device reference.
+        /// </remarks>
         private void ClearActiveTouchCapture()
         {
             _isSelecting = false;

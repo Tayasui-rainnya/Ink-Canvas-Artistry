@@ -34,6 +34,7 @@ namespace Ink_Canvas.Windows
         private Point _startPoint;
         private readonly List<Point> _freehandPoints = new List<Point>();
         private TouchDevice _activeTouchDevice;
+        private bool _isReleasingTouchCapture;
 
         public SelectionScreenshotAction ActionResult { get; private set; } = SelectionScreenshotAction.Cancel;
         public Bitmap CapturedBitmap { get; private set; }
@@ -145,9 +146,18 @@ namespace Ink_Canvas.Windows
             e.Handled = true;
         }
 
+        /// <summary>
+        /// 处理触摸捕获丢失：仅在非主动释放时清理选区视觉，避免触摸抬手后选区瞬间消失。
+        /// </summary>
         private void RootGrid_LostTouchCapture(object sender, TouchEventArgs e)
         {
             if (_activeTouchDevice == null || e.TouchDevice.Id != _activeTouchDevice.Id) return;
+
+            if (_isReleasingTouchCapture)
+            {
+                e.Handled = true;
+                return;
+            }
 
             // 触摸捕获被系统或其他控件转移时，及时解锁活动触点并清理残留选区视觉
             ClearActiveTouchCapture();
@@ -155,6 +165,9 @@ namespace Ink_Canvas.Windows
             e.Handled = true;
         }
 
+        /// <summary>
+        /// 释放当前活动触点捕获并退出选择态。
+        /// </summary>
         private void ClearActiveTouchCapture()
         {
             _isSelecting = false;
@@ -163,7 +176,15 @@ namespace Ink_Canvas.Windows
 
             if (RootGrid.AreAnyTouchesCaptured)
             {
-                RootGrid.ReleaseTouchCapture(_activeTouchDevice);
+                _isReleasingTouchCapture = true;
+                try
+                {
+                    RootGrid.ReleaseTouchCapture(_activeTouchDevice);
+                }
+                finally
+                {
+                    _isReleasingTouchCapture = false;
+                }
             }
             _activeTouchDevice = null;
         }

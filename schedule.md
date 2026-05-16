@@ -699,4 +699,4 @@ https://learn.microsoft.com/zh-cn/windows/win32/winauto/magapi/magapi-intro
 
 [ ] 时钟添加文本显示
 
-
+[ ] '面积擦'的圆形橡皮在屏幕没有触点时隐藏

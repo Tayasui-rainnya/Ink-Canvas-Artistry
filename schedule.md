@@ -692,3 +692,11 @@ The server binds to `0.0.0.0`, exposing it to all network interfaces. For an upd
 8. **update_server 监听地址暴露（Minor）** → **⏳ Remaining**: 仍以 `host="0.0.0.0"` 监听所有网卡，未改为 `127.0.0.1`。
 
 > 结论：已解决 4/8 项问题，剩余 4 项待后续 PR 跟进。
+
+
+[ ] 放大镜功能使用 magapi 重写
+https://learn.microsoft.com/zh-cn/windows/win32/winauto/magapi/magapi-intro
+
+[ ] 时钟添加文本显示
+
+

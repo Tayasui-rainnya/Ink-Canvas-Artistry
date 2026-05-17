@@ -1168,7 +1168,11 @@
                     Height="55"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
-                    Opacity="0.75"
+                    <!--
+                        保持白板中部工具栏父容器不透明，避免其负边距“弹出层”继承透明度后
+                        与画布内容发生 alpha 混合，造成“弹窗在画布后面”的视觉错觉。
+                    -->
+                    Opacity="1"
                     Visibility="Visible">
                     <Grid.Resources>
                         <!--  定义 SolidColorBrush 资源  -->

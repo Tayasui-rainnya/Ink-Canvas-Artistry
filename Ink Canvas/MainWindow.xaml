@@ -1170,6 +1170,11 @@
                     VerticalAlignment="Bottom"
                     Opacity="0.75"
                     Visibility="Visible">
+                    <!--
+                        保持白板中部工具栏父容器不透明，避免其负边距“弹出层”继承透明度后
+                        与画布内容发生 alpha 混合，造成“弹窗在画布后面”的视觉错觉；
+                        同时关闭父级裁剪，避免弹层超出 55 高度区域时被截断。
+                    -->
                     <Grid.Resources>
                         <!--  定义 SolidColorBrush 资源  -->
                         <SolidColorBrush x:Key="{x:Static ui:ThemeKeys.ButtonBackgroundKey}" Color="{DynamicResource BoardBarButtonBackgroundKey}" />
@@ -1239,12 +1244,17 @@
                             </Border>
                                 </Button>
                         <Grid Width="0" Margin="0,0,0,5">
-                            <Viewbox
-                                Name="BoardTwoFingerGestureBorder"
-                                Height="173"
-                                Margin="-119,-177,-71,0"
-                                VerticalAlignment="Top"
-                                Visibility="Visible">
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="True"
+                                Placement="Top"
+                                PlacementTarget="{Binding ElementName=BtnBoardGesture}"
+                                StaysOpen="True"
+                                VerticalOffset="-6">
+                                <Viewbox
+                                    Name="BoardTwoFingerGestureBorder"
+                                    Height="173"
+                                    Visibility="Visible">
                                 <Border
                                     Width="149"
                                     Height="135"
@@ -1394,7 +1404,8 @@
                                         </ikw:SimpleStackPanel>
                                     </ikw:SimpleStackPanel>
                                 </Border>
-                            </Viewbox>
+                                </Viewbox>
+                            </Popup>
                         </Grid>
                                 <Button
                             x:Name="BtnBoardCanvas"
@@ -1521,11 +1532,17 @@
                                 </Grid>
                             </Border>
                                 </Button>
-                        <Border>
+                        <Border Panel.ZIndex="999">
                             <Grid Width="0">
-                                <Border
+                                <Popup
+                                    AllowsTransparency="True"
+                                    IsOpen="True"
+                                    Placement="Top"
+                                    PlacementTarget="{Binding ElementName=BtnBoardPen}"
+                                    StaysOpen="True"
+                                    VerticalOffset="-6">
+                                    <Border
                                     x:Name="BoardPenPalette"
-                                    Margin="-248,-218,-190,59"
                                     Background="{DynamicResource BoardBarBackground}"
                                     BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                     BorderThickness="1"
@@ -2071,7 +2088,8 @@
                                             </Viewbox>
                                         </ikw:SimpleStackPanel>
                                     </ikw:SimpleStackPanel>
-                                </Border>
+                                    </Border>
+                                </Popup>
                             </Grid>
                         </Border>
                         <Button
@@ -2123,9 +2141,16 @@
                             </Border>
                         </Button>
                         <Border Width="0">
-                            <Border
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="True"
+                                Placement="Top"
+                                PlacementTarget="{Binding ElementName=BtnBoardAreaEraser}"
+                                StaysOpen="True"
+                                VerticalOffset="-4">
+                                <Border
                                 x:Name="BoardDeleteIcon"
-                                Margin="-61,-138,-61,55"
+                                Panel.ZIndex="999"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="1,1,1,0"
@@ -2207,7 +2232,8 @@
                                         </Grid>
                                     </Button>
                                 </ikw:SimpleStackPanel>
-                            </Border>
+                                </Border>
+                            </Popup>
                         </Border>
                         <Button
                             x:Name="BtnBoardStrokeEraser"
@@ -2298,9 +2324,16 @@
                             </Border>
                         </Button>
                         <Border Width="0">
-                            <Border
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="True"
+                                Placement="Top"
+                                PlacementTarget="{Binding ElementName=BtnBoardShape}"
+                                StaysOpen="True"
+                                VerticalOffset="-6">
+                                <Border
                                 x:Name="BoardBorderDrawShape"
-                                Margin="-162,-293,-89,58"
+                                Panel.ZIndex="999"
                                 Background="{DynamicResource BoardBarBackground}"
                                 BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                 BorderThickness="1"
@@ -2507,7 +2540,8 @@
                                         </ikw:SimpleStackPanel>
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
-                            </Border>
+                                </Border>
+                            </Popup>
                         </Border>
                                 <Button
                             x:Name="BtnBoardInsertImage"
@@ -2695,11 +2729,18 @@
                                 </Button>
                             </ikw:SimpleStackPanel>
                         </Border>
-                        <Border>
+                        <Border Panel.ZIndex="999">
                             <Grid Width="0" Margin="0,0,0,5">
-                                <Border
+                                <Popup
+                                    AllowsTransparency="True"
+                                    IsOpen="True"
+                                    Placement="Top"
+                                    PlacementTarget="{Binding ElementName=BoardMoreExitContainer}"
+                                    StaysOpen="True"
+                                    VerticalOffset="-6">
+                                    <Border
                                     Name="BoardBorderTools"
-                                    Margin="-160,-290,-80,60"
+                                    Panel.ZIndex="999"
                                     Background="{DynamicResource BoardBarBackground}"
                                     BorderBrush="{DynamicResource BoardBarBorderBrush}"
                                     BorderThickness="1"
@@ -3082,7 +3123,8 @@
                                             </ikw:SimpleStackPanel>
                                         </Border>
                                     </ikw:SimpleStackPanel>
-                                </Border>
+                                    </Border>
+                                </Popup>
                             </Grid>
                         </Border>
                     </ikw:SimpleStackPanel>

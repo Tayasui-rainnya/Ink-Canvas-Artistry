@@ -1154,18 +1154,20 @@
                 </Grid>
             </Viewbox>
             <!--  中间  -->
-            <Viewbox
+            <Grid
                 x:Name="ViewboxBlackboardCenterSide"
                 Height="55"
+                ClipToBounds="False"
                 Margin="3,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom">
-                <Viewbox.LayoutTransform>
+                <Grid.LayoutTransform>
                     <ScaleTransform x:Name="ViewboxBlackboardCenterSideScaleTransform" ScaleX="1" ScaleY="1" />
-                </Viewbox.LayoutTransform>
+                </Grid.LayoutTransform>
                 <Grid
                     x:Name="BlackboardCenterSide"
                     Height="55"
+                    ClipToBounds="False"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Opacity="0.75"
@@ -3087,7 +3089,7 @@
                         </Border>
                     </ikw:SimpleStackPanel>
                 </Grid>
-            </Viewbox>
+            </Grid>
             <!--  右下角  -->
             <Viewbox
                 x:Name="ViewboxBlackboardRightSide"

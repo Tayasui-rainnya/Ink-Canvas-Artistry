@@ -2,7 +2,6 @@ using Ink_Canvas.Helpers;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Windows;
 using Forms = System.Windows.Forms;
 
@@ -69,16 +68,16 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 加载托盘图标资源；异常时回退为系统应用图标。
+        /// 加载托盘图标：优先使用当前可执行文件关联图标，确保与软件图标保持一致。
         /// </summary>
         private Icon LoadTaskbarIcon()
         {
             try
             {
-                string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Ink Canvas Artistry.ico");
-                if (File.Exists(iconPath))
+                Icon executableIcon = Icon.ExtractAssociatedIcon(Forms.Application.ExecutablePath);
+                if (executableIcon != null)
                 {
-                    return new Icon(iconPath);
+                    return executableIcon;
                 }
             }
             catch (Exception ex)

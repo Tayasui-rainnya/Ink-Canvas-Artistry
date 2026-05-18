@@ -68,7 +68,8 @@ namespace Ink_Canvas
             if ((Settings.Advanced.TouchMultiplier != 0 || !Settings.Advanced.IsSpecialScreen) //启用特殊屏幕且触摸倍数为 0 时禁用橡皮
                 && (boundWidth > BoundsWidth))
             {
-                if (drawingShapeMode == 0 && forceEraser) return;
+                // 触屏处于橡皮工具时，仍需继续根据本次触控面积切换到对应擦除模式；
+                // 不能提前 return，否则会停留在触点结束后恢复出的 None/Ink，导致下一次触摸无法继续擦除。
                 double EraserThresholdValue = Settings.Startup.IsEnableNibMode ? Settings.Advanced.NibModeBoundsWidthThresholdValue : Settings.Advanced.FingerModeBoundsWidthThresholdValue;
                 if (boundWidth > BoundsWidth * EraserThresholdValue)
                 {
@@ -276,7 +277,8 @@ namespace Ink_Canvas
                 && (boundsWidth > BoundsWidth))
             {
                 isLastTouchEraser = true;
-                if (drawingShapeMode == 0 && forceEraser) return;
+                // 触屏处于橡皮工具时，仍需继续根据本次触控面积切换到对应擦除模式；
+                // 不能提前 return，否则会停留在触点结束后恢复出的 None/Ink，导致下一次触摸无法继续擦除。
                 double EraserThresholdValue = Settings.Startup.IsEnableNibMode ? Settings.Advanced.NibModeBoundsWidthThresholdValue : Settings.Advanced.FingerModeBoundsWidthThresholdValue;
                 if (boundsWidth > BoundsWidth * EraserThresholdValue)
                 {

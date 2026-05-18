@@ -1207,6 +1207,7 @@
                     <ikw:SimpleStackPanel Orientation="Horizontal">
                         <Border
                             x:Name="BoardGestureCanvasContainer"
+                            ClipToBounds="False"
                             Style="{StaticResource BoardToolbarGroupBorderStyle}">
                             <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button
@@ -1435,6 +1436,7 @@
                             Background="Transparent" />
                         <Border
                             x:Name="BoardMainButtonsContainer"
+                            ClipToBounds="False"
                             Style="{StaticResource BoardToolbarGroupBorderStyle}">
                             <ikw:SimpleStackPanel Style="{StaticResource BoardToolbarGroupPanelStyle}">
                                 <Button

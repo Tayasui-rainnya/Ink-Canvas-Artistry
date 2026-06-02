@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="选区截图"
+        Title="Ink Canvas Artistry 选区截图"
         WindowStyle="None"
         ResizeMode="NoResize"
         AllowsTransparency="True"

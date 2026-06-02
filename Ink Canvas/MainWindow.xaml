@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     Name="window"
-    Title="Ink Canvas Artistry 画板"
+    Title="Ink Canvas Artistry 屏幕批注"
     Width="1440"
     Height="5500"
     AllowsTransparency="True"

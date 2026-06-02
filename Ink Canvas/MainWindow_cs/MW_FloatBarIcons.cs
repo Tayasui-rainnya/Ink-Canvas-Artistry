@@ -413,6 +413,10 @@ namespace Ink_Canvas
         }
 
         bool isDisplayingOrHidingBlackboard = false;
+
+        /// <summary>
+        /// 在屏幕批注与白板状态之间切换，并同步主窗口标题、导航面板、画笔和手势状态。
+        /// </summary>
         private void ImageBlackboard_Click(object sender, RoutedEventArgs e)
         {
             if (isDisplayingOrHidingBlackboard) return;
@@ -423,6 +427,7 @@ namespace Ink_Canvas
             if (currentMode == 0)
             {
                 currentMode = 1;
+                UpdateWindowTitle();
                 //进入画板
                 PPTNavigationBottomLeft.Visibility = Visibility.Collapsed;
                 PPTNavigationBottomRight.Visibility = Visibility.Collapsed;
@@ -452,6 +457,7 @@ namespace Ink_Canvas
             else
             {
                 currentMode = 0;
+                UpdateWindowTitle();
                 //退出画板
                 HideSubPanelsImmediately();
 
@@ -1173,6 +1179,9 @@ namespace Ink_Canvas
 
         int currentMode = 0;
 
+        /// <summary>
+        /// 根据当前显示状态应用屏幕批注或白板布局，并在模式保持不变时刷新对应窗口标题。
+        /// </summary>
         private void BtnSwitch_Click(object sender, RoutedEventArgs e)
         {
             if (Main_Grid.Background == Brushes.Transparent)
@@ -1197,6 +1206,7 @@ namespace Ink_Canvas
                 {
                     case 0: //屏幕模式
                         currentMode = 0;
+                        UpdateWindowTitle();
                         GridBackgroundCover.Visibility = Visibility.Collapsed;
                         AnimationsHelper.HideWithSlideAndFade(BlackboardLeftSide);
                         AnimationsHelper.HideWithSlideAndFade(BlackboardCenterSide);
@@ -1209,6 +1219,7 @@ namespace Ink_Canvas
                         break;
                     case 1: //黑板或白板模式
                         currentMode = 1;
+                        UpdateWindowTitle();
                         GridBackgroundCover.Visibility = Visibility.Visible;
                         AnimationsHelper.ShowWithSlideFromBottomAndFade(BlackboardLeftSide);
                         AnimationsHelper.ShowWithSlideFromBottomAndFade(BlackboardCenterSide);

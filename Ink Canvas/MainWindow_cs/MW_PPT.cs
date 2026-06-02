@@ -264,7 +264,7 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 演示文稿关闭事件：释放事件绑定并恢复轮询。
+        /// 演示文稿关闭事件：释放事件绑定、恢复轮询并刷新非 PPT 状态窗口标题。
         /// </summary>
         private void PptApplication_PresentationClose(Presentation Pres)
         {
@@ -279,6 +279,7 @@ namespace Ink_Canvas
             {
                 //BtnPPTSlideShow.Visibility = Visibility.Collapsed;
                 BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
+                UpdateWindowTitle();
             });
 
         }
@@ -286,6 +287,10 @@ namespace Ink_Canvas
         //bool isPresentationHaveBlackSpace = false;
         private string pptName = null;
         int currentShowPosition = -1;
+
+        /// <summary>
+        /// PowerPoint 放映开始时接管批注界面，并将主窗口标题切换为 PPT 批注状态。
+        /// </summary>
         private void PptApplication_SlideShowBegin(SlideShowWindow Wn)
         {
             if (Settings.Automation.IsAutoFoldInPPTSlideShow && !isFloatingBarFolded)
@@ -360,6 +365,7 @@ namespace Ink_Canvas
                 }
 
                 BtnPPTSlideShowEnd.Visibility = Visibility.Visible;
+                UpdateWindowTitle();
 
                 if (Settings.PowerPointSettings.IsShowBottomPPTNavigationPanel)
                 {
@@ -399,6 +405,7 @@ namespace Ink_Canvas
                     if (currentMode != 0)
                     {
                         currentMode = 0;
+                        UpdateWindowTitle();
                         GridBackgroundCover.Visibility = Visibility.Collapsed;
                         AnimationsHelper.HideWithSlideAndFade(BlackboardLeftSide);
                         AnimationsHelper.HideWithSlideAndFade(BlackboardCenterSide);
@@ -440,6 +447,10 @@ namespace Ink_Canvas
         }
 
         bool isEnteredSlideShowEndEvent = false; //防止重复调用本函数导致墨迹保存失效
+
+        /// <summary>
+        /// PowerPoint 放映结束时保存批注并恢复非 PPT 状态的主窗口标题。
+        /// </summary>
         private async void PptApplication_SlideShowEnd(Presentation Pres)
         {
             if (isFloatingBarFolded) UnFoldFloatingBar_MouseUp(null, null);
@@ -522,6 +533,7 @@ namespace Ink_Canvas
                 //BtnPPTSlideShow.Visibility = Visibility.Visible;
                 BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
                 BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
+                UpdateWindowTitle();
                 PPTNavigationBottomLeft.Visibility = Visibility.Collapsed;
                 PPTNavigationBottomRight.Visibility = Visibility.Collapsed;
                 PPTNavigationSidesLeft.Visibility = Visibility.Collapsed;

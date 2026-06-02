@@ -18,7 +18,7 @@ namespace Ink_Canvas
         #region Window Initialization
 
         /// <summary>
-        /// 主窗口构造函数：初始化界面状态并完成基础事件绑定。
+        /// 主窗口构造函数：初始化界面状态、设置屏幕批注标题并完成基础事件绑定。
         /// </summary>
         public MainWindow()
         {
@@ -36,6 +36,7 @@ namespace Ink_Canvas
             BorderSettings.Visibility = Visibility.Collapsed;
 
             BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
+            UpdateWindowTitle();
             PPTNavigationBottomLeft.Visibility = Visibility.Collapsed;
             PPTNavigationBottomRight.Visibility = Visibility.Collapsed;
             PPTNavigationSidesLeft.Visibility = Visibility.Collapsed;

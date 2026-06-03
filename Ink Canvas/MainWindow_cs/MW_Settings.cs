@@ -492,6 +492,26 @@ namespace Ink_Canvas
             SaveSettingsToFile();
         }
 
+        /// <summary>
+        /// 手写笔默认橡皮模式选择变更：保存面积擦/墨迹擦选项。
+        /// </summary>
+        private void ComboBoxStylusDefaultEraserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Canvas.StylusDefaultEraserType = ComboBoxStylusDefaultEraserType.SelectedIndex;
+            SaveSettingsToFile();
+        }
+
+        /// <summary>
+        /// 手写笔按钮功能选择变更：当前仅保存设置，具体切换逻辑暂未启用。
+        /// </summary>
+        private void ComboBoxStylusButtonFunction_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Canvas.StylusButtonFunction = ComboBoxStylusButtonFunction.SelectedIndex;
+            SaveSettingsToFile();
+        }
+
         private void ComboBoxHyperbolaAsymptoteOption_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isLoaded) return;

@@ -3570,6 +3570,55 @@
                                         <ComboBoxItem Content="大" />
                                     </ComboBox>
                                 </ikw:SimpleStackPanel>
+                                <GroupBox Margin="0,6,0,2">
+                                    <GroupBox.Header>
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="SemiBold"
+                                            Foreground="{DynamicResource SettingsPageForeground}"
+                                            Text="手写笔设置" />
+                                    </GroupBox.Header>
+                                    <ikw:SimpleStackPanel Spacing="5">
+                                        <ikw:SimpleStackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="{DynamicResource SettingsPageForeground}"
+                                                Text="手写笔默认橡皮：" />
+                                            <ComboBox
+                                                Name="ComboBoxStylusDefaultEraserType"
+                                                Width="130"
+                                                Margin="5,0,0,0"
+                                                SelectedIndex="0"
+                                                SelectionChanged="ComboBoxStylusDefaultEraserType_SelectionChanged">
+                                                <ComboBoxItem Content="面积擦" />
+                                                <ComboBoxItem Content="墨迹擦" />
+                                            </ComboBox>
+                                        </ikw:SimpleStackPanel>
+                                        <ikw:SimpleStackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="{DynamicResource SettingsPageForeground}"
+                                                Text="手写笔按钮功能：" />
+                                            <ComboBox
+                                                Name="ComboBoxStylusButtonFunction"
+                                                Width="180"
+                                                Margin="5,0,0,0"
+                                                SelectedIndex="0"
+                                                SelectionChanged="ComboBoxStylusButtonFunction_SelectionChanged">
+                                                <ComboBoxItem Content="移动" />
+                                                <ComboBoxItem Content="面积擦" />
+                                                <ComboBoxItem Content="墨迹擦" />
+                                                <ComboBoxItem Content="显示浮动圆盘" />
+                                            </ComboBox>
+                                        </ikw:SimpleStackPanel>
+                                        <TextBlock
+                                            Foreground="{DynamicResource SettingsPageAnnotationForeground}"
+                                            Text="# 手写笔按钮功能切换回原工具逻辑暂未启用，当前仅保存设置项。"
+                                            TextWrapping="Wrap" />
+                                    </ikw:SimpleStackPanel>
+                                </GroupBox>
                                 <ikw:SimpleStackPanel Orientation="Horizontal">
                                     <ikw:SimpleStackPanel Width="50">
                                         <ui:ToggleSwitch

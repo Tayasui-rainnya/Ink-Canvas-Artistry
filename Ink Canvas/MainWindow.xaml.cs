@@ -84,7 +84,9 @@ namespace Ink_Canvas
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
             inkCanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
             PreviewMouseUp += Window_PreviewMouseUpForStraighten;
+            PreviewStylusDown += Window_PreviewStylusDownForStylusEraser;
             PreviewStylusUp += Window_PreviewStylusUpForStraighten;
+            PreviewStylusUp += Window_PreviewStylusUpForStylusEraser;
 
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             try
@@ -173,6 +175,40 @@ namespace Ink_Canvas
                 inkCanvas1.ForceCursor = false;
             }
             if (inkCanvas1.EditingMode == InkCanvasEditingMode.Ink) forcePointEraser = !forcePointEraser;
+        }
+
+        /// <summary>
+        /// 手写笔按键按下时根据设置切换到默认橡皮模式。
+        /// </summary>
+        private void Window_PreviewStylusDownForStylusEraser(object sender, System.Windows.Input.StylusDownEventArgs e)
+        {
+            if (e?.StylusDevice?.TabletDevice?.Type != System.Windows.Input.TabletDeviceType.Stylus) return;
+            if (e.StylusDevice.StylusButtons == null || e.StylusDevice.StylusButtons.Count < 2) return;
+            if (e.StylusDevice.StylusButtons[1].StylusButtonState != System.Windows.Input.StylusButtonState.Down) return;
+
+            if (Settings.Canvas.StylusDefaultEraserType == 1)
+            {
+                inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                forcePointEraser = false;
+            }
+            else
+            {
+                inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                forcePointEraser = true;
+            }
+        }
+
+        /// <summary>
+        /// 手写笔按键抬起后恢复到书写模式。
+        /// </summary>
+        private void Window_PreviewStylusUpForStylusEraser(object sender, System.Windows.Input.StylusEventArgs e)
+        {
+            if (e?.StylusDevice?.TabletDevice?.Type != System.Windows.Input.TabletDeviceType.Stylus) return;
+            if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint
+                || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
+            {
+                inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            }
         }
 
         #endregion Ink Canvas Functions

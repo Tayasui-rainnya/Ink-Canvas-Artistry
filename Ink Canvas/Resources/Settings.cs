@@ -48,6 +48,16 @@ namespace Ink_Canvas
         public int EraserSize { get; set; } = 2;
         [JsonProperty("eraserType")] 
         public int EraserType { get; set; } = 0; // 0 - 图标切换模式      1 - 面积擦     2 - 线条擦
+        /// <summary>
+        /// 手写笔默认橡皮模式：0=面积擦，1=墨迹擦。
+        /// </summary>
+        [JsonProperty("stylusDefaultEraserType")]
+        public int StylusDefaultEraserType { get; set; } = 0; // 0 - 面积擦 1 - 墨迹擦
+        /// <summary>
+        /// 手写笔按钮功能选项：0=移动，1=面积擦，2=墨迹擦，3=显示浮动圆盘。
+        /// </summary>
+        [JsonProperty("stylusButtonFunction")]
+        public int StylusButtonFunction { get; set; } = 0; // 0 - 移动 1 - 面积擦 2 - 墨迹擦 3 - 显示浮动圆盘
         [JsonProperty("hideStrokeWhenSelecting")]
         public bool HideStrokeWhenSelecting { get; set; } = true;
 

@@ -444,6 +444,8 @@ namespace Ink_Canvas
                 BoardComboBoxPenStyle.SelectedIndex = Settings.Canvas.InkStyle;
 
                 ComboBoxEraserSize.SelectedIndex = Settings.Canvas.EraserSize;
+                ComboBoxStylusDefaultEraserType.SelectedIndex = Settings.Canvas.StylusDefaultEraserType;
+                ComboBoxStylusButtonFunction.SelectedIndex = Settings.Canvas.StylusButtonFunction;
 
                 if (Settings.Canvas.HideStrokeWhenSelecting)
                 {

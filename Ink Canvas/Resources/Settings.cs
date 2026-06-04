@@ -49,15 +49,15 @@ namespace Ink_Canvas
         [JsonProperty("eraserType")] 
         public int EraserType { get; set; } = 0; // 0 - 图标切换模式      1 - 面积擦     2 - 线条擦
         /// <summary>
-        /// 手写笔默认橡皮模式：0=面积擦，1=墨迹擦。
+        /// 手写笔默认橡皮模式。
         /// </summary>
         [JsonProperty("stylusDefaultEraserType")]
-        public int StylusDefaultEraserType { get; set; } = 0; // 0 - 面积擦 1 - 墨迹擦
+        public StylusDefaultEraserType StylusDefaultEraserType { get; set; } = StylusDefaultEraserType.AreaEraser;
         /// <summary>
-        /// 手写笔按钮功能选项：0=移动，1=面积擦，2=墨迹擦，3=显示浮动圆盘。
+        /// 手写笔按钮功能选项。当前仅持久化设置，具体按钮动作暂未启用。
         /// </summary>
         [JsonProperty("stylusButtonFunction")]
-        public int StylusButtonFunction { get; set; } = 0; // 0 - 移动 1 - 面积擦 2 - 墨迹擦 3 - 显示浮动圆盘
+        public StylusButtonFunction StylusButtonFunction { get; set; } = StylusButtonFunction.Move;
         [JsonProperty("hideStrokeWhenSelecting")]
         public bool HideStrokeWhenSelecting { get; set; } = true;
 
@@ -66,6 +66,26 @@ namespace Ink_Canvas
 
         [JsonProperty("hyperbolaAsymptoteOption")]
         public OptionalOperation HyperbolaAsymptoteOption { get; set; } = OptionalOperation.Ask;
+    }
+
+    /// <summary>
+    /// 手写笔默认橡皮模式，用稳定数值持久化以避免 UI 顺序变更导致配置错义。
+    /// </summary>
+    public enum StylusDefaultEraserType
+    {
+        AreaEraser = 0,
+        StrokeEraser = 1
+    }
+
+    /// <summary>
+    /// 手写笔按钮功能选项，用稳定数值持久化以避免 UI 顺序变更导致配置错义。
+    /// </summary>
+    public enum StylusButtonFunction
+    {
+        Move = 0,
+        AreaEraser = 1,
+        StrokeEraser = 2,
+        ShowFloatingPalette = 3
     }
 
     /// <summary>

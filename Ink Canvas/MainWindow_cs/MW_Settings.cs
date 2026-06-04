@@ -498,7 +498,7 @@ namespace Ink_Canvas
         private void ComboBoxStylusDefaultEraserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isLoaded) return;
-            Settings.Canvas.StylusDefaultEraserType = ComboBoxStylusDefaultEraserType.SelectedIndex;
+            Settings.Canvas.StylusDefaultEraserType = (StylusDefaultEraserType)ComboBoxStylusDefaultEraserType.SelectedIndex;
             SaveSettingsToFile();
         }
 
@@ -508,7 +508,7 @@ namespace Ink_Canvas
         private void ComboBoxStylusButtonFunction_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isLoaded) return;
-            Settings.Canvas.StylusButtonFunction = ComboBoxStylusButtonFunction.SelectedIndex;
+            Settings.Canvas.StylusButtonFunction = (StylusButtonFunction)ComboBoxStylusButtonFunction.SelectedIndex;
             SaveSettingsToFile();
         }
 

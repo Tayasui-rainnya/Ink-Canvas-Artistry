@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
+using System.Windows.Input;
 using System.Windows.Media;
 using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
@@ -106,6 +107,9 @@ namespace Ink_Canvas
         #region Ink Canvas Functions
 
         DrawingAttributes drawingAttributes;
+        private bool isStylusEraserButtonActive;
+        private InkCanvasEditingMode stylusEraserPreviousEditingMode = InkCanvasEditingMode.Ink;
+        private bool stylusEraserPreviousForcePointEraser = true;
 
         /// <summary>
         /// 初始化墨迹画笔与手势事件。
@@ -178,15 +182,21 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 手写笔按键按下时根据设置切换到默认橡皮模式。
+        /// 手写笔侧键按下时按“默认橡皮”设置临时切换橡皮，并记录切换前的工具状态。
         /// </summary>
-        private void Window_PreviewStylusDownForStylusEraser(object sender, System.Windows.Input.StylusDownEventArgs e)
+        private void Window_PreviewStylusDownForStylusEraser(object sender, StylusDownEventArgs e)
         {
-            if (e?.StylusDevice?.TabletDevice?.Type != System.Windows.Input.TabletDeviceType.Stylus) return;
-            if (e.StylusDevice.StylusButtons == null || e.StylusDevice.StylusButtons.Count < 2) return;
-            if (e.StylusDevice.StylusButtons[1].StylusButtonState != System.Windows.Input.StylusButtonState.Down) return;
+            if (e?.StylusDevice?.TabletDevice?.Type != TabletDeviceType.Stylus) return;
+            if (!IsAnyStylusSideButtonDown(e.StylusDevice)) return;
 
-            if (Settings.Canvas.StylusDefaultEraserType == 1)
+            if (!isStylusEraserButtonActive)
+            {
+                stylusEraserPreviousEditingMode = inkCanvas.EditingMode;
+                stylusEraserPreviousForcePointEraser = forcePointEraser;
+                isStylusEraserButtonActive = true;
+            }
+
+            if (Settings.Canvas.StylusDefaultEraserType == StylusDefaultEraserType.StrokeEraser)
             {
                 inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                 forcePointEraser = false;
@@ -199,16 +209,32 @@ namespace Ink_Canvas
         }
 
         /// <summary>
-        /// 手写笔按键抬起后恢复到书写模式。
+        /// 手写笔侧键对应的一次笔触结束后，仅在本次临时橡皮生效时恢复切换前的工具状态。
         /// </summary>
-        private void Window_PreviewStylusUpForStylusEraser(object sender, System.Windows.Input.StylusEventArgs e)
+        private void Window_PreviewStylusUpForStylusEraser(object sender, StylusEventArgs e)
         {
-            if (e?.StylusDevice?.TabletDevice?.Type != System.Windows.Input.TabletDeviceType.Stylus) return;
-            if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint
-                || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
+            if (e?.StylusDevice?.TabletDevice?.Type != TabletDeviceType.Stylus) return;
+            if (!isStylusEraserButtonActive) return;
+
+            inkCanvas.EditingMode = stylusEraserPreviousEditingMode;
+            forcePointEraser = stylusEraserPreviousForcePointEraser;
+            isStylusEraserButtonActive = false;
+        }
+
+        /// <summary>
+        /// 检测当前手写笔设备是否有任一侧键处于按下状态，以兼容侧键数量或顺序不同的设备。
+        /// </summary>
+        private bool IsAnyStylusSideButtonDown(StylusDevice stylusDevice)
+        {
+            if (stylusDevice?.StylusButtons == null) return false;
+            foreach (StylusButton button in stylusDevice.StylusButtons)
             {
-                inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                if (button.StylusButtonState == StylusButtonState.Down)
+                {
+                    return true;
+                }
             }
+            return false;
         }
 
         #endregion Ink Canvas Functions

@@ -448,11 +448,7 @@ namespace Ink_Canvas
                     PenIcon_Click(BoardPenIcon, null);
                 }
 
-                if (Settings.Gesture.AutoSwitchTwoFingerGesture) // 自动关闭多指书写、开启双指移动
-                {
-                    ToggleSwitchEnableTwoFingerTranslate.IsOn = true;
-                    if (isInMultiTouchMode) ToggleSwitchEnableMultiTouchMode.IsOn = false;
-                }
+                ApplyGestureDefaultsForCurrentMode();
             }
             else
             {
@@ -487,11 +483,7 @@ namespace Ink_Canvas
                     PenIcon_Click(null, null);
                 }
 
-                if (Settings.Gesture.AutoSwitchTwoFingerGesture) // 自动启用多指书写
-                {
-                    ToggleSwitchEnableTwoFingerTranslate.IsOn = false;
-                    if (!isInMultiTouchMode) ToggleSwitchEnableMultiTouchMode.IsOn = true;
-                }
+                ApplyGestureDefaultsForCurrentMode();
             }
 
             BtnSwitch_Click(null, null);

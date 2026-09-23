@@ -1320,7 +1320,7 @@
                                                         IsOn="False"
                                                         OffContent=""
                                                         OnContent=""
-                                                        Toggled="ToggleSwitchEnableTwoFingerTranslate_Toggled" />
+                                                        Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                                 </Viewbox>
                                             </ikw:SimpleStackPanel>
                                             <ikw:SimpleStackPanel
@@ -1351,7 +1351,7 @@
                                                         IsOn="False"
                                                         OffContent=""
                                                         OnContent=""
-                                                        Toggled="ToggleSwitchEnableTwoFingerZoom_Toggled" />
+                                                        Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                                 </Viewbox>
                                             </ikw:SimpleStackPanel>
                                             <ikw:SimpleStackPanel
@@ -1381,7 +1381,7 @@
                                                         ui:ThemeManager.RequestedTheme="{DynamicResource BoardTheme}"
                                                         OffContent=""
                                                         OnContent=""
-                                                        Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled" />
+                                                        Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                                 </Viewbox>
                                             </ikw:SimpleStackPanel>
                                         </ikw:SimpleStackPanel>
@@ -3663,7 +3663,7 @@
                                             Name="ToggleSwitchEnableTwoFingerRotationOnSelection"
                                             OffContent="关"
                                             OnContent="开"
-                                            Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerRotationOnSelection_Toggled" />
                                     </ikw:SimpleStackPanel>
                                     <TextBlock
                                         Margin="0,0,14,0"
@@ -7729,7 +7729,7 @@
                                             IsOn="False"
                                             OffContent=""
                                             OnContent=""
-                                            Toggled="ToggleSwitchEnableTwoFingerTranslate_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
                                 <ikw:SimpleStackPanel
@@ -7759,7 +7759,7 @@
                                             IsOn="False"
                                             OffContent=""
                                             OnContent=""
-                                            Toggled="ToggleSwitchEnableTwoFingerZoom_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
                                 <ikw:SimpleStackPanel
@@ -7788,7 +7788,7 @@
                                             MinWidth="0"
                                             OffContent=""
                                             OnContent=""
-                                            Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
                             </ikw:SimpleStackPanel>

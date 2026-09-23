@@ -90,8 +90,33 @@ namespace Ink_Canvas
         [JsonProperty("isEnableTwoFingerRotationOnSelection")]
         public bool IsEnableTwoFingerRotationOnSelection { get; set; } = false;
 
+        [JsonProperty("annotationModeDefaults")]
+        public GestureModeDefaults AnnotationModeDefaults { get; set; } = new GestureModeDefaults();
+        [JsonProperty("whiteboardModeDefaults")]
+        public GestureModeDefaults WhiteboardModeDefaults { get; set; } = new GestureModeDefaults
+        {
+            IsEnableMultiTouchMode = false,
+            IsEnableTwoFingerZoom = true,
+            IsEnableTwoFingerTranslate = true
+        };
+
         [JsonProperty("matrixTransformCenterPoint")]
         public MatrixTransformCenterPointOptions MatrixTransformCenterPoint { get; set; } = MatrixTransformCenterPointOptions.CanvasCenterPoint;
+    }
+
+    /// <summary>
+    /// 指定模式进入时应用的手势默认状态。
+    /// </summary>
+    public class GestureModeDefaults
+    {
+        [JsonProperty("isEnableMultiTouchMode")]
+        public bool IsEnableMultiTouchMode { get; set; } = true;
+        [JsonProperty("isEnableTwoFingerZoom")]
+        public bool IsEnableTwoFingerZoom { get; set; }
+        [JsonProperty("isEnableTwoFingerTranslate")]
+        public bool IsEnableTwoFingerTranslate { get; set; }
+        [JsonProperty("isEnableTwoFingerRotation")]
+        public bool IsEnableTwoFingerRotation { get; set; }
     }
 
     /// <summary>

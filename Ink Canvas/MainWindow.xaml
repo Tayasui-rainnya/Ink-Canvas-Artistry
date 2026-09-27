@@ -1320,7 +1320,7 @@
                                                         IsOn="False"
                                                         OffContent=""
                                                         OnContent=""
-                                                        Toggled="ToggleSwitchEnableTwoFingerTranslate_Toggled" />
+                                                        Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                                 </Viewbox>
                                             </ikw:SimpleStackPanel>
                                             <ikw:SimpleStackPanel
@@ -1351,7 +1351,7 @@
                                                         IsOn="False"
                                                         OffContent=""
                                                         OnContent=""
-                                                        Toggled="ToggleSwitchEnableTwoFingerZoom_Toggled" />
+                                                        Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                                 </Viewbox>
                                             </ikw:SimpleStackPanel>
                                             <ikw:SimpleStackPanel
@@ -1381,7 +1381,7 @@
                                                         ui:ThemeManager.RequestedTheme="{DynamicResource BoardTheme}"
                                                         OffContent=""
                                                         OnContent=""
-                                                        Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled" />
+                                                        Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                                 </Viewbox>
                                             </ikw:SimpleStackPanel>
                                         </ikw:SimpleStackPanel>
@@ -3657,13 +3657,45 @@
                                     Foreground="{DynamicResource SettingsPageAnnotationForeground}"
                                     Text="# 开启 自动开关两指缩放功能 后退出画板模式时自动关闭双指移动手势，进入画板模式时自动开启双指移动手势"
                                     TextWrapping="Wrap" />
+                                <TextBlock
+                                    Margin="0,8,0,0"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource SettingsPageForeground}"
+                                    Text="屏幕批注模式默认手势" />
+                                <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="12">
+                                    <ui:ToggleSwitch Name="SettingsAnnotationMultiTouchMode" OffContent="多指书写" OnContent="多指书写" Toggled="ToggleSwitchEnableMultiTouchMode_Toggled" />
+                                    <ui:ToggleSwitch Name="SettingsAnnotationTwoFingerTranslate" OffContent="双指移动" OnContent="双指移动" Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
+                                    <ui:ToggleSwitch Name="SettingsAnnotationTwoFingerRotation" OffContent="双指旋转" OnContent="双指旋转" Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
+                                    <ui:ToggleSwitch Name="SettingsAnnotationTwoFingerZoom" OffContent="双指缩放" OnContent="双指缩放" Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
+                                </ikw:SimpleStackPanel>
+                                <TextBlock
+                                    Foreground="{DynamicResource SettingsPageAnnotationForeground}"
+                                    Text="# 开启多指书写后，双指移动、旋转和缩放将自动关闭且不可选择。"
+                                    TextWrapping="Wrap" />
+                                <TextBlock
+                                    Margin="0,5,0,0"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource SettingsPageForeground}"
+                                    Text="白板模式默认手势" />
+                                <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="12">
+                                    <ui:ToggleSwitch Name="SettingsWhiteboardMultiTouchMode" OffContent="多指书写" OnContent="多指书写" Toggled="ToggleSwitchEnableMultiTouchMode_Toggled" />
+                                    <ui:ToggleSwitch Name="SettingsWhiteboardTwoFingerTranslate" OffContent="双指移动" OnContent="双指移动" Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
+                                    <ui:ToggleSwitch Name="SettingsWhiteboardTwoFingerRotation" OffContent="双指旋转" OnContent="双指旋转" Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
+                                    <ui:ToggleSwitch Name="SettingsWhiteboardTwoFingerZoom" OffContent="双指缩放" OnContent="双指缩放" Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
+                                </ikw:SimpleStackPanel>
+                                <TextBlock
+                                    Foreground="{DynamicResource SettingsPageAnnotationForeground}"
+                                    Text="# 上述状态会在每次进入相应模式时自动应用。"
+                                    TextWrapping="Wrap" />
                                 <ikw:SimpleStackPanel Orientation="Horizontal">
                                     <ikw:SimpleStackPanel Width="50">
                                         <ui:ToggleSwitch
                                             Name="ToggleSwitchEnableTwoFingerRotationOnSelection"
                                             OffContent="关"
                                             OnContent="开"
-                                            Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerRotationOnSelection_Toggled" />
                                     </ikw:SimpleStackPanel>
                                     <TextBlock
                                         Margin="0,0,14,0"
@@ -7729,7 +7761,7 @@
                                             IsOn="False"
                                             OffContent=""
                                             OnContent=""
-                                            Toggled="ToggleSwitchEnableTwoFingerTranslate_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
                                 <ikw:SimpleStackPanel
@@ -7759,7 +7791,7 @@
                                             IsOn="False"
                                             OffContent=""
                                             OnContent=""
-                                            Toggled="ToggleSwitchEnableTwoFingerZoom_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
                                 <ikw:SimpleStackPanel
@@ -7788,7 +7820,7 @@
                                             MinWidth="0"
                                             OffContent=""
                                             OnContent=""
-                                            Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled" />
+                                            Toggled="ToggleSwitchEnableTwoFingerGesture_Toggled" />
                                     </Viewbox>
                                 </ikw:SimpleStackPanel>
                             </ikw:SimpleStackPanel>

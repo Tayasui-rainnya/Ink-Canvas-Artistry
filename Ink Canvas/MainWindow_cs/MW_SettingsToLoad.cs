@@ -320,85 +320,10 @@ namespace Ink_Canvas
             if (Settings.Gesture != null)
             {
                 ComboBoxMatrixTransformCenterPoint.SelectedIndex = (int)Settings.Gesture.MatrixTransformCenterPoint;
-                if (Settings.Gesture.IsEnableMultiTouchMode)
-                {
-                    ToggleSwitchEnableMultiTouchMode.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEnableMultiTouchMode.IsOn = false;
-                }
-                if (Settings.Gesture.IsEnableTwoFingerZoom)
-                {
-                    ToggleSwitchEnableTwoFingerZoom.IsOn = true;
-                    BoardToggleSwitchEnableTwoFingerZoom.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEnableTwoFingerZoom.IsOn = false;
-                    BoardToggleSwitchEnableTwoFingerZoom.IsOn = false;
-                }
-                if (Settings.Gesture.IsEnableTwoFingerTranslate)
-                {
-                    ToggleSwitchEnableTwoFingerTranslate.IsOn = true;
-                    BoardToggleSwitchEnableTwoFingerTranslate.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEnableTwoFingerTranslate.IsOn = false;
-                    BoardToggleSwitchEnableTwoFingerTranslate.IsOn = false;
-                }
-                if (Settings.Gesture.IsEnableTwoFingerRotation)
-                {
-                    ToggleSwitchEnableTwoFingerRotation.IsOn = true;
-                    BoardToggleSwitchEnableTwoFingerRotation.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEnableTwoFingerRotation.IsOn = false;
-                    BoardToggleSwitchEnableTwoFingerRotation.IsOn = false;
-                }
-                if (Settings.Gesture.AutoSwitchTwoFingerGesture)
-                {
-                    ToggleSwitchAutoSwitchTwoFingerGesture.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchAutoSwitchTwoFingerGesture.IsOn = false;
-                }
-                if (Settings.Gesture.IsEnableTwoFingerRotation)
-                {
-                    ToggleSwitchEnableTwoFingerRotation.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEnableTwoFingerRotation.IsOn = false;
-                }
-                if (Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
-                {
-                    ToggleSwitchEnableTwoFingerRotationOnSelection.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEnableTwoFingerRotationOnSelection.IsOn = false;
-                }
-                if (Settings.Gesture.AutoSwitchTwoFingerGesture)
-                {
-                    if (Topmost)
-                    {
-                        ToggleSwitchEnableTwoFingerTranslate.IsOn = false;
-                        BoardToggleSwitchEnableTwoFingerTranslate.IsOn = false;
-                        Settings.Gesture.IsEnableTwoFingerTranslate = false;
-                        if (!isInMultiTouchMode) ToggleSwitchEnableMultiTouchMode.IsOn = true;
-                    }
-                    else
-                    {
-                        ToggleSwitchEnableTwoFingerTranslate.IsOn = true;
-                        BoardToggleSwitchEnableTwoFingerTranslate.IsOn = true;
-                        Settings.Gesture.IsEnableTwoFingerTranslate = true;
-                        if (isInMultiTouchMode) ToggleSwitchEnableMultiTouchMode.IsOn = false;
-                    }
-                }
+                InitializeGestureModeDefaults();
+                ToggleSwitchAutoSwitchTwoFingerGesture.IsOn = Settings.Gesture.AutoSwitchTwoFingerGesture;
+                ToggleSwitchEnableTwoFingerRotationOnSelection.IsOn = Settings.Gesture.IsEnableTwoFingerRotationOnSelection;
+                ApplyGestureDefaultsForCurrentMode();
                 CheckEnableTwoFingerGestureBtnColorPrompt();
             }
             else

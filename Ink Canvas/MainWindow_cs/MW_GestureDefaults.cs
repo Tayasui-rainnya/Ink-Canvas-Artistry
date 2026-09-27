@@ -52,6 +52,7 @@ namespace Ink_Canvas
                 BoardToggleSwitchEnableTwoFingerTranslate.IsOn = Settings.Gesture.IsEnableTwoFingerTranslate;
                 BoardToggleSwitchEnableTwoFingerRotation.IsOn = Settings.Gesture.IsEnableTwoFingerRotation;
 
+                UpdateGestureDefaultsSettingsControls();
                 SetTwoFingerGestureControlsEnabled(!Settings.Gesture.IsEnableMultiTouchMode);
                 if (Settings.Gesture.IsEnableMultiTouchMode != isInMultiTouchMode)
                 {
@@ -73,7 +74,8 @@ namespace Ink_Canvas
         {
             if (!isLoaded || isApplyingGestureDefaults) return;
 
-            bool isWhiteboard = sender == BoardToggleSwitchEnableMultiTouchMode;
+            bool isWhiteboard = sender == BoardToggleSwitchEnableMultiTouchMode ||
+                                sender == SettingsWhiteboardMultiTouchMode;
             GestureModeDefaults defaults = GetGestureModeDefaults(isWhiteboard);
             defaults.IsEnableMultiTouchMode = ((ToggleSwitch)sender).IsOn;
             if (defaults.IsEnableMultiTouchMode)
@@ -97,13 +99,18 @@ namespace Ink_Canvas
             ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
             bool isWhiteboard = sender == BoardToggleSwitchEnableTwoFingerZoom ||
                                 sender == BoardToggleSwitchEnableTwoFingerTranslate ||
-                                sender == BoardToggleSwitchEnableTwoFingerRotation;
+                                sender == BoardToggleSwitchEnableTwoFingerRotation ||
+                                sender == SettingsWhiteboardTwoFingerZoom ||
+                                sender == SettingsWhiteboardTwoFingerTranslate ||
+                                sender == SettingsWhiteboardTwoFingerRotation;
             GestureModeDefaults defaults = GetGestureModeDefaults(isWhiteboard);
-            if (sender == ToggleSwitchEnableTwoFingerZoom || sender == BoardToggleSwitchEnableTwoFingerZoom)
+            if (sender == ToggleSwitchEnableTwoFingerZoom || sender == BoardToggleSwitchEnableTwoFingerZoom ||
+                sender == SettingsAnnotationTwoFingerZoom || sender == SettingsWhiteboardTwoFingerZoom)
             {
                 defaults.IsEnableTwoFingerZoom = toggleSwitch.IsOn;
             }
-            else if (sender == ToggleSwitchEnableTwoFingerTranslate || sender == BoardToggleSwitchEnableTwoFingerTranslate)
+            else if (sender == ToggleSwitchEnableTwoFingerTranslate || sender == BoardToggleSwitchEnableTwoFingerTranslate ||
+                     sender == SettingsAnnotationTwoFingerTranslate || sender == SettingsWhiteboardTwoFingerTranslate)
             {
                 defaults.IsEnableTwoFingerTranslate = toggleSwitch.IsOn;
             }
@@ -133,6 +140,46 @@ namespace Ink_Canvas
         private GestureModeDefaults GetGestureModeDefaults(bool isWhiteboard)
         {
             return isWhiteboard ? Settings.Gesture.WhiteboardModeDefaults : Settings.Gesture.AnnotationModeDefaults;
+        }
+
+        /// <summary>
+        /// 将两组默认值显示在设置页，并分别禁用启用多指书写的模式中的双指选项。
+        /// </summary>
+        private void UpdateGestureDefaultsSettingsControls()
+        {
+            UpdateGestureDefaultsSettingsControls(
+                Settings.Gesture.AnnotationModeDefaults,
+                SettingsAnnotationMultiTouchMode,
+                SettingsAnnotationTwoFingerZoom,
+                SettingsAnnotationTwoFingerTranslate,
+                SettingsAnnotationTwoFingerRotation);
+            UpdateGestureDefaultsSettingsControls(
+                Settings.Gesture.WhiteboardModeDefaults,
+                SettingsWhiteboardMultiTouchMode,
+                SettingsWhiteboardTwoFingerZoom,
+                SettingsWhiteboardTwoFingerTranslate,
+                SettingsWhiteboardTwoFingerRotation);
+        }
+
+        /// <summary>
+        /// 将一个模式的默认值写入其设置页控件，并使双指控件与多指书写的互斥状态保持一致。
+        /// </summary>
+        private static void UpdateGestureDefaultsSettingsControls(
+            GestureModeDefaults defaults,
+            ToggleSwitch multiTouchMode,
+            ToggleSwitch twoFingerZoom,
+            ToggleSwitch twoFingerTranslate,
+            ToggleSwitch twoFingerRotation)
+        {
+            multiTouchMode.IsOn = defaults.IsEnableMultiTouchMode;
+            twoFingerZoom.IsOn = defaults.IsEnableTwoFingerZoom;
+            twoFingerTranslate.IsOn = defaults.IsEnableTwoFingerTranslate;
+            twoFingerRotation.IsOn = defaults.IsEnableTwoFingerRotation;
+
+            bool isTwoFingerEnabled = !defaults.IsEnableMultiTouchMode;
+            twoFingerZoom.IsEnabled = isTwoFingerEnabled;
+            twoFingerTranslate.IsEnabled = isTwoFingerEnabled;
+            twoFingerRotation.IsEnabled = isTwoFingerEnabled;
         }
 
         /// <summary>
